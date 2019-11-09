@@ -1,0 +1,33 @@
+{
+  "properties": [
+    {
+      "name": "swagger.name",
+      "type": "java.lang.String",
+      "description": "API作者."
+    },
+    {
+      "name": "swagger.url",
+      "type": "java.lang.String",
+      "description": "API联系人网址."
+    },
+    {
+      "name": "swagger.email",
+      "type": "java.lang.String",
+      "description": "API联系人邮箱."
+    },
+    {
+      "name": "swagger.title",
+      "type": "java.lang.String",
+      "description": "API文档标题."
+    },
+    {
+      "name": "swagger.description",
+      "type": "java.lang.String",
+      "description": "API文档描述."
+    },
+    {
+      "name": "swagger.version",
+      "type": "java.lang.String",
+      "description": "API文档版本."
+    }
+  ]}

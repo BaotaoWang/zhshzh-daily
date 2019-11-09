@@ -1,0 +1,35 @@
+Manifest-Version: 1.0
+Main-Class: cn.com.zhshzh.ZhshzhApplication
+Class-Path: swagger-annotations-1.5.20.jar spring-boot-starter-websocket
+ -2.1.9.RELEASE.jar mybatis-3.5.2.jar mybatis-spring-2.0.2.jar spring-me
+ ssaging-5.1.10.RELEASE.jar mybatis-spring-boot-starter-2.1.0.jar spring
+ -boot-starter-json-2.1.9.RELEASE.jar jjwt-0.9.1.jar spring-boot-devtool
+ s-2.1.9.RELEASE.jar spring-webmvc-5.1.10.RELEASE.jar springfox-swagger-
+ common-2.9.2.jar lombok-1.18.10.jar springfox-swagger-ui-2.9.2.jar spri
+ ng-security-config-5.1.6.RELEASE.jar tomcat-embed-core-9.0.26.jar jacks
+ on-core-2.9.9.jar jackson-annotations-2.9.0.jar spring-aop-5.1.10.RELEA
+ SE.jar slf4j-api-1.7.28.jar swagger-models-1.5.20.jar spring-websocket-
+ 5.1.10.RELEASE.jar spring-core-5.1.10.RELEASE.jar tomcat-embed-el-9.0.2
+ 6.jar logback-core-1.2.3.jar jsqlparser-2.0.jar spring-boot-starter-web
+ -2.1.9.RELEASE.jar spring-boot-2.1.9.RELEASE.jar spring-boot-starter-se
+ curity-2.1.9.RELEASE.jar guava-20.0.jar spring-jcl-5.1.10.RELEASE.jar s
+ pring-plugin-metadata-1.2.0.RELEASE.jar hibernate-validator-6.0.17.Fina
+ l.jar jackson-databind-2.9.9.3.jar jul-to-slf4j-1.7.28.jar spring-conte
+ xt-5.1.10.RELEASE.jar snakeyaml-1.23.jar spring-jdbc-5.1.10.RELEASE.jar
+  spring-boot-autoconfigure-2.1.9.RELEASE.jar fastjson-1.2.62.jar classm
+ ate-1.4.0.jar tomcat-embed-websocket-9.0.26.jar pagehelper-5.1.10.jar s
+ pring-tx-5.1.10.RELEASE.jar jackson-datatype-jsr310-2.9.9.jar HikariCP-
+ 3.2.0.jar logback-classic-1.2.3.jar springfox-spring-web-2.9.2.jar mysq
+ l-connector-java-8.0.17.jar spring-security-web-5.1.6.RELEASE.jar mybat
+ is-spring-boot-autoconfigure-2.1.0.jar log4j-to-slf4j-2.11.2.jar spring
+ -boot-starter-2.1.9.RELEASE.jar spring-boot-starter-logging-2.1.9.RELEA
+ SE.jar spring-security-core-5.1.6.RELEASE.jar log4j-core-2.12.1.jar byt
+ e-buddy-1.9.16.jar springfox-core-2.9.2.jar spring-beans-5.1.10.RELEASE
+ .jar jackson-datatype-jdk8-2.9.9.jar springfox-schema-2.9.2.jar spring-
+ boot-starter-tomcat-2.1.9.RELEASE.jar springfox-spi-2.9.2.jar validatio
+ n-api-2.0.1.Final.jar spring-expression-5.1.10.RELEASE.jar jackson-modu
+ le-parameter-names-2.9.9.jar javax.annotation-api-1.3.2.jar spring-web-
+ 5.1.10.RELEASE.jar log4j-api-2.12.1.jar mapstruct-1.2.0.Final.jar jboss
+ -logging-3.3.3.Final.jar spring-boot-starter-jdbc-2.1.9.RELEASE.jar spr
+ ingfox-swagger2-2.9.2.jar spring-plugin-core-1.2.0.RELEASE.jar
+

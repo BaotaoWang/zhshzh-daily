@@ -1,2 +1,2 @@
-# zhshzh-web
-中晟日志系统-前端
+# zhshzh-daily
+中晟日志系统-后端&前端
