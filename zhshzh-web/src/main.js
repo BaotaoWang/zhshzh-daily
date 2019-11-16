@@ -1,17 +1,19 @@
 import Vue from 'vue'
 // 引入element-ui
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 import App from './App'
 import routers from '@/router/routers'
 
 Vue.config.productionTip = false
-Vue.use(ElementUI);
+Vue.use(ElementUI)
 
-new Vue({
+const vue = new Vue({
   router: routers,
   el: '#app',
-  template: '<App/>',
-  components: { App }
+  render: h => h(App)
+})
+Vue.use({
+  vue
 })

@@ -45,25 +45,25 @@
 </template>
 
 <script>
-  export default {
-    name: 'Login',
-    data() {
-      return {
-        form: {
-          username: '',
-          password: '',
-          rememberMe: ''
-        }
-      }
-    },
-    methods: {
-      login: function() {
-        this.$router.push({
-          name: 'index'
-        })
+export default {
+  name: 'Login',
+  data () {
+    return {
+      form: {
+        username: '',
+        password: '',
+        rememberMe: ''
       }
     }
+  },
+  methods: {
+    login: function () {
+      this.$router.push({
+        name: 'home'
+      })
+    }
   }
+}
 </script>
 
 <style scoped>

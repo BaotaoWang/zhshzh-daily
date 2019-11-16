@@ -1,27 +1,28 @@
-import VueRouter from "vue-router";
+import VueRouter from 'vue-router'
 import Vue from 'vue'
 
-Vue.use(VueRouter)  // Vue全局使用Router
+// Vue全局使用Router
+Vue.use(VueRouter)
 
 // 定义 (路由) 组件。
 const Login = () => import('@/components/login')
-const Index = () => import('@/components/index')
+const Home = () => import('@/components/home/home')
 
 // 创建 router 实例
 export default new VueRouter({
   routes: [
     {
-      path: "/",
-      component: Login
+      path: '/',
+      redirect: '/login'
     },
     {
-      path: "/login",
+      path: '/login',
       component: Login
     },
-    { path: '/index',
-      name: 'index',
-      component: Index
+    { path: '/home',
+      name: 'home',
+      component: Home
     }
   ],
-  mode:"history"
+  mode: 'history'
 })
