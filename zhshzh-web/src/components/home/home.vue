@@ -1,75 +1,71 @@
 <template>
-  <el-container style="height: 100%; border: 1px solid #eee">
-    <el-header style="text-align: right; font-size: 12px">
-      <el-dropdown>
-        <i class="el-icon-setting" style="margin-right: 15px"></i>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>查看</el-dropdown-item>
-          <el-dropdown-item>新增</el-dropdown-item>
-          <el-dropdown-item>删除</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-      <span>测试账号</span>
+  <el-container class="outer-container">
+    <el-header class="header-style" style="height: 50px;padding: 0;">
+      <home-header />
     </el-header>
     <el-container>
-      <el-aside width="200px">
-        <!-- <el-menu
-          default-active="2"
-          @open="handleOpen"
-          @close="handleClose">
-          <el-submenu index="1">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>导航一</span>
-            </template>
-            <el-menu-item-group>
-              <template slot="title">分组一</template>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="1-3">选项3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="1-4-1">选项1</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-menu-item index="2">
-            <i class="el-icon-menu"></i>
-            <span slot="title">导航二</span>
-          </el-menu-item>
-          <el-menu-item index="3" disabled>
-            <i class="el-icon-document"></i>
-            <span slot="title">导航三</span>
-          </el-menu-item>
-          <el-menu-item index="4">
-            <i class="el-icon-setting"></i>
-            <span slot="title">导航四</span>
-          </el-menu-item>
-        </el-menu> -->
+      <el-aside class="aside-style" :style="{width:(isCollapse?'64px':'220px')}">
+        <div :class="isCollapse?'folded-div':'unfolded-div'" @click="handleCollapse">
+          <div v-if="isCollapse" class="el-icon-s-unfold" style="font-size: 20px;"></div>
+          <div v-else class="el-icon-s-fold" style="font-size: 20px;"></div>
+        </div>
+        <home-aside :isCollapse="isCollapse"></home-aside>
       </el-aside>
-
       <el-main>
-        <h1>主要内容</h1>
+        <home-main />
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
+import HomeHeader from './homeHeader'
+import HomeAside from './homeAside'
+import HomeMain from './homeMain'
+
 export default {
   name: 'home',
   data () {
     return {
+      isCollapse: false
     }
   },
+  components: {
+    'home-header': HomeHeader,
+    'home-aside': HomeAside,
+    'home-main': HomeMain
+  },
   methods: {
+    handleCollapse: function () {
+      this.isCollapse = !this.isCollapse
+    }
   }
 }
-
 </script>
 
 <style scoped>
-
+.outer-container {
+  height: 100%;
+  width: 100%;
+}
+.aside-style {
+  border-right-width: 1px;
+  border-right-color: #eee;
+  border-right-style: solid;
+  /*overflow-y: auto;*/
+  overflow-x: hidden;
+}
+.folded-div {
+  width: 42px;
+  padding-left: 22px;
+  cursor: pointer;
+  background-color: cornflowerblue;
+}
+.unfolded-div {
+  width: 220px;
+  margin-right: 0px;
+  cursor: pointer;
+  text-align: right;
+  background-color: cornflowerblue;
+}
 </style>
