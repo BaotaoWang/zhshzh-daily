@@ -49,11 +49,17 @@ export default {
   width: 100%;
 }
 .aside-style {
-  border-right-width: 1px;
-  border-right-color: #eee;
-  border-right-style: solid;
-  /*overflow-y: auto;*/
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 50px;
+  bottom: 0;
+  overflow-y: auto;
   overflow-x: hidden;
+  border-right: solid 1px #e6e6e6;
+}
+.aside-style::-webkit-scrollbar {
+  display: none;
 }
 .folded-div {
   width: 42px;

@@ -102,5 +102,7 @@ export default {
 </script>
 
 <style scoped>
-
+.el-menu {
+  border-right-width: 0px;
+}
 </style>
