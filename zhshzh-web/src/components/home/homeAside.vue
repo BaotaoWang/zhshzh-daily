@@ -7,7 +7,11 @@
       @select="handleSelect"
       :unique-opened=true
       :collapse="isCollapse"
-      :collapse-transition=false>
+      :collapse-transition=false
+      background-color="#545c64"
+      text-color="#fff"
+      active-text-color="#ffd04b"
+    >
       <el-menu-item index="0">
         <i class="el-icon-s-home"></i>
         <span slot="title">首页</span>
@@ -35,7 +39,7 @@
         <el-menu-item-group>
           <el-menu-item index="2-1">便签</el-menu-item>
           <el-menu-item index="2-2">题库</el-menu-item>
-          <el-menu-item index="2-2">博客</el-menu-item>
+          <el-menu-item index="2-3">博客</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-submenu index="3">
@@ -46,7 +50,7 @@
         <el-menu-item-group>
           <el-menu-item index="3-1">评论</el-menu-item>
           <el-menu-item index="3-2">回复</el-menu-item>
-          <el-menu-item index="3-2">提醒</el-menu-item>
+          <el-menu-item index="3-3">提醒</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-submenu index="4">

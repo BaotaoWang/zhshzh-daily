@@ -4,12 +4,14 @@
       <home-header />
     </el-header>
     <el-container>
-      <el-aside class="aside-style" :style="{width:(isCollapse?'64px':'220px')}">
+      <el-aside :style="{width:(isCollapse?'64px':'200px')}" class="aside-style">
         <div :class="isCollapse?'folded-div':'unfolded-div'" @click="handleCollapse">
           <div v-if="isCollapse" class="el-icon-s-unfold" style="font-size: 20px;"></div>
           <div v-else class="el-icon-s-fold" style="font-size: 20px;"></div>
         </div>
-        <home-aside :isCollapse="isCollapse"></home-aside>
+        <div class="home-aside-style1">
+          <home-aside :isCollapse="isCollapse"></home-aside>
+        </div>
       </el-aside>
       <el-main>
         <home-main />
@@ -48,30 +50,28 @@ export default {
   height: 100%;
   width: 100%;
 }
-.aside-style {
+.aside-style{
+  background-color: #545c64;
+}
+.home-aside-style1 {
   display: block;
   position: absolute;
-  left: 0;
-  top: 50px;
+  top: 72px;
+  width: 200px;
   bottom: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  border-right: solid 1px #e6e6e6;
 }
-.aside-style::-webkit-scrollbar {
+.home-aside-style1::-webkit-scrollbar {
   display: none;
 }
 .folded-div {
-  width: 42px;
   padding-left: 22px;
   cursor: pointer;
-  background-color: cornflowerblue;
 }
 .unfolded-div {
-  width: 220px;
   margin-right: 0px;
   cursor: pointer;
   text-align: right;
-  background-color: cornflowerblue;
 }
 </style>
