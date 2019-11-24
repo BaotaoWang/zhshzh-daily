@@ -6,7 +6,7 @@
         </el-tab-pane>
       </el-tabs>
     </div>
-    <div>
+    <div style="margin: 0 20px;">
       <keep-alive>
         <router-view />
       </keep-alive>

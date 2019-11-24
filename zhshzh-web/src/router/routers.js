@@ -18,6 +18,7 @@ const Home = () => import('@/components/home/home')
 const TestHomePage = () => import('@/components/home/testHomePage')
 const TestWorkPLan = () => import('@/components/home/testWorkPlan')
 const TestWorkLog = () => import('@/components/home/testWorkLog')
+const Suggestion = () => import('@/components/suggestion/suggestion')
 
 // 创建 router 实例
 export default new VueRouter({
@@ -57,6 +58,14 @@ export default new VueRouter({
           component: TestWorkLog,
           meta: {
             title: '工作日志'
+          }
+        },
+        {
+          path: '/suggestion',
+          name: 'suggestion',
+          component: Suggestion,
+          meta: {
+            title: '反馈建议'
           }
         }
       ]
