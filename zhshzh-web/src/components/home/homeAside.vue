@@ -1,77 +1,35 @@
 <template>
   <div>
     <el-menu
-      default-active="1-1"
-      @open="handleOpen"
-      @close="handleClose"
-      @select="handleSelect"
+      :default-active="$route.path"
+      :default-openeds="['/daily']"
       :unique-opened=true
       :collapse="isCollapse"
       :collapse-transition=false
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b"
+      router
     >
-      <el-menu-item index="0">
-        <i class="el-icon-s-home"></i>
-        <span slot="title">首页</span>
-      </el-menu-item>
-      <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-document"></i>
-          <span slot="title">日志管理</span>
+      <template v-for="menu in menus">
+        <template v-if="menu.children.length > 0">
+          <el-submenu :index="menu.route" :key="menu.route">
+            <template slot="title">
+              <i :class="menu.icon"></i>
+              <span slot="title">{{menu.name}}</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item v-for="item in menu.children" :index="item.route" :key="item.route">{{item.name}}</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
         </template>
-        <el-menu-item-group>
-          <span slot="title">录入</span>
-          <el-menu-item index="1-1">周工作计划</el-menu-item>
-          <el-menu-item index="1-2">工作日志</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="查询">
-          <el-menu-item index="1-3">周工作计划查询</el-menu-item>
-          <el-menu-item index="1-4">工作日志查询</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-submenu index="2">
-        <template slot="title">
-          <i class="el-icon-menu"></i>
-          <span slot="title">工作台</span>
+        <template v-else>
+          <el-menu-item :index="menu.route" :key="menu.route">
+            <i :class="menu.icon"></i>
+            <span slot="title">{{menu.name}}</span>
+          </el-menu-item>
         </template>
-        <el-menu-item-group>
-          <el-menu-item index="2-1">便签</el-menu-item>
-          <el-menu-item index="2-2">题库</el-menu-item>
-          <el-menu-item index="2-3">博客</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-submenu index="3">
-        <template slot="title">
-          <i class="el-icon-message"></i>
-          <span slot="title">消息中心</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="3-1">评论</el-menu-item>
-          <el-menu-item index="3-2">回复</el-menu-item>
-          <el-menu-item index="3-3">提醒</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-submenu index="4">
-        <template slot="title">
-          <i class="el-icon-setting"></i>
-          <span slot="title">系统设置</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="4-1">组织管理</el-menu-item>
-          <el-menu-item index="4-2">角色管理</el-menu-item>
-          <el-menu-item index="4-3">权限管理</el-menu-item>
-          <el-menu-item index="4-4">人员管理</el-menu-item>
-          <el-menu-item index="4-5">参数管理</el-menu-item>
-          <el-menu-item index="4-6">审计管理</el-menu-item>
-          <el-menu-item index="4-7">假期管理</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-menu-item index="5">
-        <i class="el-icon-chat-line-round"></i>
-        <span slot="title">反馈建议</span>
-      </el-menu-item>
+      </template>
     </el-menu>
   </div>
 </template>
@@ -81,6 +39,127 @@ export default {
   name: 'homeAside',
   data () {
     return {
+      menus: [
+        {
+          route: '/homePage',
+          name: '首页',
+          icon: 'el-icon-s-home',
+          children: []
+        },
+        {
+          route: '/project',
+          name: '项目管理',
+          icon: 'el-icon-set-up',
+          children: [
+            {
+              route: '/projectList',
+              name: '项目列表'
+            }
+          ]
+        },
+        {
+          route: '/daily',
+          name: '日志管理',
+          icon: 'el-icon-document',
+          children: [
+            {
+              route: '/addWorkPlan',
+              name: '周工作计划'
+            },
+            {
+              route: '/addWorkLog',
+              name: '工作日志'
+            },
+            {
+              route: '/workPanList',
+              name: '周工作计划查询'
+            },
+            {
+              route: '/workLogList',
+              name: '工作日志查询'
+            }
+          ]
+        },
+        {
+          route: '/application',
+          name: '应用管理',
+          icon: 'el-icon-menu',
+          children: [
+            {
+              route: '/note',
+              name: '便签'
+            },
+            {
+              route: '/blog',
+              name: '博客'
+            },
+            {
+              route: '/subject',
+              name: '题库'
+            }
+          ]
+        },
+        {
+          route: '/message',
+          name: '消息管理',
+          icon: 'el-icon-message',
+          children: [
+            {
+              route: '/comment',
+              name: '评论'
+            },
+            {
+              route: '/reply',
+              name: '回复'
+            },
+            {
+              route: '/remind',
+              name: '提醒'
+            }
+          ]
+        },
+        {
+          route: '/settings',
+          name: '系统设置',
+          icon: 'el-icon-setting',
+          children: [
+            {
+              route: '/organization',
+              name: '组织管理'
+            },
+            {
+              route: '/role',
+              name: '角色管理'
+            },
+            {
+              route: '/authority',
+              name: '权限管理'
+            },
+            {
+              route: '/user',
+              name: '人员管理'
+            },
+            {
+              route: '/params',
+              name: '参数管理'
+            },
+            {
+              route: '/audit',
+              name: '审计管理'
+            },
+            {
+              route: '/holidays',
+              name: '假期管理'
+            }
+          ]
+        },
+        {
+          route: '/suggestion',
+          name: '反馈建议',
+          icon: 'el-icon-chat-line-round',
+          children: []
+        }
+      ]
     }
   },
   props: {
@@ -91,16 +170,25 @@ export default {
       }
     }
   },
-  methods: {
-    handleOpen: function () {
-      console.log('handleOpen')
-    },
-    handleClose: function () {
-      console.log('handleClose')
-    },
-    handleSelect: function (index) {
-      console.log('handleSelect===' + index)
+  computed: {
+    options () {
+      return this.$store.state.options
     }
+  },
+  mounted () {
+    // 刷新时以当前路由做为tab加入tabs
+    if (this.$route.path === '/homePage') {
+      // 如果刷新首页，只有首页一个tab
+      this.$store.commit('addTabs', {title: '首页', name: 'homePage'})
+      this.$store.commit('setActiveIndex', this.$route.name)
+    } else {
+      // 如果刷新的是非首页，tabs中第一个是首页，第二个是要刷新的页面，且选中第二个tab
+      this.$store.commit('addTabs', {title: '首页', name: 'homePage'})
+      this.$store.commit('addTabs', {title: this.$route.meta.title, name: this.$route.name})
+      this.$store.commit('setActiveIndex', this.$route.name)
+    }
+  },
+  methods: {
   }
 }
 </script>

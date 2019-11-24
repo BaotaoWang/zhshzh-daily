@@ -56,7 +56,7 @@ export default {
 
 <style scoped>
 .header-style {
-  background-color: lightslategray;
+  background-color: #2e2e2e;
   height: 100%;
   width: 100%;
 }

@@ -9,12 +9,12 @@
           <div v-if="isCollapse" class="el-icon-s-unfold" style="font-size: 20px;"></div>
           <div v-else class="el-icon-s-fold" style="font-size: 20px;"></div>
         </div>
-        <div class="home-aside-style1">
+        <div class="home-aside-style">
           <home-aside :isCollapse="isCollapse"></home-aside>
         </div>
       </el-aside>
       <el-main>
-        <home-main />
+        <home-main ref="homeMain"></home-main>
       </el-main>
     </el-container>
   </el-container>
@@ -53,7 +53,7 @@ export default {
 .aside-style{
   background-color: #545c64;
 }
-.home-aside-style1 {
+.home-aside-style {
   display: block;
   position: absolute;
   top: 72px;
@@ -62,7 +62,7 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
 }
-.home-aside-style1::-webkit-scrollbar {
+.home-aside-style::-webkit-scrollbar {
   display: none;
 }
 .folded-div {
@@ -73,5 +73,8 @@ export default {
   margin-right: 0px;
   cursor: pointer;
   text-align: right;
+}
+.el-main {
+  padding: 0px;
 }
 </style>
