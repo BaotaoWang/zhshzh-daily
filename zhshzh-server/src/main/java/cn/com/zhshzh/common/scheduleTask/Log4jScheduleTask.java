@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 
 /**
  * 测试log4j打印日志的定时任务
- * 
+ *
  * @author WBT
  * @since 2019/10/22
  */
 @Component // 注册
-@EnableScheduling // 开启定时任务
+// @EnableScheduling // 开启定时任务
 // @EnableAsync // 开启多线程
 public class Log4jScheduleTask {
 

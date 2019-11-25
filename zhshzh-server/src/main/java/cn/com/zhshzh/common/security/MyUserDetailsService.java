@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import cn.com.zhshzh.common.constant.PatternMatchesConstants;
@@ -23,7 +24,7 @@ import io.jsonwebtoken.lang.Collections;
 /**
  * security身份认证授权服务 根据用户名从数据库获取用户密码和角色，然后交给security去验证身份
  *
- * @author wbt
+ * @author WBT
  * @since 2019/10/10
  */
 @Service
@@ -38,18 +39,17 @@ public class MyUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		logger.info(username);
-		logger.error(username);
+		System.out.println(new BCryptPasswordEncoder().encode("admin"));
 		SysUserInfoPO sysUserInfoPO = new SysUserInfoPO();
 		// 判断用户登录方式
 		if (username.matches(PatternMatchesConstants.EMAIL)) {
-			sysUserInfoPO.setUserMailBox(username);
+			sysUserInfoPO.setEmail(username);
 		} else if (username.matches(PatternMatchesConstants.MOBILE_NUMBER)) {
-			sysUserInfoPO.setUserPhoneNumber(username);
+			sysUserInfoPO.setPhoneNumber(username);
 		} else if (username.matches(PatternMatchesConstants.USER_SERIAL_NUMBER)) {
-			sysUserInfoPO.setUserSerialNumber(username);
+			sysUserInfoPO.setSerialNumber(username);
 		} else if (username.matches(PatternMatchesConstants.USER_ACCOUNT)) {
-			sysUserInfoPO.setUserAccount(username);
+			sysUserInfoPO.setUserName(username);
 		} else {
 			throw new UsernameNotFoundException("User " + username + " was not found in database");
 		}
@@ -60,7 +60,7 @@ public class MyUserDetailsService implements UserDetailsService {
 		if (Collections.isEmpty(sysUserInfoList)) {
 			throw new UsernameNotFoundException("User " + username + " was not found in database");
 		} else {
-			encodedPassword = sysUserInfoList.get(0).getUserPassword();
+			encodedPassword = sysUserInfoList.get(0).getPassword();
 		}
 
 		// 设置用户角色

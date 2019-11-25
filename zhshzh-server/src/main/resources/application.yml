@@ -7,8 +7,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: 6yhNMko)
-    url: jdbc:mysql://10.100.0.134/diary?characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/daily?characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&serverTimezone=GMT
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       ## 最小空闲连接数量
@@ -39,6 +39,6 @@ swagger:
   description: 中晟日志系统 API文档
   version: 1.1.1
 
-  
+
 ## logging:
 ##   config: classpath:log4j2.xml

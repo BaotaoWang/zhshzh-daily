@@ -43,12 +43,6 @@ public class MySecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
         auth
                 .userDetailsService(myUserDetailsService)
                 .passwordEncoder(passwordEncoder());
-			/*.inMemoryAuthentication()
-				.passwordEncoder(new BCryptPasswordEncoder()).withUser("user") // 可以在内存中的验证(memory authentication)叫作"user"的用户
-				.password(new BCryptPasswordEncoder().encode("123456")).roles("USER")
-				.and()
-				.passwordEncoder(new BCryptPasswordEncoder()).withUser("admin") // 可以在内存中的验证(memory authentication)叫作"admin"的管理员用户
-				.password(new BCryptPasswordEncoder().encode("123456")).roles("ADMIN", "USER");*/
     }
 
     /**

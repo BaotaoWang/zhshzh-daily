@@ -3,14 +3,14 @@
 <mapper namespace="cn.com.zhshzh.system.user.dao.SysUserInfoMapper">
     <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.user.po.SysUserInfoPO">
         <id column="user_info_id" jdbcType="BIGINT" property="userInfoId" javaType="java.lang.Long"/>
-        <result column="user_account" jdbcType="VARCHAR" property="userAccount" javaType="java.lang.String"/>
-        <result column="user_password" jdbcType="VARCHAR" property="userPassword" javaType="java.lang.String"/>
         <result column="user_name" jdbcType="VARCHAR" property="userName" javaType="java.lang.String"/>
-        <result column="user_serial_number" jdbcType="VARCHAR" property="userSerialNumber" javaType="java.lang.String"/>
-        <result column="user_sex" jdbcType="CHAR" property="userSex" javaType="java.lang.String"/>
-        <result column="user_birth" jdbcType="DATE" property="userBirth" javaType="java.util.Date"/>
-        <result column="user_phone_number" jdbcType="VARCHAR" property="userPhoneNumber" javaType="java.lang.String"/>
-        <result column="user_mail_box" jdbcType="VARCHAR" property="userMailBox" javaType="java.lang.String"/>
+        <result column="password" jdbcType="VARCHAR" property="password" javaType="java.lang.String"/>
+        <result column="full_name" jdbcType="VARCHAR" property="fullName" javaType="java.lang.String"/>
+        <result column="serial_number" jdbcType="VARCHAR" property="serialNumber" javaType="java.lang.String"/>
+        <result column="sex" jdbcType="CHAR" property="sex" javaType="java.lang.String"/>
+        <result column="birth" jdbcType="DATE" property="birth" javaType="java.util.Date"/>
+        <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" javaType="java.lang.String"/>
+        <result column="email" jdbcType="VARCHAR" property="email" javaType="java.lang.String"/>
         <result column="is_delete" jdbcType="BIT" property="isDelete" javaType="java.lang.Integer"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date"/>
@@ -19,8 +19,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        user_info_id, user_account, user_password, user_name, user_serial_number, user_sex,
-        user_birth, user_phone_number, user_mail_box, is_delete, create_time, update_time,
+        user_info_id, user_name, password, full_name, serial_number, sex,
+        birth, phone_number, email, is_delete, create_time, update_time,
         create_by, update_by
     </sql>
 
@@ -39,14 +39,14 @@
         from sys_user_info
         <where>
             <if test="userInfoId != null and userInfoId != ''">user_info_id = #{userInfoId,jdbcType=BIGINT}</if>
-            <if test="userAccount != null and userAccount != ''">and user_account = #{userAccount,jdbcType=VARCHAR}</if>
-            <if test="userPassword != null and userPassword != ''">and user_password = #{userPassword,jdbcType=VARCHAR}</if>
             <if test="userName != null and userName != ''">and user_name = #{userName,jdbcType=VARCHAR}</if>
-            <if test="userSerialNumber != null and userSerialNumber != ''">and user_serial_number = #{userSerialNumber,jdbcType=VARCHAR}</if>
-            <if test="userSex != null and userSex != ''">and user_sex = #{userSex,jdbcType=CHAR}</if>
-            <if test="userBirth != null and userBirth != ''">and user_birth = #{userBirth,jdbcType=DATE}</if>
-            <if test="userPhoneNumber != null and userPhoneNumber != ''">and user_phone_number = #{userPhoneNumber,jdbcType=VARCHAR}</if>
-            <if test="userMailBox != null and userMailBox != ''">and user_mail_box = #{userMailBox,jdbcType=VARCHAR}</if>
+            <if test="password != null and password != ''">and password = #{password,jdbcType=VARCHAR}</if>
+            <if test="fullName != null and fullName != ''">and full_name = #{fullName,jdbcType=VARCHAR}</if>
+            <if test="serialNumber != null and serialNumber != ''">and serial_number = #{serialNumber,jdbcType=VARCHAR}</if>
+            <if test="sex != null and sex != ''">and sex = #{sex,jdbcType=CHAR}</if>
+            <if test="birth != null and birth != ''">and birth = #{birth,jdbcType=DATE}</if>
+            <if test="phoneNumber != null and phoneNumber != ''">and phone_number = #{phoneNumber,jdbcType=VARCHAR}</if>
+            <if test="email != null and email != ''">and email = #{email,jdbcType=VARCHAR}</if>
             <if test="isDelete != null and isDelete != ''">and is_delete = #{isDelete,jdbcType=BIT}</if>
             <if test="createTime != null and createTime != ''">and create_time = #{createTime,jdbcType=TIMESTAMP}</if>
             <if test="updateTime != null and updateTime != ''">and update_time = #{updateTime,jdbcType=TIMESTAMP}</if>
@@ -60,14 +60,14 @@
         insert into sys_user_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userInfoId != null and userInfoId != ''">user_info_id,</if>
-            <if test="userAccount != null and userAccount != ''">user_account,</if>
-            <if test="userPassword != null and userPassword != ''">user_password,</if>
             <if test="userName != null and userName != ''">user_name,</if>
-            <if test="userSerialNumber != null and userSerialNumber != ''">user_serial_number,</if>
-            <if test="userSex != null and userSex != ''">user_sex,</if>
-            <if test="userBirth != null and userBirth != ''">user_birth,</if>
-            <if test="userPhoneNumber != null and userPhoneNumber != ''">user_phone_number,</if>
-            <if test="userMailBox != null and userMailBox != ''">user_mail_box,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="fullName != null and fullName != ''">full_name,</if>
+            <if test="serialNumber != null and serialNumber != ''">serial_number,</if>
+            <if test="sex != null and sex != ''">sex,</if>
+            <if test="birth != null and birth != ''">birth,</if>
+            <if test="phoneNumber != null and phoneNumber != ''">phone_number,</if>
+            <if test="email != null and email != ''">email,</if>
             <if test="isDelete != null and isDelete != ''">is_delete,</if>
             <if test="createTime != null and createTime != ''">create_time,</if>
             <if test="updateTime != null and updateTime != ''">update_time,</if>
@@ -76,14 +76,14 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userInfoId != null and userInfoId != ''">#{userInfoId,jdbcType=BIGINT}</if>
-            <if test="userAccount != null and userAccount != ''">#{userAccount,jdbcType=VARCHAR}</if>
-            <if test="userPassword != null and userPassword != ''">#{userPassword,jdbcType=VARCHAR}</if>
             <if test="userName != null and userName != ''">#{userName,jdbcType=VARCHAR}</if>
-            <if test="userSerialNumber != null and userSerialNumber != ''">#{userSerialNumber,jdbcType=VARCHAR}</if>
-            <if test="userSex != null and userSex != ''">#{userSex,jdbcType=CHAR}</if>
-            <if test="userBirth != null and userBirth != ''">#{userBirth,jdbcType=DATE}</if>
-            <if test="userPhoneNumber != null and userPhoneNumber != ''">#{userPhoneNumber,jdbcType=VARCHAR}</if>
-            <if test="userMailBox != null and userMailBox != ''">#{userMailBox,jdbcType=VARCHAR}</if>
+            <if test="password != null and password != ''">#{password,jdbcType=VARCHAR}</if>
+            <if test="fullName != null and fullName != ''">#{fullName,jdbcType=VARCHAR}</if>
+            <if test="serialNumber != null and serialNumber != ''">#{serialNumber,jdbcType=VARCHAR}</if>
+            <if test="sex != null and sex != ''">#{sex,jdbcType=CHAR}</if>
+            <if test="birth != null and birth != ''">#{birth,jdbcType=DATE}</if>
+            <if test="phoneNumber != null and phoneNumber != ''">#{phoneNumber,jdbcType=VARCHAR}</if>
+            <if test="email != null and email != ''">#{email,jdbcType=VARCHAR}</if>
             <if test="isDelete != null and isDelete != ''">#{isDelete,jdbcType=BIT}</if>
             <if test="createTime != null and createTime != ''">#{createTime,jdbcType=TIMESTAMP}</if>
             <if test="updateTime != null and updateTime != ''">#{updateTime,jdbcType=TIMESTAMP}</if>
@@ -96,14 +96,14 @@
     <update id="updateSysUserInfoPO" parameterType="cn.com.zhshzh.system.user.po.SysUserInfoPO">
         update sys_user_info
         <set>
-            <if test="userAccount != null and userAccount !=''">user_account = #{userAccount,jdbcType=VARCHAR},</if>
-            <if test="userPassword != null and userPassword !=''">user_password = #{userPassword,jdbcType=VARCHAR},</if>
             <if test="userName != null and userName !=''">user_name = #{userName,jdbcType=VARCHAR},</if>
-            <if test="userSerialNumber != null and userSerialNumber !=''">user_serial_number = #{userSerialNumber,jdbcType=VARCHAR},</if>
-            <if test="userSex != null and userSex !=''">user_sex = #{userSex,jdbcType=CHAR},</if>
-            <if test="userBirth != null and userBirth !=''">user_birth = #{userBirth,jdbcType=DATE},</if>
-            <if test="userPhoneNumber != null and userPhoneNumber !=''">user_phone_number = #{userPhoneNumber,jdbcType=VARCHAR},</if>
-            <if test="userMailBox != null and userMailBox !=''">user_mail_box = #{userMailBox,jdbcType=VARCHAR},</if>
+            <if test="password != null and password !=''">password = #{password,jdbcType=VARCHAR},</if>
+            <if test="fullName != null and fullName !=''">full_name = #{fullName,jdbcType=VARCHAR},</if>
+            <if test="serialNumber != null and serialNumber !=''">serial_number = #{serialNumber,jdbcType=VARCHAR},</if>
+            <if test="sex != null and sex !=''">sex = #{sex,jdbcType=CHAR},</if>
+            <if test="birth != null and birth !=''">birth = #{birth,jdbcType=DATE},</if>
+            <if test="phoneNumber != null and phoneNumber !=''">phone_number = #{phoneNumber,jdbcType=VARCHAR},</if>
+            <if test="email != null and email !=''">email = #{email,jdbcType=VARCHAR},</if>
             <if test="isDelete != null and isDelete !=''">is_delete = #{isDelete,jdbcType=BIT},</if>
             <if test="createTime != null and createTime !=''">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
             <if test="updateTime != null and updateTime !=''">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>

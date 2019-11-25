@@ -1,21 +1,26 @@
 package cn.com.zhshzh.system.user.service.impl;
 
+import cn.com.zhshzh.common.scheduleTask.Log4jScheduleTask;
 import cn.com.zhshzh.system.user.dao.SysUserInfoMapper;
 import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 import cn.com.zhshzh.system.user.service.SysUserInfoService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * 系统用户信息
+ * 系统用户信息impl
  *
- * @author wbt
+ * @author WBT
  * @since 2019/10/15
  */
 @Service
 public class SysUserInfoServiceImpl implements SysUserInfoService {
+    private static final Logger logger = LogManager.getLogger(SysUserInfoServiceImpl.class);
     private SysUserInfoMapper sysUserInfoMapper;
 
     @Autowired
@@ -31,6 +36,7 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
      */
     @Override
     public SysUserInfoPO getSysUserInfo(Long userInfoId) {
+        logger.error(new BCryptPasswordEncoder().encode("admin"));
         return sysUserInfoMapper.getSysUserInfo(userInfoId);
     }
 
