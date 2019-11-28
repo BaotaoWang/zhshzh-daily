@@ -29,7 +29,7 @@ import io.jsonwebtoken.lang.Collections;
  */
 @Service
 public class MyUserDetailsService implements UserDetailsService {
-	Logger logger = LogManager.getLogger(MyUserDetailsService.class);
+	private static final Logger logger = LogManager.getLogger(MyUserDetailsService.class);
 	private SysUserInfoService sysUserInfoService;
 
 	@Autowired

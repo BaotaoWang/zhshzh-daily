@@ -1,9 +1,10 @@
 package cn.com.zhshzh.system.user.service.impl;
 
-import cn.com.zhshzh.common.scheduleTask.Log4jScheduleTask;
 import cn.com.zhshzh.system.user.dao.SysUserInfoMapper;
+import cn.com.zhshzh.system.user.dto.SysUserInfoDTO;
 import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 import cn.com.zhshzh.system.user.service.SysUserInfoService;
+import cn.com.zhshzh.system.user.util.SysUserInfoConvertUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,11 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
      * @return 用户基本信息
      */
     @Override
-    public SysUserInfoPO getSysUserInfo(Long userInfoId) {
-        logger.error(new BCryptPasswordEncoder().encode("admin"));
-        return sysUserInfoMapper.getSysUserInfo(userInfoId);
+    public SysUserInfoDTO getSysUserInfo(Long userInfoId) {
+        SysUserInfoPO sysUserInfoPO = sysUserInfoMapper.getSysUserInfo(userInfoId);
+        SysUserInfoConvertUtil sysUserInfoConvertUtil = new SysUserInfoConvertUtil();
+        SysUserInfoDTO sysUserInfoDTO = sysUserInfoConvertUtil.convertToDTO(sysUserInfoPO);
+        return sysUserInfoDTO;
     }
 
     /**
@@ -52,24 +55,23 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     }
 
     /**
-     * 新增用户信息
+     * 保存用户信息
      *
      * @param sysUserInfoPO 用户基本信息
      * @return 新增记录条数
      */
     @Override
-    public int insertSysUserInfo(SysUserInfoPO sysUserInfoPO) {
-        return sysUserInfoMapper.insertSysUserInfo(sysUserInfoPO);
-    }
-
-    /**
-     * 更新用户信息
-     *
-     * @param sysUserInfoPO 用户基本信息
-     * @return 更新记录条数
-     */
-    @Override
-    public int updateSysUserInfo(SysUserInfoPO sysUserInfoPO) {
-        return sysUserInfoMapper.insertSysUserInfo(sysUserInfoPO);
+    public int saveSysUserInfo(SysUserInfoPO sysUserInfoPO) {
+        Long userInfoId = sysUserInfoPO.getUserInfoId();
+        if (userInfoId == null) {
+            String password = new BCryptPasswordEncoder().encode(sysUserInfoPO.getPassword());
+            sysUserInfoPO.setPassword(password);
+            sysUserInfoPO.setCreateBy(11111L);
+            sysUserInfoPO.setUpdateBy(11111L);
+            return sysUserInfoMapper.insertSysUserInfo(sysUserInfoPO);
+        } else {
+            sysUserInfoPO.setCreateBy(11111L);
+            return sysUserInfoMapper.updateSysUserInfo(sysUserInfoPO);
+        }
     }
 }

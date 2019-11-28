@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 系统用户信息的实体类
+ * 系统用户信息的实体对象
  */
 @Data
 public class SysUserInfoPO {

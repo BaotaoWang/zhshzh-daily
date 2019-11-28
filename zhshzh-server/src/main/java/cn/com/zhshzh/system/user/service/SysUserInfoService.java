@@ -1,5 +1,6 @@
 package cn.com.zhshzh.system.user.service;
 
+import cn.com.zhshzh.system.user.dto.SysUserInfoDTO;
 import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface SysUserInfoService {
      * @param userInfoId 用户id
      * @return 用户信息
      */
-    SysUserInfoPO getSysUserInfo(Long userInfoId);
+    SysUserInfoDTO getSysUserInfo(Long userInfoId);
 
     /**
      * 条件查询用户信息
@@ -28,18 +29,10 @@ public interface SysUserInfoService {
     List<SysUserInfoPO> listSysUserInfo(SysUserInfoPO sysUserInfoPO);
 
     /**
-     * 新增用户信息
+     * 保存用户信息
      *
      * @param sysUserInfoPO 用户基本信息
      * @return 新增记录条数
      */
-    int insertSysUserInfo(SysUserInfoPO sysUserInfoPO);
-
-    /**
-     * 更新用户信息
-     *
-     * @param sysUserInfoPO 用户基本信息
-     * @return 更新记录条数
-     */
-    int updateSysUserInfo(SysUserInfoPO sysUserInfoPO);
+    int saveSysUserInfo(SysUserInfoPO sysUserInfoPO);
 }

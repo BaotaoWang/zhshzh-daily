@@ -97,7 +97,6 @@
         update sys_user_info
         <set>
             <if test="userName != null and userName !=''">user_name = #{userName,jdbcType=VARCHAR},</if>
-            <if test="password != null and password !=''">password = #{password,jdbcType=VARCHAR},</if>
             <if test="fullName != null and fullName !=''">full_name = #{fullName,jdbcType=VARCHAR},</if>
             <if test="serialNumber != null and serialNumber !=''">serial_number = #{serialNumber,jdbcType=VARCHAR},</if>
             <if test="sex != null and sex !=''">sex = #{sex,jdbcType=CHAR},</if>
