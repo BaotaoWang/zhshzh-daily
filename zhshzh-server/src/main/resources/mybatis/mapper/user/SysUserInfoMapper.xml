@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.com.zhshzh.system.user.dao.SysUserInfoMapper">
-    <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.user.po.SysUserInfoPO">
+<mapper namespace="cn.com.zhshzh.business.user.dao.SysUserInfoMapper">
+    <resultMap id="BaseResultMap" type="cn.com.zhshzh.business.user.po.SysUserInfoPO">
         <id column="user_info_id" jdbcType="BIGINT" property="userInfoId" javaType="java.lang.Long"/>
         <result column="user_name" jdbcType="VARCHAR" property="userName" javaType="java.lang.String"/>
         <result column="password" jdbcType="VARCHAR" property="password" javaType="java.lang.String"/>
@@ -33,7 +33,7 @@
     </select>
 
     <!--条件查询用户信息-->
-    <select id="listSysUserInfo" resultMap="BaseResultMap" parameterType="cn.com.zhshzh.system.user.po.SysUserInfoPO">
+    <select id="listSysUserInfo" resultMap="BaseResultMap" parameterType="cn.com.zhshzh.business.user.po.SysUserInfoPO">
         select
         <include refid="Base_Column_List"/>
         from sys_user_info
@@ -56,7 +56,7 @@
     </select>
 
     <!--新增用户信息-->
-    <insert id="insertSysUserInfo" parameterType="cn.com.zhshzh.system.user.po.SysUserInfoPO">
+    <insert id="insertSysUserInfo" parameterType="cn.com.zhshzh.business.user.po.SysUserInfoPO">
         insert into sys_user_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userInfoId != null and userInfoId != ''">user_info_id,</if>
@@ -93,7 +93,7 @@
     </insert>
 
     <!--更新用户信息-->
-    <update id="updateSysUserInfoPO" parameterType="cn.com.zhshzh.system.user.po.SysUserInfoPO">
+    <update id="updateSysUserInfoPO" parameterType="cn.com.zhshzh.business.user.po.SysUserInfoPO">
         update sys_user_info
         <set>
             <if test="userName != null and userName !=''">user_name = #{userName,jdbcType=VARCHAR},</if>
