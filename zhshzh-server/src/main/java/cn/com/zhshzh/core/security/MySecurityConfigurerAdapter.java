@@ -18,7 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 /**
  * Spring Security 权限配置
  *
- * @author  WBT
+ * @author WBT
  * @since 2019/10/10
  */
 @Configuration
@@ -88,14 +88,17 @@ public class MySecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
         http.addFilter(new JWTAuthenticationFilter(authenticationManager()));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager()));
 
-        // 配置路径拦截，表明路径访问所对应的权限，角色，认证信息。
+        // 1.先配置放行不需要认证的 permitAll()
         http.authorizeRequests()
-                .antMatchers("/signup", "/test").permitAll() // 任何人(包括没有经过验证的)都可以访问"/signup"和"/about"
+                .antMatchers("/signup", "/test").permitAll();
+
+        // 2.再配置需要特定权限的 hasRole()
+        http.authorizeRequests()
                 .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // "/admin/"开头的URL必须要是管理员用户，譬如"admin"用户
                 .antMatchers("/product/**").hasRole("USER")
                 .antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')");
 
-        // 所有其他的URL都需要用户进行验证
+        // 3.最后配置所有其他的URL都需要用户进行验证
         http.authorizeRequests()
                 .anyRequest().authenticated();
 
