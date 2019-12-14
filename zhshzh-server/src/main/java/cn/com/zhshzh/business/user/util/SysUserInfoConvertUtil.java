@@ -1,10 +1,9 @@
 package cn.com.zhshzh.business.user.util;
 
+import cn.com.zhshzh.business.user.dto.SysUserInfoDTO;
 import cn.com.zhshzh.business.user.po.SysUserInfoPO;
-import cn.com.zhshzh.core.security.MyUserDetailsService;
 import cn.com.zhshzh.core.util.Convertable;
 import cn.com.zhshzh.core.util.DateFormatUtil;
-import cn.com.zhshzh.business.user.dto.SysUserInfoDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +17,7 @@ import java.text.ParseException;
  * @since 2019/11/27
  */
 public class SysUserInfoConvertUtil implements Convertable<SysUserInfoPO, SysUserInfoDTO> {
-    private static final Logger logger = LogManager.getLogger(MyUserDetailsService.class);
+    private static final Logger logger = LogManager.getLogger(SysUserInfoConvertUtil.class);
 
     /**
      * 系统用户的PO对象转换为DTO对象

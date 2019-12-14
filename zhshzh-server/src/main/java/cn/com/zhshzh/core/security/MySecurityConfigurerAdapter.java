@@ -3,6 +3,7 @@ package cn.com.zhshzh.core.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -24,13 +25,20 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class MySecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
-    @Autowired
+
     private MyUserDetailsService myUserDetailsService;
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    MySecurityConfigurerAdapter(MyUserDetailsService myUserDetailsService, StringRedisTemplate stringRedisTemplate) {
+        this.myUserDetailsService = myUserDetailsService;
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     /**
      * 密码生成策略
      *
-     * @return
+     * @return PasswordEncoder
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -47,8 +55,8 @@ public class MySecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
     /**
      * 配置根据用户名获取用户密码、角色信息的类
      *
-     * @param auth
-     * @throws Exception
+     * @param auth auth
+     * @throws Exception Exception
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -60,8 +68,8 @@ public class MySecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
     /**
      * 配置要忽略拦截的请求
      *
-     * @param web
-     * @throws Exception
+     * @param web web
+     * @throws Exception Exception
      */
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -73,8 +81,8 @@ public class MySecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
     /**
      * 配置用户角色请求路径的权限
      *
-     * @param http
-     * @throws Exception
+     * @param http http
+     * @throws Exception Exception
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -85,7 +93,7 @@ public class MySecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // 添加过滤器
-        http.addFilter(new JWTAuthenticationFilter(authenticationManager()));
+        http.addFilter(new JWTAuthenticationFilter(authenticationManager(), stringRedisTemplate));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager()));
 
         // 1.先配置放行不需要认证的 permitAll()

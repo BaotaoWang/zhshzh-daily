@@ -5,8 +5,8 @@ import cn.com.zhshzh.core.util.ResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -21,25 +21,29 @@ import java.io.IOException;
 /**
  * security身份认证过滤器
  *
- * @author wbt
+ * @author WBT
  * @since 2019/10/10
  */
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private static final Logger logger = LogManager.getLogger(JWTAuthenticationFilter.class);
 
+    static final String KEY_PREFIX = "username:";
+    static final String KEY_SUFFIX = ":rememberMe";
+    private StringRedisTemplate stringRedisTemplate;
     private AuthenticationManager authenticationManager;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+    JWTAuthenticationFilter(AuthenticationManager authenticationManager, StringRedisTemplate stringRedisTemplate) {
         this.authenticationManager = authenticationManager;
+        this.stringRedisTemplate = stringRedisTemplate;
     }
 
     /**
      * 用户登录时，在此拦截，从request中获取用户名、密码、是否记住我
      *
-     * @param request
-     * @param response
-     * @return
-     * @throws AuthenticationException
+     * @param request  request
+     * @param response response
+     * @return 用户信息
+     * @throws AuthenticationException 异常
      */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
@@ -53,7 +57,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             if (StringUtils.isEmpty(myUser.getPassword())) {
                 throw new PasswordEmptyException("Empty password");
             }
-            // TODO 系统加上redis后，要把myUser.isRememberMe()放入缓存中（by:WBT）
+
+            // MyUserDetailsService.loadUserByUsername()接收不到rememberMe,所以将其放入redis中
+            String key = KEY_PREFIX + myUser.getUsername() + KEY_SUFFIX;
+            String rememberMe = Boolean.toString(myUser.isRememberMe());
+            stringRedisTemplate.opsForValue().set(key, rememberMe);
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(myUser.getUsername(),
                     myUser.getPassword()));
         } catch (IOException e) {
@@ -66,22 +74,25 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      * 成功验证后调用的方法
      * 如果验证成功，就生成token并返回
      *
-     * @param request
-     * @param response
-     * @param chain
-     * @param authResult
-     * @throws IOException
-     * @throws ServletException
+     * @param request    request
+     * @param response   response
+     * @param chain      chain
+     * @param authResult authResult
+     * @throws IOException      IO异常
+     * @throws ServletException Servlet异常
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-
         // 查看源代码会发现调用getPrincipal()方法会返回一个实现了`UserDetails`接口的对象
-        // 所以就是JwtUser啦
+        // 所以就是MyUser啦
         MyUser myUser = (MyUser) authResult.getPrincipal();
-        // TODO 系统加上redis后，要从缓存中获取myUser.isRememberMe()，目前取不到值（by:WBT）
-        String token = JwtTokenUtils.createToken(myUser.getUsername(), myUser.getAuthorities(), myUser.isRememberMe());
+        // 获取存入redis中的rememberMe
+        String key = KEY_PREFIX + myUser.getUsername() + KEY_SUFFIX;
+        String rememberMe = stringRedisTemplate.opsForValue().get(key);
+        // 获取到rememberMe后，将其从redis中删除
+        stringRedisTemplate.delete(key);
+        String token = JwtTokenUtils.createToken(myUser.getUsername(), myUser.getAuthorities(), Boolean.parseBoolean(rememberMe));
         // 返回创建成功的token
         // 但是这里创建的token只是单纯的token
         // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
@@ -93,41 +104,46 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     /**
      * 验证失败时候调用的方法
      *
-     * @param request
-     * @param response
-     * @param failed
-     * @throws IOException
-     * @throws ServletException
+     * @param request  request
+     * @param response response
+     * @param failed   failed
+     * @throws IOException      IO异常
+     * @throws ServletException Servlet异常
      */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {
         String failedMessage = failed.getMessage();
+        logger.error(failedMessage);
         // 登录验证失败后，不处理的话，可以直接返回英文消息，这里转换为中文比较友好
-        switch (failedMessage) {
-            case "Empty username":
-                ResponseUtil.writeMessage(response, HttpResultEnum.EMPTY_USERNAME);
-                break;
-            case "Empty password":
-                ResponseUtil.writeMessage(response, HttpResultEnum.EMPTY_PASSWORD);
-                break;
-            case "Bad credentials":
-                ResponseUtil.writeMessage(response, HttpResultEnum.BAD_CREDENTIALS);
-                break;
-            case "User account is locked":
-                ResponseUtil.writeMessage(response, HttpResultEnum.USER_ACCOUNT_IS_LOCKED);
-                break;
-            case "User is disabled":
-                ResponseUtil.writeMessage(response, HttpResultEnum.USER_IS_DISABLED);
-                break;
-            case "User account has expired":
-                ResponseUtil.writeMessage(response, HttpResultEnum.USER_ACCOUNT_HAS_EXPIRED);
-                break;
-            case "User credentials have expired":
-                ResponseUtil.writeMessage(response, HttpResultEnum.USER_CREDENTIALS_HAVE_EXPIRED);
-                break;
-            default:
-                ResponseUtil.writeMessage(response, HttpResultEnum.FAIL, failedMessage);
+        if (failed instanceof UsernameEmptyException) {
+            ResponseUtil.writeMessage(response, HttpResultEnum.EMPTY_USERNAME);
+            return;
         }
+        if (failed instanceof PasswordEmptyException) {
+            ResponseUtil.writeMessage(response, HttpResultEnum.EMPTY_PASSWORD);
+            return;
+        }
+        if (failed instanceof BadCredentialsException) {
+            ResponseUtil.writeMessage(response, HttpResultEnum.BAD_CREDENTIALS);
+            return;
+        }
+        if (failed instanceof LockedException) {
+            ResponseUtil.writeMessage(response, HttpResultEnum.USER_ACCOUNT_IS_LOCKED);
+            return;
+        }
+        if (failed instanceof DisabledException) {
+            ResponseUtil.writeMessage(response, HttpResultEnum.USER_IS_DISABLED);
+            return;
+        }
+        if (failed instanceof AccountExpiredException) {
+            ResponseUtil.writeMessage(response, HttpResultEnum.USER_ACCOUNT_HAS_EXPIRED);
+            return;
+        }
+        if (failed instanceof CredentialsExpiredException) {
+            ResponseUtil.writeMessage(response, HttpResultEnum.USER_CREDENTIALS_HAVE_EXPIRED);
+            return;
+        }
+        ResponseUtil.writeMessage(response, HttpResultEnum.FAIL, failedMessage);
     }
 }

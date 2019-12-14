@@ -8,7 +8,7 @@ import org.springframework.security.authentication.AccountStatusException;
  * @author WBT
  * @since 2019/12/01
  */
-public class UsernameEmptyException extends AccountStatusException {
+class UsernameEmptyException extends AccountStatusException {
     /**
      * 构造方法
      *

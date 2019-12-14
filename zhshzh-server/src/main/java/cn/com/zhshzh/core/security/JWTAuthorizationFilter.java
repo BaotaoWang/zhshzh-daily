@@ -23,24 +23,24 @@ import java.util.Set;
 /**
  * security身份授权过滤器
  *
- * @author wbt
+ * @author WBT
  * @since 2019/10/10
  */
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     private static final Logger logger = LogManager.getLogger(JWTAuthorizationFilter.class);
 
-    public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
+    JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
 
     /**
      * 带着token的请求会在此进行初步校验
      *
-     * @param request
-     * @param response
-     * @param chain
-     * @throws IOException
-     * @throws ServletException
+     * @param request  request
+     * @param response response
+     * @param chain    chain
+     * @throws IOException      IO异常
+     * @throws ServletException Servlet异常
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -66,17 +66,23 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         } catch (SignatureException e) {
             logger.error(e);
             ResponseUtil.writeMessage(response, HttpResultEnum.INVALID_SIGNATURE, e.getMessage());
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.error(e);
             ResponseUtil.writeMessage(response, HttpResultEnum.FAIL, e.getMessage());
+            throw new IOException(e);
+        } catch (ServletException e) {
+            logger.error(e);
+            ResponseUtil.writeMessage(response, HttpResultEnum.FAIL, e.getMessage());
+            throw new ServletException(e);
+
         }
     }
 
     /**
      * 从token中获取用户信息并新建一个token
      *
-     * @param tokenHeader
-     * @return
+     * @param tokenHeader tokenHeader
+     * @return 返回用户信息
      */
     private UsernamePasswordAuthenticationToken getAuthentication(String tokenHeader) {
         String token = tokenHeader.replace(JwtTokenUtils.TOKEN_PREFIX, "");

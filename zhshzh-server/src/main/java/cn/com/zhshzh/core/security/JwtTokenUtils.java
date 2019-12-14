@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -15,11 +14,11 @@ import java.util.*;
  * @author WBT
  * @since 2019/10/10
  */
-public class JwtTokenUtils {
+class JwtTokenUtils {
 
-    public static final String TOKEN = "token";
-    public static final String TOKEN_HEADER = "Authorization";
-    public static final String TOKEN_PREFIX = "Bearer ";
+    static final String TOKEN = "token";
+    static final String TOKEN_HEADER = "Authorization";
+    static final String TOKEN_PREFIX = "Bearer ";
     // 自定义的签名Key
     private static final String SECRET_KEY = "zhshzh-secret-key";
     // 签发者
@@ -28,17 +27,17 @@ public class JwtTokenUtils {
     private static final long EXPIRATION = 3600L;
     // 选择了记住我之后的过期时间为7天
     private static final long EXPIRATION_REMEMBER = 604800L;
-    public static final String AUTHORITY_KEY = "authorities";
+    private static final String AUTHORITY_KEY = "authorities";
 
     /**
      * 创建token
      *
-     * @param username
-     * @param authorities
-     * @param isRememberMe
-     * @return
+     * @param username     用户名
+     * @param authorities  用户权限
+     * @param isRememberMe 记住我
+     * @return token
      */
-    public static String createToken(String username, Set<GrantedAuthority> authorities, boolean isRememberMe) {
+    static String createToken(String username, Set<GrantedAuthority> authorities, boolean isRememberMe) {
         long expiration = isRememberMe ? EXPIRATION_REMEMBER : EXPIRATION;
         Map<String, Object> map = new HashMap<>();
         map.put(AUTHORITY_KEY, authorities);
@@ -56,47 +55,37 @@ public class JwtTokenUtils {
     /**
      * 从token中获取用户名
      *
-     * @param token
-     * @return
+     * @param token token
+     * @return username
      */
-    public static String getUsername(String token) {
+    static String getUsername(String token) {
         return getTokenBody(token).getSubject();
     }
 
     /**
      * 从token中获取权限
      *
-     * @param token
-     * @return
+     * @param token token
+     * @return 用户权限
      */
-    public static Set<GrantedAuthority> getClaims(String token) {
+    @SuppressWarnings("unchecked")
+    static Set<GrantedAuthority> getClaims(String token) {
         List<Map<String, String>> authorityList = (List<Map<String, String>>) getTokenBody(token).get(AUTHORITY_KEY);
-		Set<GrantedAuthority> authorities = new HashSet<>();
-		authorityList.stream().forEach(authority -> {
-			String role = authority.get("authority");
-			authorities.add(new SimpleGrantedAuthority(role));
-		});
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorityList.forEach(authority -> {
+            String role = authority.get("authority");
+            authorities.add(new SimpleGrantedAuthority(role));
+        });
         return authorities;
-    }
-
-    /**
-     * 是否已过期
-     *
-     * @param token
-     * @return
-     */
-    public static boolean isExpiration(String token) {
-        return getTokenBody(token).getExpiration().before(new Date());
     }
 
     /**
      * 用签名去解析token
      *
-     * @param token
-     * @return
+     * @param token token
+     * @return 解析token后的对象
      */
     private static Claims getTokenBody(String token) {
-        Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-        return claims;
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 }

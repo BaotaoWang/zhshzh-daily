@@ -3,7 +3,7 @@ package cn.com.zhshzh.core.constant;
 /**
  * 正则表达式常量类
  *
- * @author wbt
+ * @author WBT
  * @since 2019/10/17
  */
 public class PatternMatchesConstants {

@@ -77,10 +77,13 @@ public class ResponseUtil {
             out = response.getWriter();
             // 向字符流中写数据
             out.write(JSON.toJSONString(jsonResultUtil));
-            out.flush();
-            out.close();
         } catch (IOException e) {
             logger.error(e);
+        } finally {
+            if (null != out) {
+                out.flush();
+                out.close();
+            }
         }
     }
 }

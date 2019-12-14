@@ -19,12 +19,11 @@ public class DateFormatUtil {
      *
      * @param source 日期字符串
      * @return 转换后的日期
-     * @throws ParseException
+     * @throws ParseException ParseException
      */
     public static Date getDateTime(String source) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_PATTERN);
-        Date date = sdf.parse(source);
-        return date;
+        return sdf.parse(source);
     }
 
     /**
@@ -32,12 +31,11 @@ public class DateFormatUtil {
      *
      * @param source 日期字符串
      * @return 转换后的日期
-     * @throws ParseException
+     * @throws ParseException ParseException
      */
     public static Date getDate(String source) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
-        Date date = sdf.parse(source);
-        return date;
+        return sdf.parse(source);
     }
 
     /**
@@ -48,8 +46,7 @@ public class DateFormatUtil {
      */
     public static String getDateTimeString(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_PATTERN);
-        String dateString = sdf.format(date);
-        return dateString;
+        return sdf.format(date);
     }
 
     /**
@@ -60,7 +57,6 @@ public class DateFormatUtil {
      */
     public static String getDateString(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
-        String dateString = sdf.format(date);
-        return dateString;
+        return sdf.format(date);
     }
 }

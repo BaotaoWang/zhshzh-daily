@@ -60,7 +60,7 @@ public class MyUser implements UserDetails {
         super();
     }
 
-    public MyUser(String username, String password, Set<GrantedAuthority> authorities) {
+    MyUser(String username, String password, Set<GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
         this.authorities = authorities;

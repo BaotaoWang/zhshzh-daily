@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 忽略接口注解
  *
- * @author wbt
+ * @author WBT
  * @since 2019/10/16
  */
 @Target({ ElementType.METHOD })

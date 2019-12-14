@@ -22,7 +22,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * Swagger配置文件
  * 该类依赖了google的guava组件和springfox.documentation组件
  *
- * @Author wbt
+ * @author WBT
  * @since 2019/10/16
  **/
 @Configuration
