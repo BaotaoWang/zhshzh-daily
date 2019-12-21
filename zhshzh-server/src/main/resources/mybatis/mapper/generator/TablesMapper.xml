@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zhshzh.system.generator.dao.TablesMapper">
+    <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.generator.po.TablesPO">
+        <result column="table_catalog" jdbcType="VARCHAR" property="tableCatalog" javaType="java.lang.String"/>
+        <result column="table_schema" jdbcType="VARCHAR" property="tableSchema" javaType="java.lang.String"/>
+        <result column="table_name" jdbcType="VARCHAR" property="tableName" javaType="java.lang.String"/>
+        <result column="table_type" jdbcType="CHAR" property="tableType" javaType="java.lang.String"/>
+        <result column="engine" jdbcType="VARCHAR" property="engine" javaType="java.lang.String"/>
+        <result column="version" jdbcType="INTEGER" property="version" javaType="java.lang.Integer"/>
+        <result column="row_format" jdbcType="CHAR" property="rowFormat" javaType="java.lang.String"/>
+        <result column="table_rows" jdbcType="BIGINT" property="tableRows" javaType="java.lang.Long"/>
+        <result column="avg_row_length" jdbcType="BIGINT" property="avgRowLength" javaType="java.lang.Long"/>
+        <result column="data_length" jdbcType="BIGINT" property="dataLength" javaType="java.lang.Long"/>
+        <result column="max_data_length" jdbcType="BIGINT" property="maxDataLength" javaType="java.lang.Long"/>
+        <result column="index_length" jdbcType="BIGINT" property="indexLength" javaType="java.lang.Long"/>
+        <result column="data_free" jdbcType="BIGINT" property="dataFree" javaType="java.lang.Long"/>
+        <result column="auto_increment" jdbcType="BIGINT" property="autoIncrement" javaType="java.lang.Long"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date"/>
+        <result column="check_time" jdbcType="TIMESTAMP" property="checkTime" javaType="java.util.Date"/>
+        <result column="table_collation" jdbcType="VARCHAR" property="tableCollation" javaType="java.lang.String"/>
+        <result column="checksum" jdbcType="BIGINT" property="checksum" javaType="java.lang.Long"/>
+        <result column="create_options" jdbcType="VARCHAR" property="createOptions" javaType="java.lang.String"/>
+        <result column="table_comment" jdbcType="LONGVARCHAR" property="tableComment" javaType="java.lang.String"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        table_catalog, table_schema, table_name, table_type, engine, version, row_format, table_rows, avg_row_length,
+        data_length, max_data_length, index_length, data_free, auto_increment, create_time, update_time, check_time,
+        table_collation, checksum, create_options, table_comment
+    </sql>
+
+    <!-- 根据数据库名和表名获取表信息 -->
+    <select id="getTable" resultMap="BaseResultMap" parameterType="map">
+        SELECT <include refid="Base_Column_List"/>
+        FROM information_schema.tables
+        <where>
+            table_schema = #{tableSchema, jdbcType=VARCHAR}
+            AND table_name = #{tableName, jdbcType=VARCHAR}
+        </where>
+    </select>
+
+    <!-- 根据数据库名查询该数据库下所有的表信息 -->
+    <select id="listAllTables" resultMap="BaseResultMap" parameterType="map">
+        SELECT <include refid="Base_Column_List"/>
+        FROM information_schema.tables
+        <where>
+            table_schema = #{tableSchema, jdbcType=VARCHAR}
+        </where>
+        ORDER BY table_name ASC
+    </select>
+</mapper>

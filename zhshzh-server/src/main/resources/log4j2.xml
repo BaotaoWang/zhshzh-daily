@@ -124,6 +124,7 @@
         <logger name="org.hibernate" level="INFO"/>
         <!-- 这个地方主要是为了打印mybatis的sql日志 -->
         <logger name="cn.com.zhshzh.business" level="DEBUG"/>
+        <logger name="cn.com.zhshzh.system.generator.dao" level="DEBUG"/>
         <!-- 配置日志的根节点 -->
         <root level="info">
             <appender-ref ref="MyRandomAccessFile"/>

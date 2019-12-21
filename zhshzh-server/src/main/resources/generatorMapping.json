@@ -1,0 +1,163 @@
+{
+  "name": "generatorMapping",
+  "version": "1.0.0",
+  "description": "代码生成器的配置文件，用来配置数据库字段类型与java对象中成员变量类型的映射关系",
+  "mappings": [
+    {
+      "columnType": "TINYINT",
+      "fieldType": "Byte",
+      "jdbcType": "TINYINT",
+      "javaType": "java.lang.Byte"
+    },
+    {
+      "columnType": "SMALLINT",
+      "fieldType": "Short",
+      "jdbcType": "SMALLINT",
+      "javaType": "java.lang.Short"
+    },
+    {
+      "columnType": "MEDIUMINT",
+      "fieldType": "Integer",
+      "jdbcType": "INTEGER",
+      "javaType": "java.lang.Integer"
+    },
+    {
+      "columnType": "INT",
+      "fieldType": "Integer",
+      "jdbcType": "INTEGER",
+      "javaType": "java.lang.Integer"
+    },
+    {
+      "columnType": "INTEGER",
+      "fieldType": "Integer",
+      "jdbcType": "INTEGER",
+      "javaType": "java.lang.Integer"
+    },
+    {
+      "columnType": "BIGINT",
+      "fieldType": "Long",
+      "jdbcType": "BIGINT",
+      "javaType": "java.lang.Long"
+    },
+    {
+      "columnType": "FLOAT",
+      "fieldType": "Float",
+      "jdbcType": "REAL",
+      "javaType": "java.lang.Float"
+    },
+    {
+      "columnType": "REAL",
+      "fieldType": "Float",
+      "jdbcType": "REAL",
+      "javaType": "java.lang.Float"
+    },
+    {
+      "columnType": "DOUBLE",
+      "fieldType": "Double",
+      "jdbcType": "DOUBLE",
+      "javaType": "java.lang.Double"
+    },
+    {
+      "columnType": "DECIMAL",
+      "fieldType": "BigDecimal",
+      "jdbcType": "DECIMAL",
+      "javaType": "java.math.BigDecimal"
+    },
+    {
+      "columnType": "NUMERIC",
+      "fieldType": "BigDecimal",
+      "jdbcType": "DECIMAL",
+      "javaType": "java.math.BigDecimal"
+    },
+    {
+      "columnType": "CHAR",
+      "fieldType": "String",
+      "jdbcType": "CHAR",
+      "javaType": "java.lang.String"
+    },
+    {
+      "columnType": "VARCHAR",
+      "fieldType": "String",
+      "jdbcType": "VARCHAR",
+      "javaType": "java.lang.String"
+    },
+    {
+      "columnType": "TINYTEXT",
+      "fieldType": "String",
+      "jdbcType": "VARCHAR",
+      "javaType": "java.lang.String"
+    },
+    {
+      "columnType": "MEDIUMTEXT",
+      "fieldType": "String",
+      "jdbcType": "LONGVARCHAR",
+      "javaType": "java.lang.String"
+    },
+    {
+      "columnType": "TEXT",
+      "fieldType": "String",
+      "jdbcType": "LONGVARCHAR",
+      "javaType": "java.lang.String"
+    },
+    {
+      "columnType": "LONGTEXT",
+      "fieldType": "String",
+      "jdbcType": "LONGVARCHAR",
+      "javaType": "java.lang.String"
+    },
+    {
+      "columnType": "TINYBLOB",
+      "fieldType": "byte[]",
+      "jdbcType": "VARBINARY",
+      "javaType": "_byte[]"
+    },
+    {
+      "columnType": "MEDIUMBLOB",
+      "fieldType": "byte[]",
+      "jdbcType": "LONGVARBINARY",
+      "javaType": "_byte[]"
+    },
+    {
+      "columnType": "BLOB",
+      "fieldType": "byte[]",
+      "jdbcType": "LONGVARBINARY",
+      "javaType": "_byte[]"
+    },
+    {
+      "columnType": "LONGBLOB",
+      "fieldType": "byte[]",
+      "jdbcType": "LONGVARBINARY",
+      "javaType": "_byte[]"
+    },
+    {
+      "columnType": "BIT",
+      "fieldType": "Boolean",
+      "jdbcType": "BIT",
+      "javaType": "java.lang.Boolean"
+    },
+    {
+      "columnType": "ENUM",
+      "fieldType": "String",
+      "jdbcType": "CHAR",
+      "javaType": "java.lang.String"
+    },
+    {
+      "columnType": "TIMESTAMP",
+      "fieldType": "Date",
+      "jdbcType": "TIMESTAMP",
+      "javaType": "java.util.Date"
+    },
+    {
+      "columnType": "DATETIME",
+      "fieldType": "Date",
+      "jdbcType": "TIMESTAMP",
+      "javaType": "java.util.Date"
+    },
+    {
+      "columnType": "DATE",
+      "fieldType": "Date",
+      "jdbcType": "DATE",
+      "javaType": "java.util.Date"
+    }
+  ]
+}

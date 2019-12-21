@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zhshzh.system.generator.dao.ColumnsMapper">
+    <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.generator.po.ColumnsPO">
+        <result column="table_catalog" jdbcType="VARCHAR" property="tableCatalog" javaType="java.lang.String"/>
+        <result column="table_schema" jdbcType="VARCHAR" property="tableSchema" javaType="java.lang.String"/>
+        <result column="table_name" jdbcType="VARCHAR" property="tableName" javaType="java.lang.String"/>
+        <result column="column_name" jdbcType="VARCHAR" property="columnName" javaType="java.lang.String"/>
+        <result column="ordinal_position" jdbcType="INTEGER" property="ordinalPosition" javaType="java.lang.Integer"/>
+        <result column="column_default" jdbcType="LONGVARCHAR" property="columnDefault" javaType="java.lang.String"/>
+        <result column="is_nullable" jdbcType="VARCHAR" property="isNullable" javaType="java.lang.String"/>
+        <result column="data_type" jdbcType="LONGVARCHAR" property="dataType" javaType="java.lang.String"/>
+        <result column="character_maximum_length" jdbcType="BIGINT" property="characterMaximumLength" javaType="java.lang.Long"/>
+        <result column="character_octet_length" jdbcType="BIGINT" property="characterOctetLength" javaType="java.lang.Long"/>
+        <result column="numeric_precision" jdbcType="BIGINT" property="numericPrecision" javaType="java.lang.Long"/>
+        <result column="numeric_scale" jdbcType="BIGINT" property="numericScale" javaType="java.lang.Long"/>
+        <result column="datetime_precision" jdbcType="INTEGER" property="datetimePrecision" javaType="java.lang.Integer"/>
+        <result column="character_set_name" jdbcType="VARCHAR" property="characterSetName" javaType="java.lang.String"/>
+        <result column="collation_name" jdbcType="VARCHAR" property="collationName" javaType="java.lang.String"/>
+        <result column="column_type" jdbcType="LONGVARCHAR" property="columnType" javaType="java.lang.String"/>
+        <result column="column_key" jdbcType="CHAR" property="columnKey" javaType="java.lang.String"/>
+        <result column="extra" jdbcType="VARCHAR" property="extra" javaType="java.lang.String"/>
+        <result column="privileges" jdbcType="VARCHAR" property="privileges" javaType="java.lang.String"/>
+        <result column="column_comment" jdbcType="LONGVARCHAR" property="columnComment" javaType="java.lang.String"/>
+        <result column="generation_expression" jdbcType="LONGVARCHAR" property="generationExpression" javaType="java.lang.String"/>
+        <result column="srs_id" jdbcType="BIGINT" property="INTEGER" javaType="java.lang.Integer"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, is_nullable, data_type,
+        character_maximum_length, character_octet_length, numeric_precision, numeric_scale, datetime_precision,
+        character_set_name, collation_name, column_type, column_key, extra, privileges, column_comment,
+        generation_expression, srs_id
+    </sql>
+
+    <!-- 根据数据库名和表名查询该表中所有的列信息 -->
+    <select id="listAllColumns" resultMap="BaseResultMap" parameterType="map">
+        SELECT <include refid="Base_Column_List"/>
+        FROM information_schema.columns
+        <where>
+            table_schema = #{tableSchema, jdbcType=VARCHAR}
+            AND table_name = #{tableName, jdbcType=VARCHAR}
+            ORDER BY ordinal_position ASC
+        </where>
+    </select>
+</mapper>

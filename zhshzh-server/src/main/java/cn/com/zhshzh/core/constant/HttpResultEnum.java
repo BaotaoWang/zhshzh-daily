@@ -18,8 +18,9 @@ public enum HttpResultEnum {
     USER_ACCOUNT_HAS_EXPIRED(9106, "用户帐户已过期"),
     USER_CREDENTIALS_HAVE_EXPIRED(9107, "用户凭据已过期"),
     INVALID_TOKEN(9108, "无效的Token"),
-    INVALID_SIGNATURE(9109, "无效的JWT签名");
+    INVALID_SIGNATURE(9109, "无效的JWT签名"),
 
+    GENERATOR_ERROR(9120, "代码生成器异常");
     private int code;
     private String message;
 
