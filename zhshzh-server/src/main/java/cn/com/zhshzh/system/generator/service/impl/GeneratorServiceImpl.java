@@ -1,25 +1,25 @@
 package cn.com.zhshzh.system.generator.service.impl;
 
 import cn.com.zhshzh.core.constant.HttpResultEnum;
-import cn.com.zhshzh.core.util.FileUtil;
 import cn.com.zhshzh.core.util.JsonResultUtil;
 import cn.com.zhshzh.system.generator.dao.ColumnsMapper;
 import cn.com.zhshzh.system.generator.dao.TablesMapper;
 import cn.com.zhshzh.system.generator.dto.CodeGenerationDTO;
-import cn.com.zhshzh.system.generator.model.GeneratorMappingsModel;
-import cn.com.zhshzh.system.generator.model.MappingModel;
+import cn.com.zhshzh.system.generator.model.GeneratorStringModel;
 import cn.com.zhshzh.system.generator.po.ColumnsPO;
 import cn.com.zhshzh.system.generator.po.TablesPO;
 import cn.com.zhshzh.system.generator.service.GeneratorService;
+import cn.com.zhshzh.system.generator.util.GenerateDaoFileUtil;
 import cn.com.zhshzh.system.generator.util.GenerateMapperFileUtil;
+import cn.com.zhshzh.system.generator.util.GeneratePoFileUtil;
 import cn.com.zhshzh.system.generator.util.GeneratorUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 代码生成器impl
@@ -30,9 +30,6 @@ import java.util.Map;
 @Service
 public class GeneratorServiceImpl implements GeneratorService {
     private static final Logger logger = LogManager.getLogger(GeneratorServiceImpl.class);
-
-    // 数据库名
-    private static final String TABLE_SCHEMA = "daily";
 
     private TablesMapper tablesMapper;
     private ColumnsMapper columnsMapper;
@@ -51,28 +48,30 @@ public class GeneratorServiceImpl implements GeneratorService {
      */
     @Override
     public JsonResultUtil generator(CodeGenerationDTO codeGenerationDTO) {
-        // po文件的路径
-        String poFilePath = codeGenerationDTO.getPoFilePath();
-        // dao文件的路径
-        String daoFilePath = codeGenerationDTO.getDaoFilePath();
-        // mapper文件的路径
-        String mapperFilePath = codeGenerationDTO.getMapperFilePath();
         // 数据库名
         String tableSchema = codeGenerationDTO.getTableSchema();
+        if (StringUtils.isEmpty(tableSchema)) {
+            tableSchema = GeneratorUtil.TABLE_SCHEMA;
+        }
         // 要生成代码的表名
         String tableName = codeGenerationDTO.getTableName();
-        // 表的信息
+        // 数据库表的信息
         TablesPO tablesPO = tablesMapper.getTable(tableSchema, tableName);
-        // 表的备注
-        String tableComment = tablesPO.getTableComment();
-        // 列名的信息
+        if (tablesPO == null) {
+            return new JsonResultUtil(HttpResultEnum.TABLE_NOT_EXISTS);
+        }
+        // 数据库表中列名的信息
         List<ColumnsPO> columnsPOList = columnsMapper.listAllColumns(tableSchema, tableName);
-        Map<String, MappingModel> map = GeneratorUtil.getMappingModel();
 
         try {
+            // 解析数据库表及列的信息
+            GeneratorStringModel generatorStringModel = GeneratorUtil.handleStringBuilders(codeGenerationDTO, tablesPO, columnsPOList);
+            // 生成PO.java文件
+            GeneratePoFileUtil.generatePoFile(generatorStringModel);
+            // 生成mapper.java文件
+            GenerateDaoFileUtil.generateDaoFile(generatorStringModel);
             // 生成mapper.xml文件
-            GenerateMapperFileUtil.generateMapperFile(poFilePath, daoFilePath, mapperFilePath, tableName,
-                    tableComment, map, columnsPOList);
+            GenerateMapperFileUtil.generateMapperFile(generatorStringModel);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new JsonResultUtil(HttpResultEnum.GENERATOR_ERROR, e.getMessage());

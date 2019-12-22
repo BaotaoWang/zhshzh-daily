@@ -12,7 +12,7 @@ public class DailyException extends Exception {
      *
      * @param msg 详细信息
      */
-    DailyException(String msg) {
+    public DailyException(String msg) {
         super(msg);
     }
 }

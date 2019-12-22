@@ -8,8 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 
-import java.text.ParseException;
-
 /**
  * 系统用户DTO对象和PO对象相互转换的工具类
  *
@@ -43,11 +41,7 @@ public class SysUserInfoConvertUtil implements Convertable<SysUserInfoPO, SysUse
     public SysUserInfoPO convertToPO(SysUserInfoDTO sysUserInfoDTO) {
         SysUserInfoPO sysUserInfoPO = new SysUserInfoPO();
         BeanUtils.copyProperties(sysUserInfoDTO, sysUserInfoPO);
-        try {
-            sysUserInfoPO.setBirth(DateFormatUtil.getDate(sysUserInfoDTO.getBirth()));
-        } catch (ParseException e) {
-            logger.error(e);
-        }
+        sysUserInfoPO.setBirth(DateFormatUtil.getDate(sysUserInfoDTO.getBirth()));
         return sysUserInfoPO;
     }
 }
