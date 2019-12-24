@@ -68,6 +68,7 @@ public class GeneratePoFileUtil {
         // 拼接引包
         builder.append("import lombok.Data;").append("\r\n");
         builder.append("\r\n");
+        builder.append("import java.math.BigDecimal;").append("\r\n");
         builder.append("import java.util.Date;").append("\r\n");
         builder.append("\r\n");
         // 生成注释

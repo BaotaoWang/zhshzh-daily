@@ -57,7 +57,7 @@ public class GenerateMapperFileUtil {
         // 生成mapper.xml的Where_Clause
         generateWhereClause(builder);
         // 生成mapper.xml的插入SQL
-        generateInsertSql(tableName, tableComment, lowerCamelCaseTableName, poFileType, primaryKey,
+        generateInsertSql(tableName, tableComment, upperCamelCaseTableName, poFileType, lowerCamelCasePrimaryKey,
                 priJavaType, generatorStringModel.getInsertColumnSql(), generatorStringModel.getInsertValueSql(), builder);
         // 生成mapper.xml的批量插入SQL
         generateInsertBatchSql(tableName, tableComment, upperCamelCaseTableName,
@@ -67,7 +67,7 @@ public class GenerateMapperFileUtil {
                 lowerCamelCasePrimaryKey, poFileType, builder);
         // 生成mapper.xml的根据批量逻辑删除SQL
         generateDeleteBatchLogicalSql(tableName, tableComment, primaryKey, priJdbcType,
-                lowerCamelCaseTableName, builder);
+                lowerCamelCasePrimaryKey, builder);
         // 生成mapper.xml的根据id物理删除SQL
         generateDeletePhysicalSql(tableName, tableComment, primaryKey, priJdbcType, priJavaType,
                 lowerCamelCasePrimaryKey, builder);
@@ -150,36 +150,38 @@ public class GenerateMapperFileUtil {
         builder.append("  <!-- 查询条件的拼装 -->").append("\r\n");
         builder.append("  <sql id=\"Where_Clause\" >").append("\r\n");
         builder.append("    <where>").append("\r\n");
-        builder.append("      is_delelte = 0 AND").append("\r\n");
+        builder.append("      is_delete = 0 AND").append("\r\n");
         builder.append("      <if test=\"conditionList != null and conditionList.size() != 0\">").append("\r\n");
         builder.append("        <foreach collection=\"conditionList\" item=\"item\" index=\"index\" separator=\"AND\" >").append("\r\n");
         builder.append("          <choose>").append("\r\n");
         builder.append("            <when test=\"item.whereConditionEnum.condition == 'LIKE'\" >").append("\r\n");
-        builder.append("              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), %)").append("\r\n");
+        builder.append("              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')").append("\r\n");
         builder.append("            </when>").append("\r\n");
         builder.append("            <when test=\"item.whereConditionEnum.condition == 'NOT LIKE'\" >").append("\r\n");
-        builder.append("              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), %)").append("\r\n");
+        builder.append("              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')").append("\r\n");
         builder.append("            </when>").append("\r\n");
         builder.append("            <when test=\"item.whereConditionEnum.condition == 'BETWEEN'\" >").append("\r\n");
-        builder.append("              <if test=\"item.startValue != null and item.startValue != ''\" >").append("\r\n");
-        builder.append("                ${item.columnName} &gt;= #{item.startValue}").append("\r\n");
-        builder.append("              </if>").append("\r\n");
-        builder.append("              <if  test=\"item.endValue != null and item.endValue != ''\" >").append("\r\n");
-        builder.append("                ${item.columnName} &lt;= #{item.endValue}").append("\r\n");
-        builder.append("              </if>").append("\r\n");
-        builder.append("              <if  test=\"(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')\" >").append("\r\n");
-        builder.append("                1 = 1").append("\r\n");
-        builder.append("              </if>").append("\r\n");
+        builder.append("              <trim prefix=\" \" suffix=\" \" suffixOverrides=\"AND\" >").append("\r\n");
+        builder.append("                <if test=\"item.startValue != null and item.startValue != ''\" >").append("\r\n");
+        builder.append("                  ${item.columnName} &gt;= #{item.startValue} AND").append("\r\n");
+        builder.append("                </if>").append("\r\n");
+        builder.append("                <if test=\"item.endValue != null and item.endValue != ''\" >").append("\r\n");
+        builder.append("                  ${item.columnName} &lt;= #{item.endValue} AND").append("\r\n");
+        builder.append("                </if>").append("\r\n");
+        builder.append("                <if test=\"(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')\" >").append("\r\n");
+        builder.append("                  1 = 1").append("\r\n");
+        builder.append("                </if>").append("\r\n");
+        builder.append("              </trim>").append("\r\n");
         builder.append("            </when>").append("\r\n");
         builder.append("            <when test=\"item.whereConditionEnum.condition == 'IN'\" >").append("\r\n");
         builder.append("              ${item.columnName} ${item.whereConditionEnum.condition}").append("\r\n");
-        builder.append("              <foreach collection=\"item.values\" item=\"item\" index=\"index\" separator=\",\" >").append("\r\n");
+        builder.append("              <foreach collection=\"item.values\" item=\"item\" index=\"index\" open=\"(\" close=\")\" separator=\",\" >").append("\r\n");
         builder.append("                #{item}").append("\r\n");
         builder.append("              </foreach>").append("\r\n");
         builder.append("            </when>").append("\r\n");
         builder.append("            <when test=\"item.whereConditionEnum.condition == 'NOT IN'\" >").append("\r\n");
         builder.append("              ${item.columnName} ${item.whereConditionEnum.condition}").append("\r\n");
-        builder.append("              <foreach collection=\"item.values\" item=\"item\" index=\"index\" separator=\",\" >").append("\r\n");
+        builder.append("              <foreach collection=\"item.values\" item=\"item\" index=\"index\" open=\"(\" close=\")\" separator=\",\" >").append("\r\n");
         builder.append("                #{item}").append("\r\n");
         builder.append("              </foreach>").append("\r\n");
         builder.append("            </when>").append("\r\n");
@@ -196,24 +198,24 @@ public class GenerateMapperFileUtil {
     /**
      * 生成mapper.xml的插入SQL
      *
-     * @param tableName          数据库表名
-     * @param tableComment       数据库表的备注
-     * @param camelCaseTableName 首字母小写的驼峰格式数据库表名
-     * @param poFileType         po文件类型
-     * @param primaryKey         主键id
-     * @param priJavaType        主键的javaType
-     * @param insertColumnSql    遍历后的insertColumnSql字符串
-     * @param insertValueSql     遍历后的insertColumnSql字符串
-     * @param builder            拼接的mapper.xml文件文本
+     * @param tableName                数据库表名
+     * @param tableComment             数据库表的备注
+     * @param upperCamelCaseTableName  首字母大写的驼峰格式数据库表名
+     * @param poFileType               po文件类型
+     * @param lowerCamelCasePrimaryKey 首字母小写的驼峰格式主键
+     * @param priJavaType              主键的javaType
+     * @param insertColumnSql          遍历后的insertColumnSql字符串
+     * @param insertValueSql           遍历后的insertColumnSql字符串
+     * @param builder                  拼接的mapper.xml文件文本
      */
-    private static void generateInsertSql(String tableName, String tableComment, String camelCaseTableName,
-                                          String poFileType, String primaryKey, String priJavaType,
+    private static void generateInsertSql(String tableName, String tableComment, String upperCamelCaseTableName,
+                                          String poFileType, String lowerCamelCasePrimaryKey, String priJavaType,
                                           String insertColumnSql, String insertValueSql, StringBuilder builder) {
         builder.append("\r\n");
         // 生成sql的注释
         builder.append("  <!-- 新增").append(tableComment).append(" -->").append("\r\n");
         // 拼接insertSQL
-        builder.append("  <insert id=\"insert").append(camelCaseTableName).append("\" parameterType=\"").append(poFileType)
+        builder.append("  <insert id=\"insert").append(upperCamelCaseTableName).append("\" parameterType=\"").append(poFileType)
                 .append("\" >").append("\r\n");
         builder.append("    INSERT INTO ").append(tableName).append("\r\n");
         builder.append("    <trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\" >").append("\r\n");
@@ -224,7 +226,7 @@ public class GenerateMapperFileUtil {
         builder.append("    </trim>").append("\r\n");
         // 返回新增数据的主键
         builder.append("    <selectKey resultType=\"").append(priJavaType)
-                .append("\" order=\"AFTER\" keyProperty=\"").append(primaryKey).append("\" >").append("\r\n");
+                .append("\" order=\"AFTER\" keyProperty=\"").append(lowerCamelCasePrimaryKey).append("\" >").append("\r\n");
         builder.append("      SELECT LAST_INSERT_ID()").append("\r\n");
         builder.append("    </selectKey>").append("\r\n");
         builder.append("  </insert>").append("\r\n");
@@ -253,7 +255,7 @@ public class GenerateMapperFileUtil {
         builder.append("    )").append("\r\n");
         builder.append("    VALUES").append("\r\n");
         builder.append("    <foreach collection=\"").append(lowerCamelCaseTableName)
-                .append("List\" item=\"item\" index=\"index\" separator=\",\" >").append("\r\n");
+                .append("POList\" item=\"item\" index=\"index\" separator=\",\" >").append("\r\n");
         builder.append("      <trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\" >").append("\r\n");
         builder.append(insertBatchSql);
         builder.append("      </trim>").append("\r\n");
@@ -291,15 +293,15 @@ public class GenerateMapperFileUtil {
     /**
      * 生成mapper.xml的根据批量逻辑删除SQL
      *
-     * @param tableName               数据库表名
-     * @param tableComment            数据库表的备注
-     * @param primaryKey              主键
-     * @param priJdbcType             主键的jdbcType
-     * @param lowerCamelCaseTableName 首字母小写的驼峰格式的数据库表名
-     * @param builder                 拼接的mapper.xml文件文本
+     * @param tableName                数据库表名
+     * @param tableComment             数据库表的备注
+     * @param primaryKey               主键
+     * @param priJdbcType              主键的jdbcType
+     * @param lowerCamelCasePrimaryKey 首字母小写的驼峰格式的主键
+     * @param builder                  拼接的mapper.xml文件文本
      */
     private static void generateDeleteBatchLogicalSql(String tableName, String tableComment, String primaryKey,
-                                                      String priJdbcType, String lowerCamelCaseTableName,
+                                                      String priJdbcType, String lowerCamelCasePrimaryKey,
                                                       StringBuilder builder) {
         builder.append("\r\n");
         // 生成sql的注释
@@ -310,7 +312,7 @@ public class GenerateMapperFileUtil {
         builder.append("    SET is_delete = 1,").append("\r\n");
         builder.append("    update_by = #{updateBy, jdbcType=BIGINT}").append("\r\n");
         builder.append("    WHERE ").append(primaryKey).append(" IN").append("\r\n");
-        builder.append("    <foreach collection=\"").append(lowerCamelCaseTableName)
+        builder.append("    <foreach collection=\"").append(lowerCamelCasePrimaryKey)
                 .append("s\" item=\"item\" index=\"index\" open=\"(\" close=\")\" separator=\",\" >").append("\r\n");
         builder.append("      #{item, jdbcType=").append(priJdbcType).append("}").append("\r\n");
         builder.append("    </foreach>").append("\r\n");
@@ -423,12 +425,12 @@ public class GenerateMapperFileUtil {
         builder.append("  <update id=\"update").append(upperCamelCaseTableName)
                 .append("Batch\" parameterType=\"java.util.List\" >").append("\r\n");
         builder.append("    <foreach collection=\"").append(lowerCamelCaseTableName)
-                .append("List\" item=\"item\" index=\"index\" separator=\";\" >").append("\r\n");
+                .append("POList\" item=\"item\" index=\"index\" separator=\";\" >").append("\r\n");
         builder.append("      UPDATE ").append(tableName).append("\r\n");
         builder.append("      <set>").append("\r\n");
         builder.append(updateBatchSql);
         builder.append("      </set>").append("\r\n");
-        builder.append("      WHERE ").append(primaryKey).append(" = #{").append(lowerCamelCasePrimaryKey).append(", jdbcType=")
+        builder.append("      WHERE ").append(primaryKey).append(" = #{item.").append(lowerCamelCasePrimaryKey).append(", jdbcType=")
                 .append(priJdbcType).append("}").append("\r\n");
         builder.append("    </foreach>").append("\r\n");
         builder.append("  </update>").append("\r\n");
@@ -508,7 +510,7 @@ public class GenerateMapperFileUtil {
         builder.append("  <!-- 条件查询").append(tableComment).append("条数 -->").append("\r\n");
         // 拼接selectCountSQL
         builder.append("  <select id=\"count").append(upperCamelCaseTableName)
-                .append("s\"  parameterType=\"cn.com.zhshzh.core.model.WhereConditions\" resultType=\"java.long.Integer\" >").append("\r\n");
+                .append("s\"  parameterType=\"cn.com.zhshzh.core.model.WhereConditions\" resultType=\"java.lang.Integer\" >").append("\r\n");
         builder.append("    SELECT COUNT(*) FROM ").append(tableName).append("\r\n");
         builder.append("    <include refid=\"Where_Clause\" />").append("\r\n");
         builder.append("  </select>").append("\r\n");

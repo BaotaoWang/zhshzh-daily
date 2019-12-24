@@ -1,7 +1,5 @@
 -- 创建系统用户表
-DROP TABLE IF EXISTS `sys_user_info`;
-
-CREATE TABLE `sys_user_info` (
+CREATE TABLE IF NOT EXISTS `sys_user_info` (
 	`user_info_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户id',
 	`user_name` VARCHAR (32) NOT NULL COMMENT '用户账号',
 	`password` VARCHAR (64) NOT NULL COMMENT '用户密码',
@@ -11,7 +9,7 @@ CREATE TABLE `sys_user_info` (
 	`birth` DATE NULL COMMENT '出生日期',
 	`phone_number` VARCHAR (16) NULL COMMENT '联系电话',
 	`email` VARCHAR (64) NULL COMMENT '员工邮箱',
-	`is_delete` TINYINT (1) NOT NULL DEFAULT 0 COMMENT '是否已删除（0：未删除； 1：已删除）',
+	`is_delete` BIT NOT NULL DEFAULT 0 COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
 	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 	`create_by` BIGINT UNSIGNED NOT NULL COMMENT '创建人',
@@ -25,9 +23,7 @@ CREATE TABLE `sys_user_info` (
 
 
 -- 创建系统接口日志表
-DROP TABLE IF EXISTS `sys_interface_log`;
-
-CREATE TABLE `sys_interface_log` (
+CREATE TABLE IF NOT EXISTS `sys_interface_lg` (
 	`interface_log_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '接口日志id',
 	`path` VARCHAR (200) NOT NULL COMMENT '请求路径',
 	`type` VARCHAR (10) NOT NULL COMMENT '请求方式',
@@ -38,7 +34,9 @@ CREATE TABLE `sys_interface_log` (
 	`user_name` VARCHAR (32) DEFAULT NULL COMMENT '请求用户',
 	`principal` VARCHAR (300) DEFAULT NULL COMMENT '用户权限信息',
 	`client_ip` VARCHAR (32) NOT NULL COMMENT '客户端ip',
-	`is_delete` TINYINT (1) NOT NULL DEFAULT 0 COMMENT '是否已删除（0：未删除； 1：已删除）',
+	`server_root_address` VARCHAR (32) NOT NULL COMMENT '服务端根地址',
+	`request_exception` TEXT DEFAULT NULL COMMENT '请求异常',
+	`is_delete` BIT NOT NULL DEFAULT 0 COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
 	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 	`create_by` VARCHAR (32) NOT NULL DEFAULT 'system' COMMENT '创建人',

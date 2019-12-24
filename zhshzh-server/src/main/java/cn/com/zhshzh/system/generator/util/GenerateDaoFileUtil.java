@@ -56,9 +56,9 @@ public class GenerateDaoFileUtil {
         // 生成mapper.java的批量插入方法
         generateInsertBatchMethod(upperCamelCaseTableName, lowerCamelCasePoName, tableComment, builder);
         // 生成mapper.java的根据id逻辑删除方法
-        generateDeleteByIdLogicalMethod(lowerCamelCasePrimaryKey, priFieldType, tableComment, builder);
+        generateDeleteByIdLogicalMethod(upperCamelCaseTableName, lowerCamelCaseTableName, tableComment, builder);
         // 生成mapper.java的批量逻辑删除方法
-        generateDeleteBatchLogicalMethod(lowerCamelCaseTableName, tableComment, builder);
+        generateDeleteBatchLogicalMethod(lowerCamelCasePrimaryKey, tableComment, builder);
         // 生成mapper.java的根据id物理删除方法
         generateDeleteByIdPhysicalMethod(lowerCamelCasePrimaryKey, priFieldType, tableComment, builder);
         // 生成mapper.java的批量物理删除方法
@@ -135,8 +135,8 @@ public class GenerateDaoFileUtil {
         builder.append("     *").append("\r\n");
         builder.append("     * @param ").append(lowerCamelCasePoName).append(" ").append(tableComment).append("\r\n");
         builder.append("     */").append("\r\n");
-        builder.append("    void insert").append(upperCamelCaseTableName).append("(@Param(\"").append(lowerCamelCasePoName).append("\") ")
-                .append(upperCamelCaseTableName).append("PO ").append(lowerCamelCasePoName).append(");").append("\r\n");
+        builder.append("    void insert").append(upperCamelCaseTableName).append("(").append(upperCamelCaseTableName)
+                .append("PO ").append(lowerCamelCasePoName).append(");").append("\r\n");
     }
 
     /**
@@ -164,37 +164,37 @@ public class GenerateDaoFileUtil {
     /**
      * 生成mapper.java的deleteByIdLogical方法
      *
-     * @param lowerCamelCasePrimaryKey 首字母小写的驼峰格式主键
-     * @param priFieldType             主键的fieldType
-     * @param tableComment             数据库表的注释
-     * @param builder                  拼接的mapper.java文件文本
+     * @param upperCamelCaseTableName 首字母大写的驼峰格式数据库表名
+     * @param lowerCamelCaseTableName 首字母小写的驼峰格式数据库表名
+     * @param tableComment            数据库表的注释
+     * @param builder                 拼接的mapper.java文件文本
      */
-    private static void generateDeleteByIdLogicalMethod(String lowerCamelCasePrimaryKey, String priFieldType,
+    private static void generateDeleteByIdLogicalMethod(String upperCamelCaseTableName, String lowerCamelCaseTableName,
                                                         String tableComment, StringBuilder builder) {
         builder.append("\r\n");
         builder.append("    /**").append("\r\n");
         builder.append("     * 根据id逻辑删除").append(tableComment).append("\r\n");
         builder.append("     *").append("\r\n");
-        builder.append("     * @param ").append(lowerCamelCasePrimaryKey).append(" 主键id").append("\r\n");
+        builder.append("     * @param ").append(lowerCamelCaseTableName).append("PO ").append(tableComment).append("\r\n");
         builder.append("     */").append("\r\n");
-        builder.append("    void deleteByIdLogical(").append("@Param(\"").append(lowerCamelCasePrimaryKey)
-                .append("\") ").append(priFieldType).append(" ").append(lowerCamelCasePrimaryKey).append(");").append("\r\n");
+        builder.append("    void deleteByIdLogical(").append(upperCamelCaseTableName).append("PO ")
+                .append(lowerCamelCaseTableName).append("PO);").append("\r\n");
     }
 
     /**
      * 生成mapper.java的deleteBatchLogical方法
      *
-     * @param lowerCamelCaseTableName 首字母小写的驼峰格式数据库表名
-     * @param tableComment            数据库表的注释
-     * @param builder                 拼接的mapper.java文件文本
+     * @param lowerCamelCasePrimaryKey 首字母小写的驼峰格式主键
+     * @param tableComment             数据库表的注释
+     * @param builder                  拼接的mapper.java文件文本
      */
-    private static void generateDeleteBatchLogicalMethod(String lowerCamelCaseTableName, String tableComment,
+    private static void generateDeleteBatchLogicalMethod(String lowerCamelCasePrimaryKey, String tableComment,
                                                          StringBuilder builder) {
         builder.append("\r\n");
         builder.append("    /**").append("\r\n");
         builder.append("     * 批量逻辑删除").append(tableComment).append("\r\n");
         builder.append("     *").append("\r\n");
-        builder.append("     * @param map map中的updateBy为修改人，").append(lowerCamelCaseTableName)
+        builder.append("     * @param map map中的updateBy为修改人，").append(lowerCamelCasePrimaryKey)
                 .append("s为主键id的数组").append("\r\n");
         builder.append("     */").append("\r\n");
         builder.append("    void deleteBatchLogical(Map<String, Object> map);").append("\r\n");
@@ -255,8 +255,8 @@ public class GenerateDaoFileUtil {
         builder.append("     *").append("\r\n");
         builder.append("     * @param ").append(lowerCamelCasePoName).append(" ").append(tableComment).append("\r\n");
         builder.append("     */").append("\r\n");
-        builder.append("    void update").append(upperCamelCaseTableName).append("(@Param(\"").append(lowerCamelCasePoName).append("\") ")
-                .append(upperCamelCaseTableName).append("PO ").append(lowerCamelCasePoName).append(");").append("\r\n");
+        builder.append("    void update").append(upperCamelCaseTableName).append("(").append(upperCamelCaseTableName)
+                .append("PO ").append(lowerCamelCasePoName).append(");").append("\r\n");
     }
 
     /**
@@ -320,7 +320,7 @@ public class GenerateDaoFileUtil {
         builder.append("     * @return ").append(tableComment).append("list").append("\r\n");
         builder.append("     */").append("\r\n");
         builder.append("    List<").append(upperCamelCaseTableName).append("PO> list").append(upperCamelCaseTableName)
-                .append("s(@Param(\"whereConditions\") WhereConditions whereConditions);").append("\r\n");
+                .append("s(WhereConditions whereConditions);").append("\r\n");
     }
 
     /**
@@ -339,7 +339,7 @@ public class GenerateDaoFileUtil {
         builder.append("     * @return 条数").append("\r\n");
         builder.append("     */").append("\r\n");
         builder.append("    Integer count").append(upperCamelCaseTableName)
-                .append("s(@Param(\"whereConditions\") WhereConditions whereConditions);").append("\r\n");
+                .append("s(WhereConditions whereConditions);").append("\r\n");
     }
 
     /**

@@ -66,7 +66,10 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         } catch (SignatureException e) {
             logger.error(e);
             ResponseUtil.writeMessage(response, HttpResultEnum.INVALID_SIGNATURE, e.getMessage());
-        } catch (IOException e) {
+        }
+        // 有异常时，不往前台返回，直接往外抛。
+        // 如果捕获到ServletException，向前台返回的话，会报java.lang.IllegalStateException: getWriter() has already been called for this response
+        /* catch (IOException e) {
             logger.error(e);
             ResponseUtil.writeMessage(response, HttpResultEnum.FAIL, e.getMessage());
             throw new IOException(e);
@@ -74,8 +77,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             logger.error(e);
             ResponseUtil.writeMessage(response, HttpResultEnum.FAIL, e.getMessage());
             throw new ServletException(e);
-
-        }
+        } */
     }
 
     /**
