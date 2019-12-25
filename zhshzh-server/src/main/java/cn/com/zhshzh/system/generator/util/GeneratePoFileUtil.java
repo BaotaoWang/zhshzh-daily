@@ -6,6 +6,7 @@ import cn.com.zhshzh.core.util.FileUtil;
 import cn.com.zhshzh.system.generator.model.GeneratorStringModel;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * 生成Mybatis的po文件的工具类
@@ -30,6 +31,8 @@ public class GeneratePoFileUtil {
         String tableName = generatorStringModel.getTableName();
         // 数据库表的注释
         String tableComment = generatorStringModel.getTableComment();
+        // po对象中需要额外引的包
+        Set<String> importPackages = generatorStringModel.getImportPackages();
         // 成员变量
         String memberVariables = generatorStringModel.getMemberVariables();
         // 首字母大写的驼峰格式po名
@@ -40,7 +43,7 @@ public class GeneratePoFileUtil {
         // 拼接po文件
         StringBuilder builder = new StringBuilder();
         // 生成po文件
-        generatePo(poPackageName, tableName, tableComment, upperCamelCasePoName, memberVariables, builder);
+        generatePo(poPackageName, tableName, tableComment, upperCamelCasePoName, importPackages, memberVariables, builder);
 
         // 将字符串文本写到本地文件
         FileUtil.convertTextToLocalFile(poFileAbsolutePath, poFileName, builder.toString());
@@ -53,11 +56,12 @@ public class GeneratePoFileUtil {
      * @param tableName            数据库表名
      * @param tableComment         数据库表的注释
      * @param upperCamelCasePoName 首字母大写的驼峰格式po名
+     * @param importPackages       po对象中需要额外引的包
      * @param memberVariables      拼接后po对象的成员变量
      * @param builder              拼接的po文件文本
      */
     private static void generatePo(String poPackageName, String tableName, String tableComment, String upperCamelCasePoName,
-                                   String memberVariables, StringBuilder builder) {
+                                   Set<String> importPackages, String memberVariables, StringBuilder builder) {
         // 当前日期
         Date nowDate = new Date();
         String nowDateStr = DateFormatUtil.getBackslashDateString(nowDate);
@@ -68,8 +72,8 @@ public class GeneratePoFileUtil {
         // 拼接引包
         builder.append("import lombok.Data;").append("\r\n");
         builder.append("\r\n");
-        builder.append("import java.math.BigDecimal;").append("\r\n");
-        builder.append("import java.util.Date;").append("\r\n");
+        // 遍历拼接需要额外引的包
+        importPackages.forEach(importPackage -> builder.append(importPackage).append("\r\n"));
         builder.append("\r\n");
         // 生成注释
         builder.append("/**").append("\r\n");
@@ -82,7 +86,6 @@ public class GeneratePoFileUtil {
         builder.append("@Data").append("\r\n");
         builder.append("public class ").append(upperCamelCasePoName).append(" {").append("\r\n");
         builder.append(memberVariables).append("\r\n");
-        builder.append("\r\n");
         builder.append("    /**").append("\r\n");
         builder.append("     * 无参构造方法").append("\r\n");
         builder.append("     */").append("\r\n");

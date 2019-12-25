@@ -101,12 +101,12 @@ public class GenerateDaoFileUtil {
         builder.append("\r\n");
         // 拼接引包
         builder.append("import ").append(poFileType).append(";").append("\r\n");
+        builder.append("import cn.com.zhshzh.core.model.DeleteBatchLogicalModel;").append("\r\n");
         builder.append("import cn.com.zhshzh.core.model.WhereConditions;").append("\r\n");
         builder.append("import org.apache.ibatis.annotations.Mapper;").append("\r\n");
         builder.append("import org.apache.ibatis.annotations.Param;").append("\r\n");
         builder.append("\r\n");
         builder.append("import java.util.List;").append("\r\n");
-        builder.append("import java.util.Map;").append("\r\n");
         builder.append("\r\n");
         // 生成注释
         builder.append("/**").append("\r\n");
@@ -194,10 +194,9 @@ public class GenerateDaoFileUtil {
         builder.append("    /**").append("\r\n");
         builder.append("     * 批量逻辑删除").append(tableComment).append("\r\n");
         builder.append("     *").append("\r\n");
-        builder.append("     * @param map map中的updateBy为修改人，").append(lowerCamelCasePrimaryKey)
-                .append("s为主键id的数组").append("\r\n");
+        builder.append("     * @param deleteBatchLogicalModel 批量逻辑删除的模型对象").append("\r\n");
         builder.append("     */").append("\r\n");
-        builder.append("    void deleteBatchLogical(Map<String, Object> map);").append("\r\n");
+        builder.append("    void deleteBatchLogical(DeleteBatchLogicalModel deleteBatchLogicalModel);").append("\r\n");
     }
 
     /**

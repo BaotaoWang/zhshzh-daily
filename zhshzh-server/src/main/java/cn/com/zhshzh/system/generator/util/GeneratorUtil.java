@@ -12,9 +12,7 @@ import cn.com.zhshzh.system.generator.po.TablesPO;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 /**
@@ -101,6 +99,8 @@ public class GeneratorUtil {
             generatorStringModel.setTableComment(tableComment);
         }
 
+        // po对象中需要额外引的包
+        Set<String> importPackages = new TreeSet<>();
         // 将代码生成器数据类型配置文件转为Map
         Map<String, MappingModel> map = GeneratorUtil.getMappingModel();
         // 遍历后的resultMap
@@ -165,6 +165,12 @@ public class GeneratorUtil {
                 isPrimaryKey = true;
             }
 
+            // 如果javaType不在java.lang包下，需要额外引包
+            // 目前只是针对java.math.BigDecimal和java.util.Date
+            if (!javaType.startsWith("java.lang") && !"_byte[]".equals(javaType)) {
+                importPackages.add("import " + javaType + ";");
+            }
+
             // 迭代拼接mapper.xml中的resultMap
             iterateResultMap(columnName, camelCaseColumnName, jdbcType, javaType, isPrimaryKey, resultMapBuilder);
             // 迭代拼接mapper.xml中的Base_Column_List
@@ -179,9 +185,8 @@ public class GeneratorUtil {
             iterateUpdateBatchSql(columnName, camelCaseColumnName, jdbcType, updateBatchSqlBuilder);
             // 迭代拼接PO.java中的成员变量
             iterateMemberVariables(columnName, columnComment, camelCaseColumnName, fieldType, memberVariablesBuilder);
-
-
         }
+        generatorStringModel.setImportPackages(importPackages);
         generatorStringModel.setResultMap(resultMapBuilder.toString());
         generatorStringModel.setBaseColumnList(baseColumnListBuilder.toString());
         generatorStringModel.setInsertColumnSql(insertColumnSqlBuilder.toString());
@@ -428,7 +433,7 @@ public class GeneratorUtil {
      * @param columnName             数据库表字段名
      * @param columnComment          数据库表字段注释
      * @param camelCaseColumnName    java字段名称
-     * @param fieldType               fieldType
+     * @param fieldType              fieldType
      * @param memberVariablesBuilder 拼接的字符串
      */
     private static void iterateMemberVariables(String columnName, String columnComment, String camelCaseColumnName,

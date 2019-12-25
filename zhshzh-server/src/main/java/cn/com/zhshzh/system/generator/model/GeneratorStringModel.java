@@ -2,6 +2,8 @@ package cn.com.zhshzh.system.generator.model;
 
 import lombok.Data;
 
+import java.util.Set;
+
 /**
  * 处理拼接代码生成器字符串的模型对象
  *
@@ -114,6 +116,11 @@ public class GeneratorStringModel {
      * mapper.xml中遍历的updateBatchSql字符串
      */
     private String updateBatchSql;
+
+    /**
+     * po中要引的包
+     */
+    private Set<String> importPackages;
 
     /**
      * po中遍历的成员变量字符串

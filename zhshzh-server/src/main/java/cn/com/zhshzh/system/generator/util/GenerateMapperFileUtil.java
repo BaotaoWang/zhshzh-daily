@@ -312,8 +312,7 @@ public class GenerateMapperFileUtil {
         builder.append("    SET is_delete = 1,").append("\r\n");
         builder.append("    update_by = #{updateBy, jdbcType=BIGINT}").append("\r\n");
         builder.append("    WHERE ").append(primaryKey).append(" IN").append("\r\n");
-        builder.append("    <foreach collection=\"").append(lowerCamelCasePrimaryKey)
-                .append("s\" item=\"item\" index=\"index\" open=\"(\" close=\")\" separator=\",\" >").append("\r\n");
+        builder.append("    <foreach collection=\"deleteIds\" item=\"item\" index=\"index\" open=\"(\" close=\")\" separator=\",\" >").append("\r\n");
         builder.append("      #{item, jdbcType=").append(priJdbcType).append("}").append("\r\n");
         builder.append("    </foreach>").append("\r\n");
         builder.append("  </update>").append("\r\n");

@@ -1,5 +1,7 @@
 -- 创建系统用户表
-CREATE TABLE IF NOT EXISTS `sys_user_info` (
+DROP TABLE IF EXISTS `sys_user_info`;
+
+CREATE TABLE `sys_user_info` (
 	`user_info_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户id',
 	`user_name` VARCHAR (32) NOT NULL COMMENT '用户账号',
 	`password` VARCHAR (64) NOT NULL COMMENT '用户密码',
@@ -23,7 +25,9 @@ CREATE TABLE IF NOT EXISTS `sys_user_info` (
 
 
 -- 创建系统接口日志表
-CREATE TABLE IF NOT EXISTS `sys_interface_lg` (
+DROP TABLE IF EXISTS `sys_interface_log`;
+
+CREATE TABLE `sys_interface_log` (
 	`interface_log_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '接口日志id',
 	`path` VARCHAR (200) NOT NULL COMMENT '请求路径',
 	`type` VARCHAR (10) NOT NULL COMMENT '请求方式',
