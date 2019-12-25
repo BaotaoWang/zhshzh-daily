@@ -2,6 +2,8 @@ package cn.com.zhshzh.business.user.service;
 
 import cn.com.zhshzh.business.user.dto.SysUserInfoDTO;
 import cn.com.zhshzh.business.user.po.SysUserInfoPO;
+import cn.com.zhshzh.core.util.JsonResultUtil;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 
@@ -21,6 +23,14 @@ public interface SysUserInfoService {
     SysUserInfoDTO getSysUserInfo(Long userInfoId);
 
     /**
+     * 根据用户登录账号查询用户信息（用户登录时用）
+     *
+     * @param username 用户的登录账号
+     * @return 用户信息
+     */
+    SysUserInfoPO getSysUserInfoForLogin(String username) throws UsernameNotFoundException;
+
+    /**
      * 条件查询用户信息
      *
      * @param sysUserInfoPO 封装查询条件的用户对象
@@ -32,7 +42,6 @@ public interface SysUserInfoService {
      * 保存用户信息
      *
      * @param sysUserInfoPO 用户基本信息
-     * @return 新增记录条数
      */
-    int saveSysUserInfo(SysUserInfoPO sysUserInfoPO);
+    JsonResultUtil saveSysUserInfo(SysUserInfoPO sysUserInfoPO);
 }

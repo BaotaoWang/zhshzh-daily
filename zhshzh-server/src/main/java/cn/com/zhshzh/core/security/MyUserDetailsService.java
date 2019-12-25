@@ -2,8 +2,6 @@ package cn.com.zhshzh.core.security;
 
 import cn.com.zhshzh.business.user.po.SysUserInfoPO;
 import cn.com.zhshzh.business.user.service.SysUserInfoService;
-import cn.com.zhshzh.core.constant.PatternMatchesConstants;
-import io.jsonwebtoken.lang.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,41 +43,21 @@ public class MyUserDetailsService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SysUserInfoPO sysUserInfoPO = new SysUserInfoPO();
         // 获取存入redis中的rememberMe
         String key = JWTAuthenticationFilter.KEY_PREFIX + username + JWTAuthenticationFilter.KEY_SUFFIX;
         String rememberMe = stringRedisTemplate.opsForValue().get(key);
         // 获取到rememberMe后，将其从redis中删除
         stringRedisTemplate.delete(key);
-        // 判断用户登录方式
-        if (username.matches(PatternMatchesConstants.EMAIL)) {
-            // 邮箱登录
-            sysUserInfoPO.setEmail(username);
-        } else if (username.matches(PatternMatchesConstants.MOBILE_NUMBER)) {
-            // 手机号登录
-            sysUserInfoPO.setPhoneNumber(username);
-        } else if (username.matches(PatternMatchesConstants.SERIAL_NUMBER)) {
-            // 员工号登录
-            sysUserInfoPO.setSerialNumber(username);
-        } else if (username.matches(PatternMatchesConstants.USER_NAME)) {
-            // 用户名登录
-            sysUserInfoPO.setUserName(username);
-        } else {
-            throw new UsernameNotFoundException("User " + username + " was not found in database");
-        }
 
         // 根据用户名查询用户密码
-        String encodedPassword;
-        List<SysUserInfoPO> sysUserInfoList = sysUserInfoService.listSysUserInfo(sysUserInfoPO);
-        if (Collections.isEmpty(sysUserInfoList)) {
-            throw new UsernameNotFoundException("User " + username + " was not found in database");
-        } else {
-            username = sysUserInfoList.get(0).getUserName();
-            // 以用户名作为新的key重新放入到redis中
-            String newKey = JWTAuthenticationFilter.KEY_PREFIX + username + JWTAuthenticationFilter.KEY_SUFFIX;
+        SysUserInfoPO sysUserInfoPO = sysUserInfoService.getSysUserInfoForLogin(username);
+        username = sysUserInfoPO.getUserName();
+        // 以用户名作为新的key重新放入到redis中
+        String newKey = JWTAuthenticationFilter.KEY_PREFIX + username + JWTAuthenticationFilter.KEY_SUFFIX;
+        if (!StringUtils.isEmpty(rememberMe)) {
             stringRedisTemplate.opsForValue().set(newKey, rememberMe);
-            encodedPassword = sysUserInfoList.get(0).getPassword();
         }
+        String encodedPassword = sysUserInfoPO.getPassword();
 
         // 查询用户的所有角色
         List<String> roles = new ArrayList<>();

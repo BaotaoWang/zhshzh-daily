@@ -4,6 +4,7 @@ import cn.com.zhshzh.business.user.dto.SysUserInfoDTO;
 import cn.com.zhshzh.business.user.po.SysUserInfoPO;
 import cn.com.zhshzh.business.user.service.SysUserInfoService;
 import cn.com.zhshzh.business.user.util.SysUserInfoConvertUtil;
+import cn.com.zhshzh.core.util.JsonResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -49,7 +50,7 @@ public class SysUserInfoController {
      */
     @ApiOperation(value = "保存用户信息", notes = "注意问题点")
     @GetMapping("/saveSysUserInfo")
-    public int saveSysUserInfo(SysUserInfoDTO sysUserInfoDTO) {
+    public JsonResultUtil saveSysUserInfo(SysUserInfoDTO sysUserInfoDTO) {
         SysUserInfoConvertUtil sysUserInfoConvertUtil = new SysUserInfoConvertUtil();
         SysUserInfoPO sysUserInfoPO = sysUserInfoConvertUtil.convertToPO(sysUserInfoDTO);
         return sysUserInfoService.saveSysUserInfo(sysUserInfoPO);

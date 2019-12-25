@@ -22,6 +22,13 @@ CREATE TABLE `sys_user_info` (
 	UNIQUE INDEX `phone_number_UNIQUE` (`phone_number` ASC),
 	UNIQUE INDEX `email_UNIQUE` (`email` ASC)
 ) ENGINE = INNODB AUTO_INCREMENT = 100000 DEFAULT CHARACTER SET = utf8 COMMENT = '系统用户表';
+-- 插入系统管理员
+INSERT INTO `sys_user_info`
+(user_name, password, full_name, serial_number, sex, birth, phone_number, email, create_by, update_by)
+VALUES
+('admin', '$2a$10$0MN.Awl8Qi/lmMr3rVMW5eMeoPR8OEEXcSgQNYWnH/QFNXhFQYd.q', '系统管理员', '000001', 'M', '1970-01-01',
+'18888888888','admin@admin.com','0','0');
+
 
 
 -- 创建系统接口日志表

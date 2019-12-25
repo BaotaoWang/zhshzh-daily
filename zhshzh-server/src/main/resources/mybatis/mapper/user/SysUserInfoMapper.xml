@@ -1,114 +1,240 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.com.zhshzh.business.user.dao.SysUserInfoMapper">
-    <resultMap id="BaseResultMap" type="cn.com.zhshzh.business.user.po.SysUserInfoPO">
-        <id column="user_info_id" jdbcType="BIGINT" property="userInfoId" javaType="java.lang.Long"/>
-        <result column="user_name" jdbcType="VARCHAR" property="userName" javaType="java.lang.String"/>
-        <result column="password" jdbcType="VARCHAR" property="password" javaType="java.lang.String"/>
-        <result column="full_name" jdbcType="VARCHAR" property="fullName" javaType="java.lang.String"/>
-        <result column="serial_number" jdbcType="VARCHAR" property="serialNumber" javaType="java.lang.String"/>
-        <result column="sex" jdbcType="CHAR" property="sex" javaType="java.lang.String"/>
-        <result column="birth" jdbcType="DATE" property="birth" javaType="java.util.Date"/>
-        <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" javaType="java.lang.String"/>
-        <result column="email" jdbcType="VARCHAR" property="email" javaType="java.lang.String"/>
-        <result column="is_delete" jdbcType="BIT" property="isDelete" javaType="java.lang.Integer"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date"/>
-        <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long"/>
-        <result column="update_by" jdbcType="BIGINT" property="updateBy" javaType="java.lang.Long"/>
-    </resultMap>
+<mapper namespace="cn.com.zhshzh.business.user.dao.SysUserInfoMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.zhshzh.business.user.po.SysUserInfoPO" >
+    <id column="user_info_id" jdbcType="BIGINT" property="userInfoId" javaType="java.lang.Long" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" javaType="java.lang.String" />
+    <result column="password" jdbcType="VARCHAR" property="password" javaType="java.lang.String" />
+    <result column="full_name" jdbcType="VARCHAR" property="fullName" javaType="java.lang.String" />
+    <result column="serial_number" jdbcType="VARCHAR" property="serialNumber" javaType="java.lang.String" />
+    <result column="sex" jdbcType="CHAR" property="sex" javaType="java.lang.String" />
+    <result column="birth" jdbcType="DATE" property="birth" javaType="java.util.Date" />
+    <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" javaType="java.lang.String" />
+    <result column="email" jdbcType="VARCHAR" property="email" javaType="java.lang.String" />
+    <result column="is_delete" jdbcType="BIT" property="delete" javaType="java.lang.Boolean" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" javaType="java.lang.Long" />
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        user_info_id, user_name, password, full_name, serial_number, sex,
-        birth, phone_number, email, is_delete, create_time, update_time,
-        create_by, update_by
-    </sql>
+  <sql id="Base_Column_List" >
+    user_info_id, user_name, password, full_name, serial_number, sex, birth, phone_number, email, is_delete,
+    create_time, update_time, create_by, update_by
+  </sql>
 
-    <!--根据用户id查询用户信息-->
-    <select id="getSysUserInfo" resultMap="BaseResultMap" parameterType="java.lang.Long">
-        select
-        <include refid="Base_Column_List"/>
-        from sys_user_info
-        where user_info_id = #{userInfoId,jdbcType=BIGINT}
-    </select>
+  <!-- 查询条件的拼装 -->
+  <sql id="Where_Clause" >
+    <where>
+      is_delete = 0 AND
+      <if test="conditionList != null and conditionList.size() != 0">
+        <foreach collection="conditionList" item="item" index="index" separator="AND" >
+          <choose>
+            <when test="item.whereConditionEnum.condition == 'LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'BETWEEN'" >
+              <trim prefix=" " suffix=" " suffixOverrides="AND" >
+                <if test="item.startValue != null and item.startValue != ''" >
+                  ${item.columnName} &gt;= #{item.startValue} AND
+                </if>
+                <if test="item.endValue != null and item.endValue != ''" >
+                  ${item.columnName} &lt;= #{item.endValue} AND
+                </if>
+                <if test="(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')" >
+                  1 = 1
+                </if>
+              </trim>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <otherwise>
+              ${item.columnName} ${item.whereConditionEnum.condition} #{item.value}
+            </otherwise>
+          </choose>
+        </foreach>
+      </if>
+    </where>
+  </sql>
 
-    <!--条件查询用户信息-->
-    <select id="listSysUserInfo" resultMap="BaseResultMap" parameterType="cn.com.zhshzh.business.user.po.SysUserInfoPO">
-        select
-        <include refid="Base_Column_List"/>
-        from sys_user_info
-        <where>
-            <if test="userInfoId != null and userInfoId != ''">user_info_id = #{userInfoId,jdbcType=BIGINT}</if>
-            <if test="userName != null and userName != ''">and user_name = #{userName,jdbcType=VARCHAR}</if>
-            <if test="password != null and password != ''">and password = #{password,jdbcType=VARCHAR}</if>
-            <if test="fullName != null and fullName != ''">and full_name = #{fullName,jdbcType=VARCHAR}</if>
-            <if test="serialNumber != null and serialNumber != ''">and serial_number = #{serialNumber,jdbcType=VARCHAR}</if>
-            <if test="sex != null and sex != ''">and sex = #{sex,jdbcType=CHAR}</if>
-            <if test="birth != null and birth != ''">and birth = #{birth,jdbcType=DATE}</if>
-            <if test="phoneNumber != null and phoneNumber != ''">and phone_number = #{phoneNumber,jdbcType=VARCHAR}</if>
-            <if test="email != null and email != ''">and email = #{email,jdbcType=VARCHAR}</if>
-            <if test="isDelete != null and isDelete != ''">and is_delete = #{isDelete,jdbcType=BIT}</if>
-            <if test="createTime != null and createTime != ''">and create_time = #{createTime,jdbcType=TIMESTAMP}</if>
-            <if test="updateTime != null and updateTime != ''">and update_time = #{updateTime,jdbcType=TIMESTAMP}</if>
-            <if test="createBy != null and createBy != ''">and create_by = #{createBy,jdbcType=BIGINT}</if>
-            <if test="updateBy != null and updateBy != ''">and update_by = #{updateBy,jdbcType=BIGINT}</if>
-        </where>
-    </select>
+  <!-- 新增系统用户 -->
+  <insert id="insertSysUserInfo" parameterType="cn.com.zhshzh.business.user.po.SysUserInfoPO" >
+    INSERT INTO sys_user_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userInfoId != null" > user_info_id, </if>
+      <if test="userName != null" > user_name, </if>
+      <if test="password != null" > password, </if>
+      <if test="fullName != null" > full_name, </if>
+      <if test="serialNumber != null" > serial_number, </if>
+      <if test="sex != null" > sex, </if>
+      <if test="birth != null" > birth, </if>
+      <if test="phoneNumber != null" > phone_number, </if>
+      <if test="email != null" > email, </if>
+      <if test="delete != null" > is_delete, </if>
+      <if test="createTime != null" > create_time, </if>
+      <if test="updateTime != null" > update_time, </if>
+      <if test="createBy != null" > create_by, </if>
+      <if test="updateBy != null" > update_by, </if>
+    </trim>
+    <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+      <if test="userInfoId != null" > #{userInfoId, jdbcType=BIGINT}, </if>
+      <if test="userName != null" > #{userName, jdbcType=VARCHAR}, </if>
+      <if test="password != null" > #{password, jdbcType=VARCHAR}, </if>
+      <if test="fullName != null" > #{fullName, jdbcType=VARCHAR}, </if>
+      <if test="serialNumber != null" > #{serialNumber, jdbcType=VARCHAR}, </if>
+      <if test="sex != null" > #{sex, jdbcType=CHAR}, </if>
+      <if test="birth != null" > #{birth, jdbcType=DATE}, </if>
+      <if test="phoneNumber != null" > #{phoneNumber, jdbcType=VARCHAR}, </if>
+      <if test="email != null" > #{email, jdbcType=VARCHAR}, </if>
+      <if test="delete != null" > #{delete, jdbcType=BIT}, </if>
+      <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
+      <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
+      <if test="createBy != null" > #{createBy, jdbcType=BIGINT}, </if>
+      <if test="updateBy != null" > #{updateBy, jdbcType=BIGINT}, </if>
+    </trim>
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="userInfoId" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
 
-    <!--新增用户信息-->
-    <insert id="insertSysUserInfo" parameterType="cn.com.zhshzh.business.user.po.SysUserInfoPO">
-        insert into sys_user_info
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userInfoId != null and userInfoId != ''">user_info_id,</if>
-            <if test="userName != null and userName != ''">user_name,</if>
-            <if test="password != null and password != ''">password,</if>
-            <if test="fullName != null and fullName != ''">full_name,</if>
-            <if test="serialNumber != null and serialNumber != ''">serial_number,</if>
-            <if test="sex != null and sex != ''">sex,</if>
-            <if test="birth != null and birth != ''">birth,</if>
-            <if test="phoneNumber != null and phoneNumber != ''">phone_number,</if>
-            <if test="email != null and email != ''">email,</if>
-            <if test="isDelete != null and isDelete != ''">is_delete,</if>
-            <if test="createTime != null and createTime != ''">create_time,</if>
-            <if test="updateTime != null and updateTime != ''">update_time,</if>
-            <if test="createBy != null and createBy != ''">create_by,</if>
-            <if test="updateBy != null and updateBy != ''">update_by,</if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="userInfoId != null and userInfoId != ''">#{userInfoId,jdbcType=BIGINT}</if>
-            <if test="userName != null and userName != ''">#{userName,jdbcType=VARCHAR}</if>
-            <if test="password != null and password != ''">#{password,jdbcType=VARCHAR}</if>
-            <if test="fullName != null and fullName != ''">#{fullName,jdbcType=VARCHAR}</if>
-            <if test="serialNumber != null and serialNumber != ''">#{serialNumber,jdbcType=VARCHAR}</if>
-            <if test="sex != null and sex != ''">#{sex,jdbcType=CHAR}</if>
-            <if test="birth != null and birth != ''">#{birth,jdbcType=DATE}</if>
-            <if test="phoneNumber != null and phoneNumber != ''">#{phoneNumber,jdbcType=VARCHAR}</if>
-            <if test="email != null and email != ''">#{email,jdbcType=VARCHAR}</if>
-            <if test="isDelete != null and isDelete != ''">#{isDelete,jdbcType=BIT}</if>
-            <if test="createTime != null and createTime != ''">#{createTime,jdbcType=TIMESTAMP}</if>
-            <if test="updateTime != null and updateTime != ''">#{updateTime,jdbcType=TIMESTAMP}</if>
-            <if test="createBy != null and createBy != ''">#{createBy,jdbcType=BIGINT}</if>
-            <if test="updateBy != null and updateBy != ''">#{updateBy,jdbcType=BIGINT}</if>
-        </trim>
-    </insert>
+  <!-- 批量新增系统用户 -->
+  <insert id="insertSysUserInfoBatch" parameterType="java.util.List" >
+    INSERT INTO sys_user_info (
+      <include refid="Base_Column_List" />
+    )
+    VALUES
+    <foreach collection="sysUserInfoPOList" item="item" index="index" separator="," >
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+        #{item.userInfoId, jdbcType=BIGINT},
+        #{item.userName, jdbcType=VARCHAR},
+        #{item.password, jdbcType=VARCHAR},
+        #{item.fullName, jdbcType=VARCHAR},
+        #{item.serialNumber, jdbcType=VARCHAR},
+        #{item.sex, jdbcType=CHAR},
+        #{item.birth, jdbcType=DATE},
+        #{item.phoneNumber, jdbcType=VARCHAR},
+        #{item.email, jdbcType=VARCHAR},
+        0,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP,
+        #{item.createBy, jdbcType=BIGINT},
+        #{item.updateBy, jdbcType=BIGINT},
+      </trim>
+    </foreach>
+  </insert>
 
-    <!--更新用户信息-->
-    <update id="updateSysUserInfoPO" parameterType="cn.com.zhshzh.business.user.po.SysUserInfoPO">
-        update sys_user_info
-        <set>
-            <if test="userName != null and userName !=''">user_name = #{userName,jdbcType=VARCHAR},</if>
-            <if test="fullName != null and fullName !=''">full_name = #{fullName,jdbcType=VARCHAR},</if>
-            <if test="serialNumber != null and serialNumber !=''">serial_number = #{serialNumber,jdbcType=VARCHAR},</if>
-            <if test="sex != null and sex !=''">sex = #{sex,jdbcType=CHAR},</if>
-            <if test="birth != null and birth !=''">birth = #{birth,jdbcType=DATE},</if>
-            <if test="phoneNumber != null and phoneNumber !=''">phone_number = #{phoneNumber,jdbcType=VARCHAR},</if>
-            <if test="email != null and email !=''">email = #{email,jdbcType=VARCHAR},</if>
-            <if test="isDelete != null and isDelete !=''">is_delete = #{isDelete,jdbcType=BIT},</if>
-            <if test="createTime != null and createTime !=''">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
-            <if test="updateTime != null and updateTime !=''">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
-            <if test="createBy != null and createBy !=''">create_by = #{createBy,jdbcType=BIGINT},</if>
-            <if test="updateBy != null and updateBy !=''">update_by = #{updateBy,jdbcType=BIGINT}</if>
-        </set>
-        where user_info_id = #{userInfoId,jdbcType=BIGINT}
-    </update>
+  <!-- 根据id逻辑删除系统用户 -->
+  <update id="deleteByIdLogical" parameterType="cn.com.zhshzh.business.user.po.SysUserInfoPO" >
+    UPDATE sys_user_info
+    SET is_delete = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE user_info_id = #{userInfoId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量逻辑删除系统用户 -->
+  <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
+    UPDATE sys_user_info
+    SET is_delete = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE user_info_id IN
+    <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id物理删除系统用户 -->
+  <delete id="deleteByIdPhysical" parameterType="java.lang.Long" >
+    DELETE FROM sys_user_info
+    WHERE user_info_id = #{userInfoId, jdbcType=BIGINT}
+  </delete>
+
+  <!-- 批量物理删除系统用户 -->
+  <delete id="deleteBatchPhysical" >
+    DELETE FROM sys_user_info
+    WHERE user_info_id IN
+    <foreach collection="sysUserInfos" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </delete>
+
+  <!-- 根据id修改系统用户 -->
+  <update id="updateSysUserInfo" parameterType="cn.com.zhshzh.business.user.po.SysUserInfoPO" >
+    UPDATE sys_user_info
+    <set>
+      <if test="userInfoId != null" > user_info_id = #{userInfoId, jdbcType=BIGINT}, </if>
+      <if test="userName != null" > user_name = #{userName, jdbcType=VARCHAR}, </if>
+      <if test="password != null" > password = #{password, jdbcType=VARCHAR}, </if>
+      <if test="fullName != null" > full_name = #{fullName, jdbcType=VARCHAR}, </if>
+      <if test="serialNumber != null" > serial_number = #{serialNumber, jdbcType=VARCHAR}, </if>
+      <if test="sex != null" > sex = #{sex, jdbcType=CHAR}, </if>
+      <if test="birth != null" > birth = #{birth, jdbcType=DATE}, </if>
+      <if test="phoneNumber != null" > phone_number = #{phoneNumber, jdbcType=VARCHAR}, </if>
+      <if test="email != null" > email = #{email, jdbcType=VARCHAR}, </if>
+      update_by = #{updateBy, jdbcType=BIGINT}
+    </set>
+    WHERE user_info_id = #{userInfoId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量修改系统用户 -->
+  <update id="updateSysUserInfoBatch" parameterType="java.util.List" >
+    <foreach collection="sysUserInfoPOList" item="item" index="index" separator=";" >
+      UPDATE sys_user_info
+      <set>
+        <if test="item.userInfoId != null" > user_info_id = #{item.userInfoId, jdbcType=BIGINT}, </if>
+        <if test="item.userName != null" > user_name = #{item.userName, jdbcType=VARCHAR}, </if>
+        <if test="item.password != null" > password = #{item.password, jdbcType=VARCHAR}, </if>
+        <if test="item.fullName != null" > full_name = #{item.fullName, jdbcType=VARCHAR}, </if>
+        <if test="item.serialNumber != null" > serial_number = #{item.serialNumber, jdbcType=VARCHAR}, </if>
+        <if test="item.sex != null" > sex = #{item.sex, jdbcType=CHAR}, </if>
+        <if test="item.birth != null" > birth = #{item.birth, jdbcType=DATE}, </if>
+        <if test="item.phoneNumber != null" > phone_number = #{item.phoneNumber, jdbcType=VARCHAR}, </if>
+        <if test="item.email != null" > email = #{item.email, jdbcType=VARCHAR}, </if>
+        update_by = #{item.updateBy, jdbcType=BIGINT}
+      </set>
+      WHERE user_info_id = #{item.userInfoId, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id查询系统用户 -->
+  <select id="getSysUserInfo" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_user_info
+    WHERE user_info_id = #{userInfoId, jdbcType=BIGINT}
+  </select>
+
+  <!-- 条件查询系统用户 -->
+  <select id="listSysUserInfos" parameterType="cn.com.zhshzh.core.model.WhereConditions" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_user_info
+    <include refid="Where_Clause" />
+    <if test="orderByList != null and orderByList.size() != 0">
+      ORDER BY
+      <foreach collection="orderByList" item="item" index="index" separator="," >
+        ${item.sort} ${item.orderByEnum.order}
+      </foreach>
+    </if>
+  </select>
+
+  <!-- 条件查询系统用户条数 -->
+  <select id="countSysUserInfos"  parameterType="cn.com.zhshzh.core.model.WhereConditions" resultType="java.lang.Integer" >
+    SELECT COUNT(*) FROM sys_user_info
+    <include refid="Where_Clause" />
+  </select>
+
+  <!-- 以上代码由代码生成器自动生成，原则上不允许任何修改, 如需自定义，请在下面补充 -->
 </mapper>

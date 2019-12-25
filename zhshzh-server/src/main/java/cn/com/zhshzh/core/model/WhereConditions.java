@@ -21,4 +21,13 @@ public class WhereConditions {
      * 排序
      */
     private List<OrderByModel> orderByList;
+
+    public WhereConditions(List<ConditionModel> conditionList) {
+        this.conditionList = conditionList;
+    }
+
+    public WhereConditions(List<ConditionModel> conditionList, List<OrderByModel> orderByList) {
+        this.conditionList = conditionList;
+        this.orderByList = orderByList;
+    }
 }

@@ -1,47 +1,101 @@
 package cn.com.zhshzh.business.user.dao;
 
 import cn.com.zhshzh.business.user.po.SysUserInfoPO;
+import cn.com.zhshzh.core.model.DeleteBatchLogicalModel;
+import cn.com.zhshzh.core.model.WhereConditions;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
- * 系统用户信息mapper
+ * sys_user_info
+ * 系统用户Mapper
  *
- * @author WBT
- * @since 2019/10/15
+ * @author Generator
+ * @since 2019/12/25
  */
 @Mapper
 public interface SysUserInfoMapper {
     /**
-     * 根据用户id查询用户信息
+     * 新增系统用户
      *
-     * @param userInfoId 用户id
-     * @return 用户信息
+     * @param sysUserInfoPO 系统用户
      */
-    SysUserInfoPO getSysUserInfo(Long userInfoId);
+    void insertSysUserInfo(SysUserInfoPO sysUserInfoPO);
 
     /**
-     * 条件查询用户信息
+     * 批量新增系统用户
      *
-     * @param sysUserInfoPO 封装查询条件的用户对象
-     * @return 用户信息list
+     * @param sysUserInfoPOList 系统用户List
      */
-    List<SysUserInfoPO> listSysUserInfo(SysUserInfoPO sysUserInfoPO);
+    void insertSysUserInfoBatch(@Param("sysUserInfoPOList") List<SysUserInfoPO> sysUserInfoPOList);
 
     /**
-     * 新增用户信息
+     * 根据id逻辑删除系统用户
      *
-     * @param sysUserInfoPO 用户基本信息
-     * @return 新增记录条数
+     * @param sysUserInfoPO 系统用户
      */
-    int insertSysUserInfo(SysUserInfoPO sysUserInfoPO);
+    void deleteByIdLogical(SysUserInfoPO sysUserInfoPO);
 
     /**
-     * 更新用户信息
+     * 批量逻辑删除系统用户
      *
-     * @param sysUserInfoPO 用户基本信息
-     * @return 更新记录条数
+     * @param deleteBatchLogicalModel 批量逻辑删除的模型对象
      */
-    int updateSysUserInfo(SysUserInfoPO sysUserInfoPO);
+    void deleteBatchLogical(DeleteBatchLogicalModel deleteBatchLogicalModel);
+
+    /**
+     * 根据id物理删除系统用户
+     *
+     * @param userInfoId 主键id
+     */
+    void deleteByIdPhysical(@Param("userInfoId") Long userInfoId);
+
+    /**
+     * 批量物理删除系统用户
+     *
+     * @param sysUserInfos 主键id的数组
+     */
+    void deleteBatchPhysical(@Param("sysUserInfos") String[] sysUserInfos);
+
+    /**
+     * 修改系统用户
+     *
+     * @param sysUserInfoPO 系统用户
+     */
+    void updateSysUserInfo(SysUserInfoPO sysUserInfoPO);
+
+    /**
+     * 批量修改系统用户
+     *
+     * @param sysUserInfoPOList 系统用户List
+     */
+    void updateSysUserInfoBatch(@Param("sysUserInfoPOList") List<SysUserInfoPO> sysUserInfoPOList);
+
+    /**
+     * 根据id查询系统用户
+     *
+     * @param userInfoId 主键id
+     * @return 系统用户
+     */
+    SysUserInfoPO getSysUserInfo(@Param("userInfoId") Long userInfoId);
+
+    /**
+     * 条件查询系统用户
+     *
+     * @param whereConditions 查询条件
+     * @return 系统用户list
+     */
+    List<SysUserInfoPO> listSysUserInfos(WhereConditions whereConditions);
+
+    /**
+     * 条件查询系统用户条数
+     *
+     * @param whereConditions 查询条件
+     * @return 条数
+     */
+    Integer countSysUserInfos(WhereConditions whereConditions);
+
+    // 以上代码由代码生成器自动生成，原则上不允许任何修改, 如需自定义，请在下面补充
 }
