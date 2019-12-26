@@ -73,7 +73,7 @@ public class FileUtil {
         boolean isMkdir;
         // 如果目标目录不存在，则新建目录
         if (!directory.exists()) {
-            isMkdir = directory.mkdir();
+            isMkdir = directory.mkdirs();
         } else {
             isMkdir = true;
         }
