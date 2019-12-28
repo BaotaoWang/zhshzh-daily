@@ -18,12 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/generator")
 public class GeneratorController {
-    private GeneratorService generatorService;
-
     @Autowired
-    private GeneratorController(GeneratorService generatorService) {
-        this.generatorService = generatorService;
-    }
+    private GeneratorService generatorService;
 
     /**
      * 代码生成器

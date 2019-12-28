@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zhshzh.system.interfaceLog.dao.SysInterfaceLogMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.interfaceLog.po.SysInterfaceLogPO" >
+    <id column="interface_log_id" jdbcType="BIGINT" property="interfaceLogId" javaType="java.lang.Long" />
+    <result column="request_url" jdbcType="VARCHAR" property="requestUrl" javaType="java.lang.String" />
+    <result column="type" jdbcType="VARCHAR" property="type" javaType="java.lang.String" />
+    <result column="request_data" jdbcType="LONGVARCHAR" property="requestData" javaType="java.lang.String" />
+    <result column="response_data" jdbcType="LONGVARCHAR" property="responseData" javaType="java.lang.String" />
+    <result column="process_time" jdbcType="BIGINT" property="processTime" javaType="java.lang.Long" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" javaType="java.lang.String" />
+    <result column="method_name" jdbcType="VARCHAR" property="methodName" javaType="java.lang.String" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" javaType="java.lang.Long" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" javaType="java.lang.String" />
+    <result column="principal" jdbcType="VARCHAR" property="principal" javaType="java.lang.String" />
+    <result column="client_ip" jdbcType="VARCHAR" property="clientIp" javaType="java.lang.String" />
+    <result column="server_ip" jdbcType="VARCHAR" property="serverIp" javaType="java.lang.String" />
+    <result column="server_port" jdbcType="INTEGER" property="serverPort" javaType="java.lang.Integer" />
+    <result column="request_exception" jdbcType="LONGVARCHAR" property="requestException" javaType="java.lang.String" />
+    <result column="is_delete" jdbcType="BIT" property="delete" javaType="java.lang.Boolean" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" javaType="java.lang.String" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" javaType="java.lang.String" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    interface_log_id, request_url, type, request_data, response_data, process_time, class_name, method_name, user_id,
+    user_name, principal, client_ip, server_ip, server_port, request_exception, is_delete, create_time, update_time, create_by,
+    update_by
+  </sql>
+
+  <!-- 查询条件的拼装 -->
+  <sql id="Where_Clause" >
+    <where>
+      is_delete = 0 AND
+      <if test="conditionList != null and conditionList.size() != 0">
+        <foreach collection="conditionList" item="item" index="index" separator="AND" >
+          <choose>
+            <when test="item.whereConditionEnum.condition == 'LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'BETWEEN'" >
+              <trim prefix=" " suffix=" " suffixOverrides="AND" >
+                <if test="item.startValue != null and item.startValue != ''" >
+                  ${item.columnName} &gt;= #{item.startValue} AND
+                </if>
+                <if test="item.endValue != null and item.endValue != ''" >
+                  ${item.columnName} &lt;= #{item.endValue} AND
+                </if>
+                <if test="(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')" >
+                  1 = 1
+                </if>
+              </trim>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <otherwise>
+              ${item.columnName} ${item.whereConditionEnum.condition} #{item.value}
+            </otherwise>
+          </choose>
+        </foreach>
+      </if>
+    </where>
+  </sql>
+
+  <!-- 新增系统接口日志 -->
+  <insert id="insertSysInterfaceLog" parameterType="cn.com.zhshzh.system.interfaceLog.po.SysInterfaceLogPO" >
+    INSERT INTO sys_interface_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="interfaceLogId != null" > interface_log_id, </if>
+      <if test="requestUrl != null" > request_url, </if>
+      <if test="type != null" > type, </if>
+      <if test="requestData != null" > request_data, </if>
+      <if test="responseData != null" > response_data, </if>
+      <if test="processTime != null" > process_time, </if>
+      <if test="className != null" > class_name, </if>
+      <if test="methodName != null" > method_name, </if>
+      <if test="userId != null" > user_id, </if>
+      <if test="userName != null" > user_name, </if>
+      <if test="principal != null" > principal, </if>
+      <if test="clientIp != null" > client_ip, </if>
+      <if test="serverIp != null" > server_ip, </if>
+      <if test="serverPort != null" > server_port, </if>
+      <if test="requestException != null" > request_exception, </if>
+      <if test="delete != null" > is_delete, </if>
+      <if test="createTime != null" > create_time, </if>
+      <if test="updateTime != null" > update_time, </if>
+      <if test="createBy != null" > create_by, </if>
+      <if test="updateBy != null" > update_by, </if>
+    </trim>
+    <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+      <if test="interfaceLogId != null" > #{interfaceLogId, jdbcType=BIGINT}, </if>
+      <if test="requestUrl != null" > #{requestUrl, jdbcType=VARCHAR}, </if>
+      <if test="type != null" > #{type, jdbcType=VARCHAR}, </if>
+      <if test="requestData != null" > #{requestData, jdbcType=LONGVARCHAR}, </if>
+      <if test="responseData != null" > #{responseData, jdbcType=LONGVARCHAR}, </if>
+      <if test="processTime != null" > #{processTime, jdbcType=BIGINT}, </if>
+      <if test="className != null" > #{className, jdbcType=VARCHAR}, </if>
+      <if test="methodName != null" > #{methodName, jdbcType=VARCHAR}, </if>
+      <if test="userId != null" > #{userId, jdbcType=BIGINT}, </if>
+      <if test="userName != null" > #{userName, jdbcType=VARCHAR}, </if>
+      <if test="principal != null" > #{principal, jdbcType=VARCHAR}, </if>
+      <if test="clientIp != null" > #{clientIp, jdbcType=VARCHAR}, </if>
+      <if test="serverIp != null" > #{serverIp, jdbcType=VARCHAR}, </if>
+      <if test="serverPort != null" > #{serverPort, jdbcType=INTEGER}, </if>
+      <if test="requestException != null" > #{requestException, jdbcType=LONGVARCHAR}, </if>
+      <if test="delete != null" > #{delete, jdbcType=BIT}, </if>
+      <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
+      <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
+      <if test="createBy != null" > #{createBy, jdbcType=VARCHAR}, </if>
+      <if test="updateBy != null" > #{updateBy, jdbcType=VARCHAR}, </if>
+    </trim>
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="interfaceLogId" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <!-- 批量新增系统接口日志 -->
+  <insert id="insertSysInterfaceLogBatch" parameterType="java.util.List" >
+    INSERT INTO sys_interface_log (
+      <include refid="Base_Column_List" />
+    )
+    VALUES
+    <foreach collection="sysInterfaceLogPOList" item="item" index="index" separator="," >
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+        #{item.interfaceLogId, jdbcType=BIGINT},
+        #{item.requestUrl, jdbcType=VARCHAR},
+        #{item.type, jdbcType=VARCHAR},
+        #{item.requestData, jdbcType=LONGVARCHAR},
+        #{item.responseData, jdbcType=LONGVARCHAR},
+        #{item.processTime, jdbcType=BIGINT},
+        #{item.className, jdbcType=VARCHAR},
+        #{item.methodName, jdbcType=VARCHAR},
+        #{item.userId, jdbcType=BIGINT},
+        #{item.userName, jdbcType=VARCHAR},
+        #{item.principal, jdbcType=VARCHAR},
+        #{item.clientIp, jdbcType=VARCHAR},
+        #{item.serverIp, jdbcType=VARCHAR},
+        #{item.serverPort, jdbcType=INTEGER},
+        #{item.requestException, jdbcType=LONGVARCHAR},
+        0,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP,
+        #{item.createBy, jdbcType=VARCHAR},
+        #{item.updateBy, jdbcType=VARCHAR},
+      </trim>
+    </foreach>
+  </insert>
+
+  <!-- 根据id逻辑删除系统接口日志 -->
+  <update id="deleteByIdLogical" parameterType="cn.com.zhshzh.system.interfaceLog.po.SysInterfaceLogPO" >
+    UPDATE sys_interface_log
+    SET is_delete = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE interface_log_id = #{interfaceLogId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量逻辑删除系统接口日志 -->
+  <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
+    UPDATE sys_interface_log
+    SET is_delete = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE interface_log_id IN
+    <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id物理删除系统接口日志 -->
+  <delete id="deleteByIdPhysical" parameterType="java.lang.Long" >
+    DELETE FROM sys_interface_log
+    WHERE interface_log_id = #{interfaceLogId, jdbcType=BIGINT}
+  </delete>
+
+  <!-- 批量物理删除系统接口日志 -->
+  <delete id="deleteBatchPhysical" >
+    DELETE FROM sys_interface_log
+    WHERE interface_log_id IN
+    <foreach collection="sysInterfaceLogs" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </delete>
+
+  <!-- 根据id修改系统接口日志 -->
+  <update id="updateSysInterfaceLog" parameterType="cn.com.zhshzh.system.interfaceLog.po.SysInterfaceLogPO" >
+    UPDATE sys_interface_log
+    <set>
+      <if test="interfaceLogId != null" > interface_log_id = #{interfaceLogId, jdbcType=BIGINT}, </if>
+      <if test="requestUrl != null" > request_url = #{requestUrl, jdbcType=VARCHAR}, </if>
+      <if test="type != null" > type = #{type, jdbcType=VARCHAR}, </if>
+      <if test="requestData != null" > request_data = #{requestData, jdbcType=LONGVARCHAR}, </if>
+      <if test="responseData != null" > response_data = #{responseData, jdbcType=LONGVARCHAR}, </if>
+      <if test="processTime != null" > process_time = #{processTime, jdbcType=BIGINT}, </if>
+      <if test="className != null" > class_name = #{className, jdbcType=VARCHAR}, </if>
+      <if test="methodName != null" > method_name = #{methodName, jdbcType=VARCHAR}, </if>
+      <if test="userId != null" > user_id = #{userId, jdbcType=BIGINT}, </if>
+      <if test="userName != null" > user_name = #{userName, jdbcType=VARCHAR}, </if>
+      <if test="principal != null" > principal = #{principal, jdbcType=VARCHAR}, </if>
+      <if test="clientIp != null" > client_ip = #{clientIp, jdbcType=VARCHAR}, </if>
+      <if test="serverIp != null" > server_ip = #{serverIp, jdbcType=VARCHAR}, </if>
+      <if test="serverPort != null" > server_port = #{serverPort, jdbcType=INTEGER}, </if>
+      <if test="requestException != null" > request_exception = #{requestException, jdbcType=LONGVARCHAR}, </if>
+      update_by = #{updateBy, jdbcType=VARCHAR}
+    </set>
+    WHERE interface_log_id = #{interfaceLogId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量修改系统接口日志 -->
+  <update id="updateSysInterfaceLogBatch" parameterType="java.util.List" >
+    <foreach collection="sysInterfaceLogPOList" item="item" index="index" separator=";" >
+      UPDATE sys_interface_log
+      <set>
+        <if test="item.interfaceLogId != null" > interface_log_id = #{item.interfaceLogId, jdbcType=BIGINT}, </if>
+        <if test="item.requestUrl != null" > request_url = #{item.requestUrl, jdbcType=VARCHAR}, </if>
+        <if test="item.type != null" > type = #{item.type, jdbcType=VARCHAR}, </if>
+        <if test="item.requestData != null" > request_data = #{item.requestData, jdbcType=LONGVARCHAR}, </if>
+        <if test="item.responseData != null" > response_data = #{item.responseData, jdbcType=LONGVARCHAR}, </if>
+        <if test="item.processTime != null" > process_time = #{item.processTime, jdbcType=BIGINT}, </if>
+        <if test="item.className != null" > class_name = #{item.className, jdbcType=VARCHAR}, </if>
+        <if test="item.methodName != null" > method_name = #{item.methodName, jdbcType=VARCHAR}, </if>
+        <if test="item.userId != null" > user_id = #{item.userId, jdbcType=BIGINT}, </if>
+        <if test="item.userName != null" > user_name = #{item.userName, jdbcType=VARCHAR}, </if>
+        <if test="item.principal != null" > principal = #{item.principal, jdbcType=VARCHAR}, </if>
+        <if test="item.clientIp != null" > client_ip = #{item.clientIp, jdbcType=VARCHAR}, </if>
+        <if test="item.serverIp != null" > server_ip = #{item.serverIp, jdbcType=VARCHAR}, </if>
+        <if test="item.serverPort != null" > server_port = #{item.serverPort, jdbcType=INTEGER}, </if>
+        <if test="item.requestException != null" > request_exception = #{item.requestException, jdbcType=LONGVARCHAR}, </if>
+        update_by = #{item.updateBy, jdbcType=VARCHAR}
+      </set>
+      WHERE interface_log_id = #{item.interfaceLogId, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id查询系统接口日志 -->
+  <select id="getSysInterfaceLog" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_interface_log
+    WHERE interface_log_id = #{interfaceLogId, jdbcType=BIGINT}
+  </select>
+
+  <!-- 条件查询系统接口日志 -->
+  <select id="listSysInterfaceLogs" parameterType="cn.com.zhshzh.core.model.WhereConditions" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_interface_log
+    <include refid="Where_Clause" />
+    <if test="orderByList != null and orderByList.size() != 0">
+      ORDER BY
+      <foreach collection="orderByList" item="item" index="index" separator="," >
+        ${item.sort} ${item.orderByEnum.order}
+      </foreach>
+    </if>
+  </select>
+
+  <!-- 条件查询系统接口日志条数 -->
+  <select id="countSysInterfaceLogs"  parameterType="cn.com.zhshzh.core.model.WhereConditions" resultType="java.lang.Integer" >
+    SELECT COUNT(*) FROM sys_interface_log
+    <include refid="Where_Clause" />
+  </select>
+
+  <!-- 以上代码由代码生成器自动生成，原则上不允许任何修改, 如需自定义，请在下面补充 -->
+</mapper>

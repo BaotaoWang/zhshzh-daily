@@ -1,6 +1,7 @@
 package cn.com.zhshzh.core.security;
 
 import cn.com.zhshzh.core.constant.HttpResultEnum;
+import cn.com.zhshzh.core.constant.RedisKeyConstants;
 import cn.com.zhshzh.core.util.ResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
@@ -27,8 +28,6 @@ import java.io.IOException;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private static final Logger logger = LogManager.getLogger(JWTAuthenticationFilter.class);
 
-    static final String KEY_PREFIX = "username:";
-    static final String KEY_SUFFIX = ":rememberMe";
     private StringRedisTemplate stringRedisTemplate;
     private AuthenticationManager authenticationManager;
 
@@ -59,7 +58,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             }
 
             // MyUserDetailsService.loadUserByUsername()接收不到rememberMe,所以将其放入redis中
-            String key = KEY_PREFIX + myUser.getUsername() + KEY_SUFFIX;
+            String key = RedisKeyConstants.REMEMBERME_PREFIX + myUser.getUsername() + RedisKeyConstants.REMEMBERME_SUFFIX;
             String rememberMe = Boolean.toString(myUser.isRememberMe());
             stringRedisTemplate.opsForValue().set(key, rememberMe);
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(myUser.getUsername(),
@@ -88,7 +87,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 所以就是MyUser啦
         MyUser myUser = (MyUser) authResult.getPrincipal();
         // 获取存入redis中的rememberMe
-        String key = KEY_PREFIX + myUser.getUsername() + KEY_SUFFIX;
+        String key = RedisKeyConstants.REMEMBERME_PREFIX + myUser.getUsername() + RedisKeyConstants.REMEMBERME_SUFFIX;
         String rememberMe = stringRedisTemplate.opsForValue().get(key);
         // 获取到rememberMe后，将其从redis中删除
         stringRedisTemplate.delete(key);

@@ -2,6 +2,7 @@ package cn.com.zhshzh.core.security;
 
 import cn.com.zhshzh.business.user.po.SysUserInfoPO;
 import cn.com.zhshzh.business.user.service.SysUserInfoService;
+import cn.com.zhshzh.core.constant.RedisKeyConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,7 +45,7 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 获取存入redis中的rememberMe
-        String key = JWTAuthenticationFilter.KEY_PREFIX + username + JWTAuthenticationFilter.KEY_SUFFIX;
+        String key = RedisKeyConstants.REMEMBERME_PREFIX + username + RedisKeyConstants.REMEMBERME_SUFFIX;
         String rememberMe = stringRedisTemplate.opsForValue().get(key);
         // 获取到rememberMe后，将其从redis中删除
         stringRedisTemplate.delete(key);
@@ -53,10 +54,13 @@ public class MyUserDetailsService implements UserDetailsService {
         SysUserInfoPO sysUserInfoPO = sysUserInfoService.getSysUserInfoForLogin(username);
         username = sysUserInfoPO.getUserName();
         // 以用户名作为新的key重新放入到redis中
-        String newKey = JWTAuthenticationFilter.KEY_PREFIX + username + JWTAuthenticationFilter.KEY_SUFFIX;
+        String newKey = RedisKeyConstants.REMEMBERME_PREFIX + username + RedisKeyConstants.REMEMBERME_SUFFIX;
         if (!StringUtils.isEmpty(rememberMe)) {
             stringRedisTemplate.opsForValue().set(newKey, rememberMe);
         }
+        // 将用户id放入redis中
+        String userIdKey = RedisKeyConstants.USERID_PREFIX + username + RedisKeyConstants.USERID_SUFFIX;
+        stringRedisTemplate.opsForValue().set(userIdKey, sysUserInfoPO.getUserInfoId().toString());
         String encodedPassword = sysUserInfoPO.getPassword();
 
         // 查询用户的所有角色

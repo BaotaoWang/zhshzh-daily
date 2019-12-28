@@ -23,12 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/userInfo")
 public class SysUserInfoController {
-    private SysUserInfoService sysUserInfoService;
-
     @Autowired
-    private SysUserInfoController(SysUserInfoService sysUserInfoService) {
-        this.sysUserInfoService = sysUserInfoService;
-    }
+    private SysUserInfoService sysUserInfoService;
 
     /**
      * 根据用户id查询用户信息
