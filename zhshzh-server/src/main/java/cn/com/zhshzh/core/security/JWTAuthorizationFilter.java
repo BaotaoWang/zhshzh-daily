@@ -58,23 +58,23 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
             super.doFilterInternal(request, response, chain);
         } catch (ExpiredJwtException e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
             ResponseUtil.writeMessage(response, HttpResultEnum.USER_CREDENTIALS_HAVE_EXPIRED, e.getMessage());
         } catch (MalformedJwtException e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
             ResponseUtil.writeMessage(response, HttpResultEnum.INVALID_TOKEN, e.getMessage());
         } catch (SignatureException e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
             ResponseUtil.writeMessage(response, HttpResultEnum.INVALID_SIGNATURE, e.getMessage());
         }
         // 有异常时，不往前台返回，直接往外抛。
         // 如果捕获到ServletException，向前台返回的话，会报java.lang.IllegalStateException: getWriter() has already been called for this response
         /* catch (IOException e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
             ResponseUtil.writeMessage(response, HttpResultEnum.FAIL, e.getMessage());
             throw new IOException(e);
         } catch (ServletException e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
             ResponseUtil.writeMessage(response, HttpResultEnum.FAIL, e.getMessage());
             throw new ServletException(e);
         } */

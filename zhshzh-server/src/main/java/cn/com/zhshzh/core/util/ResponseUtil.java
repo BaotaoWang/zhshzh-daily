@@ -78,7 +78,7 @@ public class ResponseUtil {
             // 向字符流中写数据
             out.write(JSON.toJSONString(jsonResultUtil));
         } catch (IOException e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
         } finally {
             if (null != out) {
                 out.flush();
