@@ -10,10 +10,34 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      // 因存在跨域问题，必须在这配置代理
+      // 与src/http/axios.js中的axios.defaults.baseURL配合
+      '/development': {
+        target: 'http://127.0.0.1:8989/zhshzh',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/development': ''
+        }
+      },
+      '/debug': {
+        target: 'http://127.0.0.1:8989/zhshzh',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/debug': ''
+        }
+      },
+      '/production': {
+        target: 'http://127.0.0.1:8989/zhshzh',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/production': ''
+        }
+      }
+    },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '127.0.0.1', // can be overwritten by process.env.HOST
     port: 9999, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

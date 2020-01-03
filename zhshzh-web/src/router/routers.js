@@ -25,13 +25,15 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
+      name: 'login',
       redirect: '/login'
     },
     {
       path: '/login',
       component: Login
     },
-    { path: '/home',
+    {
+      path: '/home',
       name: 'home',
       component: Home,
       redirect: 'homePage',

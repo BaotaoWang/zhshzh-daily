@@ -11,7 +11,7 @@
           <div class="message-style">
             <el-dropdown trigger="click" @command="handleMessageCommand">
               <el-badge is-dot>
-                <i class="el-icon-message-solid" style="font-size: 22px;"></i>
+                <i class="el-icon-message-solid" style="font-size: 22px;" />
               </el-badge>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="a">评论</el-dropdown-item>
@@ -27,9 +27,9 @@
               </el-avatar>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item disabled>系统管理员</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-key" command="a">密码管理</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-s-custom" command="b">用户管理</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-switch-button" command="c">注销</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-key" command="password">密码管理</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-s-custom" command="userInfo">用户管理</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-switch-button" command="logout">注销</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -48,7 +48,19 @@ export default {
       this.$message('click on item ' + command)
     },
     handleUserCommand: function (command) {
-      this.$message('click on item ' + command)
+      if (command === 'password') {
+        // 密码管理
+      } else if (command === 'userInfo') {
+        // 用户管理
+      } else if (command === 'logout') {
+        // 注销操作
+        // 清除localStorage中存的token
+        localStorage.removeItem('daily-token')
+        // 跳转到登录页
+        this.$router.push({
+          name: 'login'
+        })
+      }
     }
   }
 }

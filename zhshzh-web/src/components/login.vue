@@ -13,7 +13,7 @@
           </el-col>
           <el-col :span="16">
             <el-form-item>
-              <el-input v-model="form.username" prefix-icon="el-icon-user" placeholder="请输入用户名" clearable></el-input>
+              <el-input v-model="form.username" prefix-icon="el-icon-user" placeholder="请输入用户名" clearable />
             </el-form-item>
           </el-col>
         </el-row>
@@ -23,7 +23,7 @@
           </el-col>
           <el-col :span="16">
             <el-form-item>
-              <el-input v-model="form.password" prefix-icon="el-icon-lock" placeholder="请输入密码" show-password></el-input>
+              <el-input v-model="form.password" prefix-icon="el-icon-lock" placeholder="请输入密码" show-password />
             </el-form-item>
           </el-col>
         </el-row>
@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import {login} from '@/http/api'
+
 export default {
   name: 'Login',
   data () {
@@ -56,10 +58,25 @@ export default {
       }
     }
   },
+  mounted () {
+    // 回到登录页时，将tabs数组清空
+    this.$store.state.options = []
+  },
   methods: {
     login: function () {
-      this.$router.push({
-        name: 'home'
+      login({
+        username: this.form.username,
+        password: this.form.password,
+        rememberMe: this.form.rememberMe
+      }).then(response => {
+        // 如果登录成功，则跳转到首页
+        if (response.code === 10000) {
+          this.$router.push({
+            name: 'home'
+          })
+        }
+      }).catch(error => {
+        console.log(error)
       })
     }
   }

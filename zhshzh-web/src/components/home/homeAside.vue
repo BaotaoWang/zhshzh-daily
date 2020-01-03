@@ -195,6 +195,6 @@ export default {
 
 <style scoped>
 .el-menu {
-  border-right-width: 0px;
+  border-right-width: 0;
 }
 </style>
