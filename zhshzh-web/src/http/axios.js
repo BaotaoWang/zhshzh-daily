@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import {saveToken, getToken, removeToken} from '@/util/authenticationUtil'
 
 // 环境切换时，配置请求根地址
 // 代理配置，请参考config/index.js
@@ -20,7 +21,7 @@ axios.interceptors.request.use(
   config => {
     // 每次发送请求之前判断vuex中是否存在token
     // 如果存在，则统一在http请求的header都加上token，这样后台根据token判断你的登录情况
-    let token = localStorage.getItem('daily-token')
+    let token = getToken()
     if (!token) {
       config.headers.Authorization = token
     }
@@ -39,7 +40,7 @@ axios.interceptors.response.use(
       // 请求成功后，如果header中有token，则将其保存在localStorage中
       let token = response.headers.token
       if (token) {
-        localStorage.setItem('daily-token', token)
+        saveToken(token)
       }
       return Promise.resolve(response)
     } else {
@@ -73,7 +74,7 @@ axios.interceptors.response.use(
             forbidClick: true
           }) */
           // 清除token
-          localStorage.removeItem('daily-token')
+          removeToken()
           this.$store.commit('loginSuccess', null)
           // 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
           setTimeout(() => {

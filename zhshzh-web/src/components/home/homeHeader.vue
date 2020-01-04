@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import {removeToken} from '@/util/authenticationUtil'
+
 export default {
   name: 'header1',
   methods: {
@@ -55,7 +57,7 @@ export default {
       } else if (command === 'logout') {
         // 注销操作
         // 清除localStorage中存的token
-        localStorage.removeItem('daily-token')
+        removeToken()
         // 跳转到登录页
         this.$router.push({
           name: 'login'

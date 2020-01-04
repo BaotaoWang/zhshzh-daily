@@ -27,10 +27,15 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row justify="center">
-          <el-col :span="4" :offset="10">
-            <el-checkbox v-model="form.rememberMe">
-              <span class="rememberMe">记住我</span>
+        <el-row justify="center" style="margin-top: 3%">
+          <el-col :span="2" :offset="6">
+            <el-checkbox v-model="autoLogin" @change="isAutoLogin">
+              <span class="rememberMe">自动登录</span>
+            </el-checkbox>
+          </el-col>
+          <el-col :span="2" :offset="6">
+            <el-checkbox v-model="form.rememberMe" @change="isRememberMe">
+              <span class="rememberMe">记住密码</span>
             </el-checkbox>
           </el-col>
         </el-row>
@@ -46,6 +51,7 @@
 
 <script>
 import {login} from '@/http/api'
+import {saveUserIdentity, getUserIdentity, removeUserIdentity} from '@/util/authenticationUtil'
 
 export default {
   name: 'Login',
@@ -54,23 +60,44 @@ export default {
       form: {
         username: '',
         password: '',
-        rememberMe: ''
-      }
+        rememberMe: false
+      },
+      autoLogin: false
     }
   },
   mounted () {
+    // 获取localStorage中的username和password
+    let userIdentity = getUserIdentity()
+    let username = userIdentity.username
+    let password = userIdentity.password
+    // 如果存在的话，则自动填充（忽略浏览器自带的自动填充功能）
+    if (username && password) {
+      this.form.username = username
+      this.form.password = password
+      this.form.rememberMe = true
+    }
     // 回到登录页时，将tabs数组清空
     this.$store.state.options = []
   },
   methods: {
+    /**
+     * 登录
+     */
     login: function () {
       login({
         username: this.form.username,
         password: this.form.password,
         rememberMe: this.form.rememberMe
       }).then(response => {
-        // 如果登录成功，则跳转到首页
         if (response.code === 10000) {
+          if (this.form.rememberMe) {
+            // 如果勾选了记住密码，则将加密后的用户名和密码存入localStorage中
+            saveUserIdentity(this.form.username, this.form.password)
+          } else {
+            // 如果没勾选记住密码，则将localStorage中的用户名和密码删除
+            removeUserIdentity()
+          }
+          // 如果登录成功，则跳转到首页
           this.$router.push({
             name: 'home'
           })
@@ -78,6 +105,22 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    /**
+     * 勾选自动登录的前提是记住密码
+     */
+    isAutoLogin: function () {
+      if (this.autoLogin) {
+        this.form.rememberMe = true
+      }
+    },
+    /**
+     * 不记住密码时，取消自动登录
+     */
+    isRememberMe: function () {
+      if (!this.form.rememberMe) {
+        this.autoLogin = false
+      }
     }
   }
 }
