@@ -1,15 +1,21 @@
 import {decrypt, encrypt} from '@/util/cryptoUtil'
 
-const TOKEN = 'token'
+/**
+ * 为了安全，存在localStorage和sessionStorage中数据的key都为简写，并且反转
+ * **_KEY为加密时的密钥，必须为16位十六进制的字符
+ * **_IV为加密时的偏移量，必须为16位十六进制的字符
+ */
+const TOKEN = 'nt'
 const TOKEN_KEY = 'e58311d7651252bc'
 const TOKEN_IV = 'b84163731f4f502f'
-const USERNAME = 'ue'
+const USERNAME = 'eu'
 const USERNAME_KEY = 'eab9b81688964b6d'
 const USERNAME_IV = '87a0aeac486a87c2'
-const PASSWORD = 'pd'
+const PASSWORD = 'dp'
 const PASSWORD_KEY = '3767e97f3b8945db'
 const PASSWORD_IV = 'ab73e4a361b594d6'
-const AUTO_LOGIN = 'an'
+const AUTO_LOGIN = 'la'
+const USER_FULL_NAME = 'nfu'
 
 /**
  * 将token加密后存入sessionStorage中
@@ -38,6 +44,29 @@ const getToken = () => {
  */
 const removeToken = () => {
   sessionStorage.removeItem(TOKEN)
+}
+
+/**
+ * 将用户姓名存入sessionStorage中
+ * @param userFullName 用户姓名
+ */
+const saveUserFullName = (userFullName) => {
+  sessionStorage.setItem(USER_FULL_NAME, userFullName)
+}
+
+/**
+ * 从sessionStorage中获取并返回用户姓名
+ * @returns {string}
+ */
+const getUserFullName = () => {
+  return sessionStorage.getItem(USER_FULL_NAME)
+}
+
+/**
+ * 将用户姓名从sessionStorage中移除
+ */
+const removeUserFullName = () => {
+  sessionStorage.removeItem(USER_FULL_NAME)
 }
 
 /**
@@ -107,6 +136,9 @@ export {
   saveToken,
   getToken,
   removeToken,
+  saveUserFullName,
+  getUserFullName,
+  removeUserFullName,
   saveUserIdentity,
   getUserIdentity,
   removeUserIdentity,

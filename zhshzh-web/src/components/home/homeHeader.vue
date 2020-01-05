@@ -26,7 +26,7 @@
                 <img src="@/assets/images/head-image1.jpg"/>
               </el-avatar>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item disabled>系统管理员</el-dropdown-item>
+                <el-dropdown-item disabled>{{userFullName}}</el-dropdown-item>
                 <el-dropdown-item icon="el-icon-key" command="password">密码管理</el-dropdown-item>
                 <el-dropdown-item icon="el-icon-s-custom" command="userInfo">用户管理</el-dropdown-item>
                 <el-dropdown-item icon="el-icon-info" command="about">关于</el-dropdown-item>
@@ -42,10 +42,19 @@
 </template>
 
 <script>
-import {removeToken} from '@/util/authenticationUtil'
+import {removeToken, getUserFullName, removeUserFullName} from '@/util/authenticationUtil'
 
 export default {
   name: 'header1',
+  data () {
+    return {
+      userFullName: null
+    }
+  },
+  mounted () {
+    // 从sessionStorage中获取用户姓名
+    this.userFullName = getUserFullName()
+  },
   methods: {
     handleMessageCommand: function (command) {
       this.$message('click on item ' + command)
@@ -61,6 +70,8 @@ export default {
         // 注销操作
         // 清除sessionStorage中存的token
         removeToken()
+        // 清除sessionStorage中存的用户姓名
+        removeUserFullName()
         // 跳转到登录页
         this.$router.push({
           name: 'login'

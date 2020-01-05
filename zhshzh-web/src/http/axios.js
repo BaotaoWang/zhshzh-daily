@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {Message} from 'element-ui'
-import {saveToken, getToken, removeToken} from '@/util/authenticationUtil'
+import {saveToken, getToken} from '@/util/authenticationUtil'
 
 // 环境切换时，配置请求根地址
 // 代理配置，请参考config/index.js
@@ -73,8 +73,6 @@ axios.interceptors.response.use(
             duration: 1000,
             forbidClick: true
           }) */
-          // 清除token
-          removeToken()
           this.$store.commit('loginSuccess', null)
           // 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
           setTimeout(() => {

@@ -1,7 +1,7 @@
 <template>
   <div class="div-background">
-    <div class="div-form">
-      <el-form ref="form" :model="form">
+    <div class="div-form" @keypress.enter="login('loginForm')">
+      <el-form ref="loginForm" :model="loginForm" :rules="rules">
         <el-row justify="center">
           <el-col :span="16" :offset="4">
             <h1>中晟日志系统</h1>
@@ -12,8 +12,8 @@
             <span>用户名</span>
           </el-col>
           <el-col :span="16">
-            <el-form-item>
-              <el-input v-model="form.username" prefix-icon="el-icon-user" placeholder="请输入用户名" clearable />
+            <el-form-item prop="username">
+              <el-input v-model="loginForm.username" prefix-icon="el-icon-user" placeholder="请输入用户名" clearable />
             </el-form-item>
           </el-col>
         </el-row>
@@ -22,8 +22,8 @@
             <span>密码</span>
           </el-col>
           <el-col :span="16">
-            <el-form-item>
-              <el-input v-model="form.password" prefix-icon="el-icon-lock" placeholder="请输入密码" show-password />
+            <el-form-item prop="password">
+              <el-input v-model="loginForm.password" prefix-icon="el-icon-lock" placeholder="请输入密码" show-password />
             </el-form-item>
           </el-col>
         </el-row>
@@ -34,14 +34,14 @@
             </el-checkbox>
           </el-col>
           <el-col :span="2" :offset="6">
-            <el-checkbox v-model="form.rememberMe" @change="isRememberMe">
+            <el-checkbox v-model="loginForm.rememberMe" @change="isRememberMe">
               <span class="rememberMe">记住密码</span>
             </el-checkbox>
           </el-col>
         </el-row>
         <el-row justify="center" style="margin-top: 5%;">
           <el-col :span="4" :offset="10">
-            <el-button type="primary" @click="login">登&nbsp;&nbsp;录</el-button>
+            <el-button type="primary" @click="login('loginForm')">登&nbsp;&nbsp;录</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -50,19 +50,29 @@
 </template>
 
 <script>
+import {Message} from 'element-ui'
 import {login} from '@/http/api'
-import {saveUserIdentity, getUserIdentity, removeUserIdentity, saveAutoLoginState, getAutoLoginState, removeAutoLoginState} from '@/util/authenticationUtil'
+import {saveUserIdentity, getUserIdentity, removeUserIdentity, saveAutoLoginState, getAutoLoginState,
+  removeAutoLoginState, saveUserFullName} from '@/util/authenticationUtil'
 
 export default {
   name: 'Login',
   data () {
     return {
-      form: {
+      loginForm: {
         username: '',
         password: '',
         rememberMe: false
       },
-      autoLogin: false
+      autoLogin: false,
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'change' }
+        ]
+      }
     }
   },
   mounted () {
@@ -72,9 +82,9 @@ export default {
     let password = userIdentity.password
     // 如果存在的话，则自动填充（忽略浏览器自带的自动填充功能）
     if (username && password) {
-      this.form.username = username
-      this.form.password = password
-      this.form.rememberMe = true
+      this.loginForm.username = username
+      this.loginForm.password = password
+      this.loginForm.rememberMe = true
     }
 
     // 获取localStorage中的自动登录状态
@@ -91,34 +101,51 @@ export default {
     /**
      * 登录
      */
-    login: function () {
-      login({
-        username: this.form.username,
-        password: this.form.password,
-        rememberMe: this.form.rememberMe
-      }).then(response => {
-        if (response.code === 10000) {
-          if (this.form.rememberMe) {
-            // 如果勾选了记住密码，则将加密后的用户名和密码存入localStorage中
-            saveUserIdentity(this.form.username, this.form.password)
-          } else {
-            // 如果没勾选记住密码，则将localStorage中的用户名和密码删除
-            removeUserIdentity()
-          }
-          if (this.autoLogin) {
-            // 如果勾选自动登录，则将自动登录状态保存到localStorage中
-            saveAutoLoginState(true)
-          } else {
-            // 如果没勾选自动登录状态，则将localStorage中的自动登录状态删除
-            removeAutoLoginState()
-          }
-          // 如果登录成功，则跳转到首页
-          this.$router.push({
-            name: 'home'
+    login: function (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          login({
+            username: this.loginForm.username,
+            password: this.loginForm.password,
+            rememberMe: this.loginForm.rememberMe
+          }).then(response => {
+            if (response.code === 10000) {
+              if (this.loginForm.rememberMe) {
+                // 如果勾选了记住密码，则将加密后的用户名和密码存入localStorage中
+                saveUserIdentity(this.loginForm.username, this.loginForm.password)
+              } else {
+                // 如果没勾选记住密码，则将localStorage中的用户名和密码删除
+                removeUserIdentity()
+              }
+
+              if (this.autoLogin) {
+                // 如果勾选自动登录，则将自动登录状态保存到localStorage中
+                saveAutoLoginState(true)
+              } else {
+                // 如果没勾选自动登录状态，则将localStorage中的自动登录状态删除
+                removeAutoLoginState()
+              }
+
+              console.log(response)
+              // 将用户姓名保存到sessionStorage中
+              saveUserFullName(response.data.fullName)
+
+              // 如果登录成功，则跳转到首页
+              this.$router.push({
+                name: 'home'
+              })
+            } else {
+              // 如果返回的code不是10000,则提示错误消息
+              Message({
+                showClose: true,
+                message: response.message,
+                type: 'error'
+              })
+            }
+          }).catch(error => {
+            console.log(error)
           })
         }
-      }).catch(error => {
-        console.log(error)
       })
     },
     /**
@@ -126,14 +153,14 @@ export default {
      */
     isAutoLogin: function () {
       if (this.autoLogin) {
-        this.form.rememberMe = true
+        this.loginForm.rememberMe = true
       }
     },
     /**
      * 不记住密码时，取消自动登录
      */
     isRememberMe: function () {
-      if (!this.form.rememberMe) {
+      if (!this.loginForm.rememberMe) {
         this.autoLogin = false
       }
     }

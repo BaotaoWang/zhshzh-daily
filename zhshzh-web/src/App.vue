@@ -7,7 +7,7 @@
 <script>
 import {Message} from 'element-ui'
 import {login} from '@/http/api'
-import {getToken, getAutoLoginState, getUserIdentity} from '@/util/authenticationUtil'
+import {getToken, getAutoLoginState, getUserIdentity, saveUserFullName} from '@/util/authenticationUtil'
 
 export default {
   name: 'App',
@@ -34,6 +34,8 @@ export default {
               rememberMe: true
             }).then(response => {
               if (response.code === 10000) {
+                // 将用户姓名保存到sessionStorage中
+                saveUserFullName(response.data.fullName)
                 next()
               } else {
                 // 如果自动登录失败，提示失败信息
