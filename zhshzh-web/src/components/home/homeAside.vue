@@ -176,6 +176,8 @@ export default {
     }
   },
   mounted () {
+    // 将tabs数组清空
+    this.$store.state.options = []
     // 刷新时以当前路由做为tab加入tabs
     if (this.$route.path === '/homePage') {
       // 如果刷新首页，只有首页一个tab

@@ -51,7 +51,7 @@
 
 <script>
 import {login} from '@/http/api'
-import {saveUserIdentity, getUserIdentity, removeUserIdentity} from '@/util/authenticationUtil'
+import {saveUserIdentity, getUserIdentity, removeUserIdentity, saveAutoLoginState, getAutoLoginState, removeAutoLoginState} from '@/util/authenticationUtil'
 
 export default {
   name: 'Login',
@@ -76,6 +76,14 @@ export default {
       this.form.password = password
       this.form.rememberMe = true
     }
+
+    // 获取localStorage中的自动登录状态
+    let isAutoLogin = getAutoLoginState()
+    if (isAutoLogin) {
+      // 如果之前是自动登录，则当前自动勾选自动登录
+      this.autoLogin = true
+    }
+
     // 回到登录页时，将tabs数组清空
     this.$store.state.options = []
   },
@@ -96,6 +104,13 @@ export default {
           } else {
             // 如果没勾选记住密码，则将localStorage中的用户名和密码删除
             removeUserIdentity()
+          }
+          if (this.autoLogin) {
+            // 如果勾选自动登录，则将自动登录状态保存到localStorage中
+            saveAutoLoginState(true)
+          } else {
+            // 如果没勾选自动登录状态，则将localStorage中的自动登录状态删除
+            removeAutoLoginState()
           }
           // 如果登录成功，则跳转到首页
           this.$router.push({

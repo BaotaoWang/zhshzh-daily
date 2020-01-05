@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import {Message} from 'element-ui'
 import {saveToken, getToken, removeToken} from '@/util/authenticationUtil'
 
 // 环境切换时，配置请求根地址
@@ -19,7 +19,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
-    // 每次发送请求之前判断vuex中是否存在token
+    // 每次发送请求之前判断sessionStorage中是否存在token
     // 如果存在，则统一在http请求的header都加上token，这样后台根据token判断你的登录情况
     let token = getToken()
     if (!token) {
@@ -37,7 +37,7 @@ axios.interceptors.response.use(
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {
-      // 请求成功后，如果header中有token，则将其保存在localStorage中
+      // 请求成功后，如果header中有token，则将其保存在sessionStorage中
       let token = response.headers.token
       if (token) {
         saveToken(token)

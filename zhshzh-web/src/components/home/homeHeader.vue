@@ -29,6 +29,7 @@
                 <el-dropdown-item disabled>系统管理员</el-dropdown-item>
                 <el-dropdown-item icon="el-icon-key" command="password">密码管理</el-dropdown-item>
                 <el-dropdown-item icon="el-icon-s-custom" command="userInfo">用户管理</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-info" command="about">关于</el-dropdown-item>
                 <el-dropdown-item icon="el-icon-switch-button" command="logout">注销</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -54,9 +55,11 @@ export default {
         // 密码管理
       } else if (command === 'userInfo') {
         // 用户管理
+      } else if (command === 'about') {
+        // 关于
       } else if (command === 'logout') {
         // 注销操作
-        // 清除localStorage中存的token
+        // 清除sessionStorage中存的token
         removeToken()
         // 跳转到登录页
         this.$router.push({
