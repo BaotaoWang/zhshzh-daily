@@ -1,5 +1,6 @@
 package cn.com.zhshzh.core.security;
 
+import cn.com.zhshzh.business.user.service.SysUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,11 +29,14 @@ public class MySecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     private MyUserDetailsService myUserDetailsService;
     private StringRedisTemplate stringRedisTemplate;
+    private SysUserInfoService sysUserInfoService;
 
     @Autowired
-    MySecurityConfigurerAdapter(MyUserDetailsService myUserDetailsService, StringRedisTemplate stringRedisTemplate) {
+    MySecurityConfigurerAdapter(MyUserDetailsService myUserDetailsService, StringRedisTemplate stringRedisTemplate,
+                                SysUserInfoService sysUserInfoService) {
         this.myUserDetailsService = myUserDetailsService;
         this.stringRedisTemplate = stringRedisTemplate;
+        this.sysUserInfoService = sysUserInfoService;
     }
 
     /**
@@ -93,7 +97,7 @@ public class MySecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // 添加过滤器
-        http.addFilter(new JWTAuthenticationFilter(authenticationManager(), stringRedisTemplate));
+        http.addFilter(new JWTAuthenticationFilter(authenticationManager(), stringRedisTemplate, sysUserInfoService));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager()));
 
         // 1.先配置放行不需要认证的 permitAll()

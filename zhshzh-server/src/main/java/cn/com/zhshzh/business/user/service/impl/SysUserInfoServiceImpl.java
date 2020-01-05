@@ -84,6 +84,25 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     }
 
     /**
+     * 根据用户名查询用户信息
+     *
+     * @param username 用户名
+     * @return 用户信息
+     */
+    @Override
+    public SysUserInfoPO getSysUserInfoByUsername(String username) {
+        // 查询条件
+        List<ConditionModel> conditionModels = new ArrayList<>();
+        conditionModels.add(new ConditionModel("user_name", username));
+        // 根据用户名查询用户信息
+        List<SysUserInfoPO> sysUserInfoPOS = sysUserInfoMapper.listSysUserInfos(new WhereConditions(conditionModels));
+        if (!CollectionUtils.isEmpty(sysUserInfoPOS)) {
+            return sysUserInfoPOS.get(0);
+        }
+        return null;
+    }
+
+    /**
      * 条件查询用户信息
      *
      * @param sysUserInfoPO 查询条件对象

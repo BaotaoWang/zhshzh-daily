@@ -1,11 +1,15 @@
 package cn.com.zhshzh.core.security;
 
+import cn.com.zhshzh.business.user.dto.SysUserInfoDTO;
+import cn.com.zhshzh.business.user.po.SysUserInfoPO;
+import cn.com.zhshzh.business.user.service.SysUserInfoService;
 import cn.com.zhshzh.core.constant.HttpResultEnum;
 import cn.com.zhshzh.core.constant.RedisKeyConstants;
 import cn.com.zhshzh.core.util.ResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -30,10 +34,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private StringRedisTemplate stringRedisTemplate;
     private AuthenticationManager authenticationManager;
+    private SysUserInfoService sysUserInfoService;
 
-    JWTAuthenticationFilter(AuthenticationManager authenticationManager, StringRedisTemplate stringRedisTemplate) {
+    JWTAuthenticationFilter(AuthenticationManager authenticationManager, StringRedisTemplate stringRedisTemplate,
+                            SysUserInfoService sysUserInfoService) {
         this.authenticationManager = authenticationManager;
         this.stringRedisTemplate = stringRedisTemplate;
+        this.sysUserInfoService = sysUserInfoService;
     }
 
     /**
@@ -86,18 +93,24 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 查看源代码会发现调用getPrincipal()方法会返回一个实现了`UserDetails`接口的对象
         // 所以就是MyUser啦
         MyUser myUser = (MyUser) authResult.getPrincipal();
+        // 用户名
+        String username = myUser.getUsername();
         // 获取存入redis中的rememberMe
-        String key = RedisKeyConstants.REMEMBERME_PREFIX + myUser.getUsername() + RedisKeyConstants.REMEMBERME_SUFFIX;
+        String key = RedisKeyConstants.REMEMBERME_PREFIX + username + RedisKeyConstants.REMEMBERME_SUFFIX;
         String rememberMe = stringRedisTemplate.opsForValue().get(key);
         // 获取到rememberMe后，将其从redis中删除
         stringRedisTemplate.delete(key);
-        String token = JwtTokenUtils.createToken(myUser.getUsername(), myUser.getAuthorities(), Boolean.parseBoolean(rememberMe));
+        String token = JwtTokenUtils.createToken(username, myUser.getAuthorities(), Boolean.parseBoolean(rememberMe));
         // 返回创建成功的token
         // 但是这里创建的token只是单纯的token
         // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
         response.setHeader(JwtTokenUtils.TOKEN, JwtTokenUtils.TOKEN_PREFIX + token);
+        // 根据用户名查询用户信息
+        SysUserInfoPO sysUserInfoPO = sysUserInfoService.getSysUserInfoByUsername(username);
+        SysUserInfoDTO sysUserInfoDTO = new SysUserInfoDTO();
+        BeanUtils.copyProperties(sysUserInfoPO, sysUserInfoDTO);
         // 返回成功的消息
-        ResponseUtil.writeMessage(response);
+        ResponseUtil.writeMessage(response, sysUserInfoDTO);
     }
 
     /**
