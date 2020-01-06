@@ -1,4 +1,4 @@
-package cn.com.zhshzh.business.user.dto;
+package cn.com.zhshzh.system.user.dto;
 
 import lombok.Data;
 

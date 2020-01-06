@@ -1,9 +1,9 @@
-package cn.com.zhshzh.business.user.util;
+package cn.com.zhshzh.system.user.util;
 
-import cn.com.zhshzh.business.user.dto.SysUserInfoDTO;
-import cn.com.zhshzh.business.user.po.SysUserInfoPO;
 import cn.com.zhshzh.core.util.Convertable;
 import cn.com.zhshzh.core.util.DateFormatUtil;
+import cn.com.zhshzh.system.user.dto.SysUserInfoDTO;
+import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;

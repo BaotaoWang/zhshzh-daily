@@ -9,8 +9,6 @@ import java.util.Set;
 @Data
 public class MyUser implements UserDetails {
 
-    private static final long serialVersionUID = -8972455339484022256L;
-
     /**
      * 用户id
      */

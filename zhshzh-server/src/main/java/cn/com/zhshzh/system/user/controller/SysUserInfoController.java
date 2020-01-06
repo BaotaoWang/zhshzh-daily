@@ -1,10 +1,10 @@
-package cn.com.zhshzh.business.user.controller;
+package cn.com.zhshzh.system.user.controller;
 
-import cn.com.zhshzh.business.user.dto.SysUserInfoDTO;
-import cn.com.zhshzh.business.user.po.SysUserInfoPO;
-import cn.com.zhshzh.business.user.service.SysUserInfoService;
-import cn.com.zhshzh.business.user.util.SysUserInfoConvertUtil;
 import cn.com.zhshzh.core.util.JsonResultUtil;
+import cn.com.zhshzh.system.user.dto.SysUserInfoDTO;
+import cn.com.zhshzh.system.user.po.SysUserInfoPO;
+import cn.com.zhshzh.system.user.service.SysUserInfoService;
+import cn.com.zhshzh.system.user.util.SysUserInfoConvertUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

@@ -1,8 +1,8 @@
-package cn.com.zhshzh.business.user.dao;
+package cn.com.zhshzh.system.user.dao;
 
-import cn.com.zhshzh.business.user.po.SysUserInfoPO;
 import cn.com.zhshzh.core.model.DeleteBatchLogicalModel;
 import cn.com.zhshzh.core.model.WhereConditions;
+import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

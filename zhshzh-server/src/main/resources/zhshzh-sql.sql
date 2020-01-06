@@ -57,3 +57,71 @@ CREATE TABLE `sys_interface_log` (
 	`update_by` VARCHAR (32) NOT NULL DEFAULT 'system' COMMENT '修改人',
 	PRIMARY KEY (`interface_log_id`)
 ) ENGINE = INNODB DEFAULT CHARACTER SET = utf8 COMMENT = '系统接口日志表';
+
+
+-- 创建系统角色表
+DROP TABLE IF EXISTS `sys_role_info`;
+
+CREATE TABLE `sys_role_info` (
+	`role_info_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '角色id',
+	`role_name` VARCHAR (32) NOT NULL COMMENT '角色名称',
+	`role_description` VARCHAR (200) DEFAULT NULL COMMENT '角色描述',
+	`is_delete` BIT NOT NULL DEFAULT 0 COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+	`create_by` BIGINT UNSIGNED NOT NULL COMMENT '创建人',
+	`update_by` BIGINT UNSIGNED NOT NULL COMMENT '修改人',
+	PRIMARY KEY (`role_info_id`)
+) ENGINE = INNODB DEFAULT CHARACTER SET = utf8 COMMENT = '系统角色表';
+
+
+-- 创建用户-角色关系表
+DROP TABLE IF EXISTS `user_role_relation`;
+
+CREATE TABLE `user_role_relation` (
+	`ur_relation_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户-角色关系id',
+	`user_info_id` BIGINT NOT NULL COMMENT '用户id',
+	`role_info_id` BIGINT NOT NULL COMMENT '角色id',
+	`is_delete` BIT NOT NULL DEFAULT 0 COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+	`create_by` BIGINT UNSIGNED NOT NULL COMMENT '创建人',
+	`update_by` BIGINT UNSIGNED NOT NULL COMMENT '修改人',
+	PRIMARY KEY (`ur_relation_id`)
+) ENGINE = INNODB DEFAULT CHARACTER SET = utf8 COMMENT = '用户-角色关系表';
+
+
+-- 创建系统菜单表
+DROP TABLE IF EXISTS `sys_menu_info`;
+
+CREATE TABLE `sys_menu_info` (
+	`menu_info_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '菜单id',
+	`menu_name` VARCHAR (64) NOT NULL COMMENT '菜单名称',
+	`menu_route` VARCHAR (200) NOT NULL COMMENT '菜单路由',
+	`parent_id` BIGINT UNSIGNED NOT NULL COMMENT '父级菜单id',
+	`menu_order` SMALLINT UNSIGNED DEFAULT NULL COMMENT '菜单序号',
+	`menu_icon` BIGINT UNSIGNED DEFAULT NULL COMMENT '菜单图标id',
+	`menu_description` VARCHAR (200) DEFAULT NULL COMMENT '菜单描述',
+	`is_delete` BIT NOT NULL DEFAULT 0 COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+	`create_by` BIGINT UNSIGNED NOT NULL COMMENT '创建人',
+	`update_by` BIGINT UNSIGNED NOT NULL COMMENT '修改人',
+	PRIMARY KEY (`menu_info_id`)
+) ENGINE = INNODB DEFAULT CHARACTER SET = utf8 COMMENT = '系统菜单表';
+
+
+-- 创建角色-菜单关系表
+DROP TABLE IF EXISTS `role_menu_relation`;
+
+CREATE TABLE `role_menu_relation` (
+	`rm_relation_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '角色-菜单关系id',
+	`role_info_id` BIGINT NOT NULL COMMENT '角色id',
+	`menu_info_id` BIGINT NOT NULL COMMENT '菜单id',
+	`is_delete` BIT NOT NULL DEFAULT 0 COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+	`create_by` BIGINT UNSIGNED NOT NULL COMMENT '创建人',
+	`update_by` BIGINT UNSIGNED NOT NULL COMMENT '修改人',
+	PRIMARY KEY (`rm_relation_id`)
+) ENGINE = INNODB DEFAULT CHARACTER SET = utf8 COMMENT = '角色-菜单关系表';

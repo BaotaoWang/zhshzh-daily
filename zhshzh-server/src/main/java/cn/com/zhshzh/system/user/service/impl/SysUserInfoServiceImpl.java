@@ -1,14 +1,14 @@
-package cn.com.zhshzh.business.user.service.impl;
+package cn.com.zhshzh.system.user.service.impl;
 
-import cn.com.zhshzh.business.user.dao.SysUserInfoMapper;
-import cn.com.zhshzh.business.user.dto.SysUserInfoDTO;
-import cn.com.zhshzh.business.user.po.SysUserInfoPO;
-import cn.com.zhshzh.business.user.service.SysUserInfoService;
-import cn.com.zhshzh.business.user.util.SysUserInfoConvertUtil;
 import cn.com.zhshzh.core.constant.PatternMatchesConstants;
 import cn.com.zhshzh.core.model.ConditionModel;
 import cn.com.zhshzh.core.model.WhereConditions;
 import cn.com.zhshzh.core.util.JsonResultUtil;
+import cn.com.zhshzh.system.user.dao.SysUserInfoMapper;
+import cn.com.zhshzh.system.user.dto.SysUserInfoDTO;
+import cn.com.zhshzh.system.user.po.SysUserInfoPO;
+import cn.com.zhshzh.system.user.service.SysUserInfoService;
+import cn.com.zhshzh.system.user.util.SysUserInfoConvertUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

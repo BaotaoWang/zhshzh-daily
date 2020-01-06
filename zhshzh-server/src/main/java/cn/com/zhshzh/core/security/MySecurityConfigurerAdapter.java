@@ -1,6 +1,6 @@
 package cn.com.zhshzh.core.security;
 
-import cn.com.zhshzh.business.user.service.SysUserInfoService;
+import cn.com.zhshzh.system.user.service.SysUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
