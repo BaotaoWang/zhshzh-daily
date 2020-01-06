@@ -21,7 +21,8 @@ public enum HttpResultEnum {
     INVALID_SIGNATURE(9109, "无效的JWT签名"),
 
     TABLE_NOT_EXISTS(9120, "数据库表不存在"),
-    GENERATOR_ERROR(9121, "代码生成器异常");
+    GENERATOR_ERROR(9121, "代码生成器异常"),
+    GENERATOR_NOT_ALLOW(9122, "禁止远程生成代码");
 
     private int code;
     private String message;

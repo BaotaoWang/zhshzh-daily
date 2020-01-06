@@ -72,6 +72,7 @@ public class GeneratePoFileUtil {
         // 拼接引包
         builder.append("import lombok.Data;").append("\r\n");
         builder.append("\r\n");
+        builder.append("import java.io.Serializable;").append("\r\n");
         // 遍历拼接需要额外引的包
         importPackages.forEach(importPackage -> builder.append(importPackage).append("\r\n"));
         builder.append("\r\n");
@@ -84,7 +85,7 @@ public class GeneratePoFileUtil {
         builder.append(" * @since ").append(nowDateStr).append("\r\n");
         builder.append(" */").append("\r\n");
         builder.append("@Data").append("\r\n");
-        builder.append("public class ").append(upperCamelCasePoName).append(" {").append("\r\n");
+        builder.append("public class ").append(upperCamelCasePoName).append(" implements Serializable {").append("\r\n");
         builder.append(memberVariables).append("\r\n");
         builder.append("    /**").append("\r\n");
         builder.append("     * 无参构造方法").append("\r\n");

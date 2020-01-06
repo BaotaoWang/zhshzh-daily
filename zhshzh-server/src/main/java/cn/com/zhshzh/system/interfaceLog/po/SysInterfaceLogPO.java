@@ -2,6 +2,7 @@ package cn.com.zhshzh.system.interfaceLog.po;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,10 +10,10 @@ import java.util.Date;
  * 系统接口日志PO
  *
  * @author Generator
- * @since 2019/12/28
+ * @since 2020/01/06
  */
 @Data
-public class SysInterfaceLogPO {
+public class SysInterfaceLogPO implements Serializable {
 
     /**
      * interface_log_id

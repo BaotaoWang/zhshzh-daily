@@ -13,7 +13,7 @@ import java.util.List;
  * 系统接口日志Mapper
  *
  * @author Generator
- * @since 2019/12/28
+ * @since 2020/01/06
  */
 @Mapper
 public interface SysInterfaceLogMapper {

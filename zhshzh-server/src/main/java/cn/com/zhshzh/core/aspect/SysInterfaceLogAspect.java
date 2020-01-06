@@ -18,8 +18,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartRequest;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 系统接口调用日志的切面
@@ -77,18 +82,6 @@ public class SysInterfaceLogAspect {
                 return pjp.proceed();
             }
             HttpServletRequest request = attributes.getRequest();
-            // 请求方式
-            sysInterfaceLogPO.setType(request.getMethod());
-            if (HttpMethod.GET.matches(request.getMethod())) {
-                // GET请求获取参数
-                sysInterfaceLogPO.setRequestData(request.getQueryString());
-            } else {
-                // POST/PUT请求获取参数
-                Object[] args = pjp.getArgs();
-                if (args != null) {
-                    sysInterfaceLogPO.setRequestData(JSON.toJSONString(args));
-                }
-            }
             // 请求URL
             sysInterfaceLogPO.setRequestUrl(new String(request.getRequestURL()));
             // 请求用户名
@@ -116,6 +109,25 @@ public class SysInterfaceLogAspect {
             sysInterfaceLogPO.setProcessTime(responseTime - requestTime);
             // 响应数据
             sysInterfaceLogPO.setResponseData(JSON.toJSONString(result));
+            // 请求方式
+            sysInterfaceLogPO.setType(request.getMethod());
+            if (HttpMethod.GET.matches(request.getMethod())) {
+                // GET请求获取参数
+                sysInterfaceLogPO.setRequestData(request.getQueryString());
+            } else {
+                // POST/PUT请求获取参数
+                Object[] args = pjp.getArgs();
+                if (args != null) {
+                    List<Object> objects = new ArrayList<>();
+                    for (Object arg : args) {
+                        if (arg instanceof ServletRequest || arg instanceof MultipartRequest || arg instanceof ServletResponse) {
+                            continue;
+                        }
+                        objects.add(arg);
+                    }
+                    sysInterfaceLogPO.setRequestData(JSON.toJSONString(objects));
+                }
+            }
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
             sysInterfaceLogPO.setRequestException(throwable.getMessage());

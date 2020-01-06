@@ -2,6 +2,7 @@ package cn.com.zhshzh.business.user.po;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Date;
  * @since 2019/12/25
  */
 @Data
-public class SysUserInfoPO {
+public class SysUserInfoPO implements Serializable {
 
     /**
      * user_info_id
