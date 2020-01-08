@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zhshzh.system.user.dao.SysUserRoleRelationMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.user.po.SysUserRoleRelationPO" >
+    <id column="ur_relation_id" jdbcType="BIGINT" property="urRelationId" javaType="java.lang.Long" />
+    <result column="user_info_id" jdbcType="BIGINT" property="userInfoId" javaType="java.lang.Long" />
+    <result column="role_info_id" jdbcType="BIGINT" property="roleInfoId" javaType="java.lang.Long" />
+    <result column="is_delete" jdbcType="BIT" property="delete" javaType="java.lang.Boolean" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" javaType="java.lang.Long" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ur_relation_id, user_info_id, role_info_id, is_delete, create_time, update_time, create_by, update_by
+  </sql>
+
+  <!-- 查询条件的拼装 -->
+  <sql id="Where_Clause" >
+    <where>
+      is_delete = 0 AND
+      <if test="conditionList != null and conditionList.size() != 0">
+        <foreach collection="conditionList" item="item" index="index" separator="AND" >
+          <choose>
+            <when test="item.whereConditionEnum.condition == 'LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'BETWEEN'" >
+              <trim prefix=" " suffix=" " suffixOverrides="AND" >
+                <if test="item.startValue != null and item.startValue != ''" >
+                  ${item.columnName} &gt;= #{item.startValue} AND
+                </if>
+                <if test="item.endValue != null and item.endValue != ''" >
+                  ${item.columnName} &lt;= #{item.endValue} AND
+                </if>
+                <if test="(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')" >
+                  1 = 1
+                </if>
+              </trim>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <otherwise>
+              ${item.columnName} ${item.whereConditionEnum.condition} #{item.value}
+            </otherwise>
+          </choose>
+        </foreach>
+      </if>
+    </where>
+  </sql>
+
+  <!-- 新增用户-角色关系 -->
+  <insert id="insertSysUserRoleRelation" parameterType="cn.com.zhshzh.system.user.po.SysUserRoleRelationPO" >
+    INSERT INTO sys_user_role_relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="urRelationId != null" > ur_relation_id, </if>
+      <if test="userInfoId != null" > user_info_id, </if>
+      <if test="roleInfoId != null" > role_info_id, </if>
+      <if test="delete != null" > is_delete, </if>
+      <if test="createTime != null" > create_time, </if>
+      <if test="updateTime != null" > update_time, </if>
+      <if test="createBy != null" > create_by, </if>
+      <if test="updateBy != null" > update_by, </if>
+    </trim>
+    <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+      <if test="urRelationId != null" > #{urRelationId, jdbcType=BIGINT}, </if>
+      <if test="userInfoId != null" > #{userInfoId, jdbcType=BIGINT}, </if>
+      <if test="roleInfoId != null" > #{roleInfoId, jdbcType=BIGINT}, </if>
+      <if test="delete != null" > #{delete, jdbcType=BIT}, </if>
+      <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
+      <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
+      <if test="createBy != null" > #{createBy, jdbcType=BIGINT}, </if>
+      <if test="updateBy != null" > #{updateBy, jdbcType=BIGINT}, </if>
+    </trim>
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="urRelationId" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <!-- 批量新增用户-角色关系 -->
+  <insert id="insertSysUserRoleRelationBatch" parameterType="java.util.List" >
+    INSERT INTO sys_user_role_relation (
+      <include refid="Base_Column_List" />
+    )
+    VALUES
+    <foreach collection="sysUserRoleRelationPOList" item="item" index="index" separator="," >
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+        #{item.urRelationId, jdbcType=BIGINT},
+        #{item.userInfoId, jdbcType=BIGINT},
+        #{item.roleInfoId, jdbcType=BIGINT},
+        0,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP,
+        #{item.createBy, jdbcType=BIGINT},
+        #{item.updateBy, jdbcType=BIGINT},
+      </trim>
+    </foreach>
+  </insert>
+
+  <!-- 根据id逻辑删除用户-角色关系 -->
+  <update id="deleteByIdLogical" parameterType="cn.com.zhshzh.system.user.po.SysUserRoleRelationPO" >
+    UPDATE sys_user_role_relation
+    SET is_delete = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE ur_relation_id = #{urRelationId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量逻辑删除用户-角色关系 -->
+  <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
+    UPDATE sys_user_role_relation
+    SET is_delete = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE ur_relation_id IN
+    <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id物理删除用户-角色关系 -->
+  <delete id="deleteByIdPhysical" parameterType="java.lang.Long" >
+    DELETE FROM sys_user_role_relation
+    WHERE ur_relation_id = #{urRelationId, jdbcType=BIGINT}
+  </delete>
+
+  <!-- 批量物理删除用户-角色关系 -->
+  <delete id="deleteBatchPhysical" >
+    DELETE FROM sys_user_role_relation
+    WHERE ur_relation_id IN
+    <foreach collection="sysUserRoleRelations" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </delete>
+
+  <!-- 根据id修改用户-角色关系 -->
+  <update id="updateSysUserRoleRelation" parameterType="cn.com.zhshzh.system.user.po.SysUserRoleRelationPO" >
+    UPDATE sys_user_role_relation
+    <set>
+      <if test="urRelationId != null" > ur_relation_id = #{urRelationId, jdbcType=BIGINT}, </if>
+      <if test="userInfoId != null" > user_info_id = #{userInfoId, jdbcType=BIGINT}, </if>
+      <if test="roleInfoId != null" > role_info_id = #{roleInfoId, jdbcType=BIGINT}, </if>
+      update_by = #{updateBy, jdbcType=BIGINT}
+    </set>
+    WHERE ur_relation_id = #{urRelationId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量修改用户-角色关系 -->
+  <update id="updateSysUserRoleRelationBatch" parameterType="java.util.List" >
+    <foreach collection="sysUserRoleRelationPOList" item="item" index="index" separator=";" >
+      UPDATE sys_user_role_relation
+      <set>
+        <if test="item.urRelationId != null" > ur_relation_id = #{item.urRelationId, jdbcType=BIGINT}, </if>
+        <if test="item.userInfoId != null" > user_info_id = #{item.userInfoId, jdbcType=BIGINT}, </if>
+        <if test="item.roleInfoId != null" > role_info_id = #{item.roleInfoId, jdbcType=BIGINT}, </if>
+        update_by = #{item.updateBy, jdbcType=BIGINT}
+      </set>
+      WHERE ur_relation_id = #{item.urRelationId, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id查询用户-角色关系 -->
+  <select id="getSysUserRoleRelation" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_user_role_relation
+    WHERE ur_relation_id = #{urRelationId, jdbcType=BIGINT}
+  </select>
+
+  <!-- 条件查询用户-角色关系 -->
+  <select id="listSysUserRoleRelations" parameterType="cn.com.zhshzh.core.model.WhereConditions" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_user_role_relation
+    <include refid="Where_Clause" />
+    <if test="orderByList != null and orderByList.size() != 0">
+      ORDER BY
+      <foreach collection="orderByList" item="item" index="index" separator="," >
+        ${item.sort} ${item.orderByEnum.order}
+      </foreach>
+    </if>
+  </select>
+
+  <!-- 条件查询用户-角色关系条数 -->
+  <select id="countSysUserRoleRelations"  parameterType="cn.com.zhshzh.core.model.WhereConditions" resultType="java.lang.Integer" >
+    SELECT COUNT(*) FROM sys_user_role_relation
+    <include refid="Where_Clause" />
+  </select>
+
+  <!-- 以上代码由代码生成器自动生成，原则上不允许任何修改, 如需自定义，请在下面补充 -->
+</mapper>

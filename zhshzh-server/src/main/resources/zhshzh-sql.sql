@@ -1,3 +1,12 @@
+/**
+    首先更改mysql的配置文件
+    linux下配置文件是/etc/my.cnf文件
+    windows下配置文件是安装目录下的my.ini文件
+    sql_mode默认是ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+    将其修改为sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+    如果sql_mode前有注释就把注释打开，如果没有就加上sql_mode
+ */
+
 -- 创建系统用户表
 DROP TABLE IF EXISTS `sys_user_info`;
 
@@ -59,11 +68,13 @@ CREATE TABLE `sys_interface_log` (
 ) ENGINE = INNODB DEFAULT CHARACTER SET = utf8 COMMENT = '系统接口日志表';
 
 
+
 -- 创建系统角色表
 DROP TABLE IF EXISTS `sys_role_info`;
 
 CREATE TABLE `sys_role_info` (
 	`role_info_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '角色id',
+	`role_code` VARCHAR (32) NOT NULL COMMENT '角色标识',
 	`role_name` VARCHAR (32) NOT NULL COMMENT '角色名称',
 	`role_description` VARCHAR (200) DEFAULT NULL COMMENT '角色描述',
 	`is_delete` BIT NOT NULL DEFAULT 0 COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
@@ -71,24 +82,39 @@ CREATE TABLE `sys_role_info` (
 	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 	`create_by` BIGINT UNSIGNED NOT NULL COMMENT '创建人',
 	`update_by` BIGINT UNSIGNED NOT NULL COMMENT '修改人',
-	PRIMARY KEY (`role_info_id`)
+	PRIMARY KEY (`role_info_id`),
+	UNIQUE INDEX `role_code_UNIQUE` (`role_code` ASC)
 ) ENGINE = INNODB DEFAULT CHARACTER SET = utf8 COMMENT = '系统角色表';
+-- 插入系统管理员角色
+INSERT INTO `sys_role_info`
+(role_code, role_name, role_description, create_by, update_by)
+VALUES
+('ROLE_ADMIN', '系统管理员', '该角色可拥有所有的权限', '0', '0');
+
 
 
 -- 创建用户-角色关系表
-DROP TABLE IF EXISTS `user_role_relation`;
+DROP TABLE IF EXISTS `sys_user_role_relation`;
 
-CREATE TABLE `user_role_relation` (
+CREATE TABLE `sys_user_role_relation` (
 	`ur_relation_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户-角色关系id',
-	`user_info_id` BIGINT NOT NULL COMMENT '用户id',
-	`role_info_id` BIGINT NOT NULL COMMENT '角色id',
+	`user_info_id` BIGINT UNSIGNED NOT NULL COMMENT '用户id',
+	`role_info_id` BIGINT UNSIGNED NOT NULL COMMENT '角色id',
 	`is_delete` BIT NOT NULL DEFAULT 0 COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
 	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 	`create_by` BIGINT UNSIGNED NOT NULL COMMENT '创建人',
 	`update_by` BIGINT UNSIGNED NOT NULL COMMENT '修改人',
-	PRIMARY KEY (`ur_relation_id`)
+	PRIMARY KEY (`ur_relation_id`),
+	CONSTRAINT `sys_user_role_relation_user_info_id_FOREIGN` FOREIGN KEY (`user_info_id`) REFERENCES `sys_user_info` (`user_info_id`),
+	CONSTRAINT `sys_user_role_relation_role_info_id_FOREIGN` FOREIGN KEY (`role_info_id`) REFERENCES `sys_role_info` (`role_info_id`)
 ) ENGINE = INNODB DEFAULT CHARACTER SET = utf8 COMMENT = '用户-角色关系表';
+-- 插入系统管理员的用户-角色关系
+INSERT INTO `sys_user_role_relation`
+(user_info_id, role_info_id, create_by, update_by)
+VALUES
+('100000', '1', '0', '0');
+
 
 
 -- 创建系统菜单表
@@ -111,17 +137,20 @@ CREATE TABLE `sys_menu_info` (
 ) ENGINE = INNODB DEFAULT CHARACTER SET = utf8 COMMENT = '系统菜单表';
 
 
--- 创建角色-菜单关系表
-DROP TABLE IF EXISTS `role_menu_relation`;
 
-CREATE TABLE `role_menu_relation` (
+-- 创建角色-菜单关系表
+DROP TABLE IF EXISTS `sys_role_menu_relation`;
+
+CREATE TABLE `sys_role_menu_relation` (
 	`rm_relation_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '角色-菜单关系id',
-	`role_info_id` BIGINT NOT NULL COMMENT '角色id',
-	`menu_info_id` BIGINT NOT NULL COMMENT '菜单id',
+	`role_info_id` BIGINT UNSIGNED NOT NULL COMMENT '角色id',
+	`menu_info_id` BIGINT UNSIGNED NOT NULL COMMENT '菜单id',
 	`is_delete` BIT NOT NULL DEFAULT 0 COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
 	`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 	`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 	`create_by` BIGINT UNSIGNED NOT NULL COMMENT '创建人',
 	`update_by` BIGINT UNSIGNED NOT NULL COMMENT '修改人',
-	PRIMARY KEY (`rm_relation_id`)
+	PRIMARY KEY (`rm_relation_id`),
+	CONSTRAINT `sys_role_menu_relation_role_info_id_FOREIGN` FOREIGN KEY (`role_info_id`) REFERENCES `sys_role_info` (`role_info_id`),
+	CONSTRAINT `sys_role_menu_relation_menu_info_id_FOREIGN` FOREIGN KEY (`menu_info_id`) REFERENCES `sys_menu_info` (`menu_info_id`)
 ) ENGINE = INNODB DEFAULT CHARACTER SET = utf8 COMMENT = '角色-菜单关系表';

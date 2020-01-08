@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zhshzh.system.user.dao.SysRoleInfoMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.user.po.SysRoleInfoPO" >
+    <id column="role_info_id" jdbcType="BIGINT" property="roleInfoId" javaType="java.lang.Long" />
+    <result column="role_code" jdbcType="VARCHAR" property="roleCode" javaType="java.lang.String" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" javaType="java.lang.String" />
+    <result column="role_description" jdbcType="VARCHAR" property="roleDescription" javaType="java.lang.String" />
+    <result column="is_delete" jdbcType="BIT" property="delete" javaType="java.lang.Boolean" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" javaType="java.lang.Long" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    role_info_id, role_code, role_name, role_description, is_delete, create_time, update_time, create_by, update_by
+  </sql>
+
+  <!-- 查询条件的拼装 -->
+  <sql id="Where_Clause" >
+    <where>
+      is_delete = 0 AND
+      <if test="conditionList != null and conditionList.size() != 0">
+        <foreach collection="conditionList" item="item" index="index" separator="AND" >
+          <choose>
+            <when test="item.whereConditionEnum.condition == 'LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'BETWEEN'" >
+              <trim prefix=" " suffix=" " suffixOverrides="AND" >
+                <if test="item.startValue != null and item.startValue != ''" >
+                  ${item.columnName} &gt;= #{item.startValue} AND
+                </if>
+                <if test="item.endValue != null and item.endValue != ''" >
+                  ${item.columnName} &lt;= #{item.endValue} AND
+                </if>
+                <if test="(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')" >
+                  1 = 1
+                </if>
+              </trim>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <otherwise>
+              ${item.columnName} ${item.whereConditionEnum.condition} #{item.value}
+            </otherwise>
+          </choose>
+        </foreach>
+      </if>
+    </where>
+  </sql>
+
+  <!-- 新增系统角色 -->
+  <insert id="insertSysRoleInfo" parameterType="cn.com.zhshzh.system.user.po.SysRoleInfoPO" >
+    INSERT INTO sys_role_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleInfoId != null" > role_info_id, </if>
+      <if test="roleCode != null" > role_code, </if>
+      <if test="roleName != null" > role_name, </if>
+      <if test="roleDescription != null" > role_description, </if>
+      <if test="delete != null" > is_delete, </if>
+      <if test="createTime != null" > create_time, </if>
+      <if test="updateTime != null" > update_time, </if>
+      <if test="createBy != null" > create_by, </if>
+      <if test="updateBy != null" > update_by, </if>
+    </trim>
+    <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+      <if test="roleInfoId != null" > #{roleInfoId, jdbcType=BIGINT}, </if>
+      <if test="roleCode != null" > #{roleCode, jdbcType=VARCHAR}, </if>
+      <if test="roleName != null" > #{roleName, jdbcType=VARCHAR}, </if>
+      <if test="roleDescription != null" > #{roleDescription, jdbcType=VARCHAR}, </if>
+      <if test="delete != null" > #{delete, jdbcType=BIT}, </if>
+      <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
+      <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
+      <if test="createBy != null" > #{createBy, jdbcType=BIGINT}, </if>
+      <if test="updateBy != null" > #{updateBy, jdbcType=BIGINT}, </if>
+    </trim>
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="roleInfoId" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <!-- 批量新增系统角色 -->
+  <insert id="insertSysRoleInfoBatch" parameterType="java.util.List" >
+    INSERT INTO sys_role_info (
+      <include refid="Base_Column_List" />
+    )
+    VALUES
+    <foreach collection="sysRoleInfoPOList" item="item" index="index" separator="," >
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+        #{item.roleInfoId, jdbcType=BIGINT},
+        #{item.roleCode, jdbcType=VARCHAR},
+        #{item.roleName, jdbcType=VARCHAR},
+        #{item.roleDescription, jdbcType=VARCHAR},
+        0,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP,
+        #{item.createBy, jdbcType=BIGINT},
+        #{item.updateBy, jdbcType=BIGINT},
+      </trim>
+    </foreach>
+  </insert>
+
+  <!-- 根据id逻辑删除系统角色 -->
+  <update id="deleteByIdLogical" parameterType="cn.com.zhshzh.system.user.po.SysRoleInfoPO" >
+    UPDATE sys_role_info
+    SET is_delete = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE role_info_id = #{roleInfoId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量逻辑删除系统角色 -->
+  <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
+    UPDATE sys_role_info
+    SET is_delete = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE role_info_id IN
+    <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id物理删除系统角色 -->
+  <delete id="deleteByIdPhysical" parameterType="java.lang.Long" >
+    DELETE FROM sys_role_info
+    WHERE role_info_id = #{roleInfoId, jdbcType=BIGINT}
+  </delete>
+
+  <!-- 批量物理删除系统角色 -->
+  <delete id="deleteBatchPhysical" >
+    DELETE FROM sys_role_info
+    WHERE role_info_id IN
+    <foreach collection="sysRoleInfos" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </delete>
+
+  <!-- 根据id修改系统角色 -->
+  <update id="updateSysRoleInfo" parameterType="cn.com.zhshzh.system.user.po.SysRoleInfoPO" >
+    UPDATE sys_role_info
+    <set>
+      <if test="roleInfoId != null" > role_info_id = #{roleInfoId, jdbcType=BIGINT}, </if>
+      <if test="roleCode != null" > role_code = #{roleCode, jdbcType=VARCHAR}, </if>
+      <if test="roleName != null" > role_name = #{roleName, jdbcType=VARCHAR}, </if>
+      <if test="roleDescription != null" > role_description = #{roleDescription, jdbcType=VARCHAR}, </if>
+      update_by = #{updateBy, jdbcType=BIGINT}
+    </set>
+    WHERE role_info_id = #{roleInfoId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量修改系统角色 -->
+  <update id="updateSysRoleInfoBatch" parameterType="java.util.List" >
+    <foreach collection="sysRoleInfoPOList" item="item" index="index" separator=";" >
+      UPDATE sys_role_info
+      <set>
+        <if test="item.roleInfoId != null" > role_info_id = #{item.roleInfoId, jdbcType=BIGINT}, </if>
+        <if test="item.roleCode != null" > role_code = #{item.roleCode, jdbcType=VARCHAR}, </if>
+        <if test="item.roleName != null" > role_name = #{item.roleName, jdbcType=VARCHAR}, </if>
+        <if test="item.roleDescription != null" > role_description = #{item.roleDescription, jdbcType=VARCHAR}, </if>
+        update_by = #{item.updateBy, jdbcType=BIGINT}
+      </set>
+      WHERE role_info_id = #{item.roleInfoId, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id查询系统角色 -->
+  <select id="getSysRoleInfo" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_role_info
+    WHERE role_info_id = #{roleInfoId, jdbcType=BIGINT}
+  </select>
+
+  <!-- 条件查询系统角色 -->
+  <select id="listSysRoleInfos" parameterType="cn.com.zhshzh.core.model.WhereConditions" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_role_info
+    <include refid="Where_Clause" />
+    <if test="orderByList != null and orderByList.size() != 0">
+      ORDER BY
+      <foreach collection="orderByList" item="item" index="index" separator="," >
+        ${item.sort} ${item.orderByEnum.order}
+      </foreach>
+    </if>
+  </select>
+
+  <!-- 条件查询系统角色条数 -->
+  <select id="countSysRoleInfos"  parameterType="cn.com.zhshzh.core.model.WhereConditions" resultType="java.lang.Integer" >
+    SELECT COUNT(*) FROM sys_role_info
+    <include refid="Where_Clause" />
+  </select>
+
+  <!-- 以上代码由代码生成器自动生成，原则上不允许任何修改, 如需自定义，请在下面补充 -->
+</mapper>
