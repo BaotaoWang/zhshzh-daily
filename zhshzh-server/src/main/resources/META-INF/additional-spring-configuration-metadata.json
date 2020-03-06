@@ -29,5 +29,25 @@
       "name": "swagger.version",
       "type": "java.lang.String",
       "description": "API文档版本."
+    },
+    {
+      "name": "minio.endpoint",
+      "type": "java.lang.String",
+      "description": "minio地址."
+    },
+    {
+      "name": "minio.accessKey",
+      "type": "java.lang.String",
+      "description": "minio账号."
+    },
+    {
+      "name": "minio.secretKey",
+      "type": "java.lang.String",
+      "description": "minio密码."
+    },
+    {
+      "name": "minio.bucketName",
+      "type": "java.lang.String",
+      "description": "minio桶名（根目录）."
     }
   ]}

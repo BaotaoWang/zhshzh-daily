@@ -35,7 +35,7 @@ spring:
     # Redis服务器连接端口
     port: 6379
     # Redis服务器连接密码
-    password: 5tgBNji(
+    password: 123456
     # 连接超时时间（毫秒）
     timeout: 1000
     lettuce:
@@ -61,6 +61,11 @@ swagger:
   description: 中晟日志系统 API文档
   version: 1.1.1
 
+minio:
+  endpoint: http://127.0.0.1:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucketName: daily
 
 ## logging:
 ##   config: classpath:log4j2.xml
