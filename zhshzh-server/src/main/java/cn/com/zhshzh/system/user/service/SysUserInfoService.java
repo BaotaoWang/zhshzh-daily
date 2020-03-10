@@ -1,6 +1,6 @@
 package cn.com.zhshzh.system.user.service;
 
-import cn.com.zhshzh.core.util.JsonResultUtil;
+import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.system.user.dto.SysUserInfoDTO;
 import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -51,5 +51,5 @@ public interface SysUserInfoService {
      *
      * @param sysUserInfoPO 用户基本信息
      */
-    JsonResultUtil saveSysUserInfo(SysUserInfoPO sysUserInfoPO);
+    HttpResult<SysUserInfoDTO> saveSysUserInfo(SysUserInfoPO sysUserInfoPO);
 }

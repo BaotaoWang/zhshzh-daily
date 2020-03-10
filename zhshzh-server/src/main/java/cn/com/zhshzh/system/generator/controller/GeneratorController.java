@@ -1,7 +1,7 @@
 package cn.com.zhshzh.system.generator.controller;
 
 import cn.com.zhshzh.core.constant.HttpResultEnum;
-import cn.com.zhshzh.core.util.JsonResultUtil;
+import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.system.generator.dto.CodeGenerationDTO;
 import cn.com.zhshzh.system.generator.service.GeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class GeneratorController {
      * @return JsonResultUtil 返回到前台的信息
      */
     @PostMapping("/codeGeneration")
-    public JsonResultUtil codeGeneration(@RequestBody CodeGenerationDTO codeGenerationDTO, HttpServletRequest request) {
+    public HttpResult<CodeGenerationDTO> codeGeneration(@RequestBody CodeGenerationDTO codeGenerationDTO, HttpServletRequest request) {
         // 请求端的ip地址
         String remoteAddr = request.getRemoteAddr();
         // 服务端的ip地址
@@ -46,7 +46,7 @@ public class GeneratorController {
                 || serverName.equals(remoteAddr)) {
             return generatorService.generator(codeGenerationDTO);
         } else {
-            return new JsonResultUtil(HttpResultEnum.GENERATOR_NOT_ALLOW);
+            return HttpResult.error(HttpResultEnum.GENERATOR_NOT_ALLOW);
         }
     }
 }

@@ -2,8 +2,8 @@ package cn.com.zhshzh.system.user.service.impl;
 
 import cn.com.zhshzh.core.constant.PatternMatchesConstants;
 import cn.com.zhshzh.core.model.ConditionModel;
+import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.core.model.WhereConditions;
-import cn.com.zhshzh.core.util.JsonResultUtil;
 import cn.com.zhshzh.system.user.dao.SysUserInfoMapper;
 import cn.com.zhshzh.system.user.dto.SysUserInfoDTO;
 import cn.com.zhshzh.system.user.po.SysUserInfoPO;
@@ -119,7 +119,7 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
      * @param sysUserInfoPO 用户基本信息
      */
     @Override
-    public JsonResultUtil saveSysUserInfo(SysUserInfoPO sysUserInfoPO) {
+    public HttpResult<SysUserInfoDTO> saveSysUserInfo(SysUserInfoPO sysUserInfoPO) {
         Long userInfoId = sysUserInfoPO.getUserInfoId();
         if (userInfoId == null) {
             String password = new BCryptPasswordEncoder().encode(sysUserInfoPO.getPassword());
@@ -131,6 +131,6 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
             sysUserInfoPO.setCreateBy(11111L);
             sysUserInfoMapper.updateSysUserInfo(sysUserInfoPO);
         }
-        return new JsonResultUtil();
+        return HttpResult.success();
     }
 }

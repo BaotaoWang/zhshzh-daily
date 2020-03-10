@@ -1,6 +1,6 @@
 package cn.com.zhshzh.system.generator.service;
 
-import cn.com.zhshzh.core.util.JsonResultUtil;
+import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.system.generator.dto.CodeGenerationDTO;
 
 /**
@@ -16,5 +16,5 @@ public interface GeneratorService {
      * @param codeGenerationDTO 生成代码的相关参数
      * @return 代码生成结果
      */
-    JsonResultUtil generator(CodeGenerationDTO codeGenerationDTO);
+    HttpResult<CodeGenerationDTO> generator(CodeGenerationDTO codeGenerationDTO);
 }

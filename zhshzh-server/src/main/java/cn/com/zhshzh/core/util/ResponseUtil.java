@@ -1,6 +1,7 @@
 package cn.com.zhshzh.core.util;
 
 import cn.com.zhshzh.core.constant.HttpResultEnum;
+import cn.com.zhshzh.core.model.HttpResult;
 import com.alibaba.fastjson.JSON;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +25,7 @@ public class ResponseUtil {
      * @param response 响应消息对象
      */
     public static void writeMessage(HttpServletResponse response) {
-        JsonResultUtil jsonResultUtil = new JsonResultUtil();
-        ResponseUtil.printWriter(response, jsonResultUtil);
+        ResponseUtil.printWriter(response, HttpResult.success());
     }
 
     /**
@@ -34,9 +34,8 @@ public class ResponseUtil {
      * @param response 响应消息的对象
      * @param data     响应数据
      */
-    public static void writeMessage(HttpServletResponse response, Object data) {
-        JsonResultUtil jsonResultUtil = new JsonResultUtil(data);
-        ResponseUtil.printWriter(response, jsonResultUtil);
+    public static <T> void writeMessage(HttpServletResponse response, T data) {
+        ResponseUtil.printWriter(response, HttpResult.success(data));
     }
 
     /**
@@ -46,8 +45,7 @@ public class ResponseUtil {
      * @param httpResultEnum 响应消息的枚举
      */
     public static void writeMessage(HttpServletResponse response, HttpResultEnum httpResultEnum) {
-        JsonResultUtil jsonResultUtil = new JsonResultUtil(httpResultEnum);
-        ResponseUtil.printWriter(response, jsonResultUtil);
+        ResponseUtil.printWriter(response, HttpResult.error(httpResultEnum));
     }
 
     /**
@@ -57,18 +55,18 @@ public class ResponseUtil {
      * @param httpResultEnum 响应消息的枚举
      * @param data           响应数据
      */
-    public static void writeMessage(HttpServletResponse response, HttpResultEnum httpResultEnum, Object data) {
-        JsonResultUtil jsonResultUtil = new JsonResultUtil(httpResultEnum, data);
-        ResponseUtil.printWriter(response, jsonResultUtil);
+    public static <T> void writeMessage(HttpServletResponse response, HttpResultEnum httpResultEnum, T data) {
+        HttpResult<T> httpResult = new HttpResult<>(httpResultEnum, data);
+        ResponseUtil.printWriter(response, httpResult);
     }
 
     /**
      * 向response对象中写自定义消息
      *
-     * @param response       响应消息的对象
-     * @param jsonResultUtil 返回的json数据
+     * @param response   响应消息的对象
+     * @param httpResult 返回的json数据
      */
-    private static void printWriter(HttpServletResponse response, JsonResultUtil jsonResultUtil) {
+    private static <T> void printWriter(HttpServletResponse response, HttpResult<T> httpResult) {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = null;
@@ -76,7 +74,7 @@ public class ResponseUtil {
             // 获取字符流
             out = response.getWriter();
             // 向字符流中写数据
-            out.write(JSON.toJSONString(jsonResultUtil));
+            out.write(JSON.toJSONString(httpResult));
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         } finally {

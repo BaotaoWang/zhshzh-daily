@@ -1,7 +1,7 @@
 package cn.com.zhshzh.system.generator.service.impl;
 
 import cn.com.zhshzh.core.constant.HttpResultEnum;
-import cn.com.zhshzh.core.util.JsonResultUtil;
+import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.system.generator.dao.ColumnsMapper;
 import cn.com.zhshzh.system.generator.dao.TablesMapper;
 import cn.com.zhshzh.system.generator.dto.CodeGenerationDTO;
@@ -47,7 +47,7 @@ public class GeneratorServiceImpl implements GeneratorService {
      * @return 生成代码后的结果
      */
     @Override
-    public JsonResultUtil generator(CodeGenerationDTO codeGenerationDTO) {
+    public HttpResult<CodeGenerationDTO> generator(CodeGenerationDTO codeGenerationDTO) {
         // 数据库名
         String tableSchema = codeGenerationDTO.getTableSchema();
         if (StringUtils.isEmpty(tableSchema)) {
@@ -58,7 +58,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         // 数据库表的信息
         TablesPO tablesPO = tablesMapper.getTable(tableSchema, tableName);
         if (tablesPO == null) {
-            return new JsonResultUtil(HttpResultEnum.TABLE_NOT_EXISTS);
+            return HttpResult.error(HttpResultEnum.TABLE_NOT_EXISTS);
         }
         // 数据库表中列名的信息
         List<ColumnsPO> columnsPOList = columnsMapper.listAllColumns(tableSchema, tableName);
@@ -74,8 +74,8 @@ public class GeneratorServiceImpl implements GeneratorService {
             GenerateMapperFileUtil.generateMapperFile(generatorStringModel);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new JsonResultUtil(HttpResultEnum.GENERATOR_ERROR, e.getMessage());
+            return HttpResult.error(HttpResultEnum.GENERATOR_ERROR);
         }
-        return new JsonResultUtil();
+        return HttpResult.success();
     }
 }
