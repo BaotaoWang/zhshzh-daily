@@ -56,6 +56,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         // 如果请求头中有token，则进行解析，并且设置认证信息
         try {
             SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
+            // 这一步会将当前的用户名放入到request中,并执行目标方法。用request.getRemoteUser()方法可得到用户名
             super.doFilterInternal(request, response, chain);
         } catch (ExpiredJwtException e) {
             logger.error(e.getMessage(), e);

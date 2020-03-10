@@ -106,7 +106,7 @@ public class MySecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
         // 2.再配置需要特定权限的 hasRole()
         http.authorizeRequests()
-                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // "/admin/"开头的URL必须要是管理员用户，譬如"admin"用户
+                .antMatchers("**/admin").hasAuthority("ROLE_ADMIN") // "/admin"结尾的URL必须要是管理员用户，譬如"admin"用户
                 .antMatchers("/product/**").hasRole("USER")
                 .antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')");
 

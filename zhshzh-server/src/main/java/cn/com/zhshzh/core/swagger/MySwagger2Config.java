@@ -1,22 +1,26 @@
 package cn.com.zhshzh.core.swagger;
 
+import com.google.common.base.Predicate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
+import springfox.documentation.schema.ModelRef;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.service.Parameter;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static springfox.documentation.builders.PathSelectors.regex;
 import static springfox.documentation.builders.RequestHandlerSelectors.withMethodAnnotation;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import com.google.common.base.Predicate;
-
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Swagger配置文件
@@ -58,7 +62,20 @@ public class MySwagger2Config {
                 .apis(not(withMethodAnnotation(SwaggerCustomIgnore.class)))
                 //配置匹配规则(也可以在类上用@ComponentScan扫描包进行匹配)
                 .paths(this.allowPaths())
-                .build();
+                .build()
+                .globalOperationParameters(globalOperation());
+    }
+
+    /**
+     * 添加token认证
+     * @return
+     */
+    private List<Parameter> globalOperation() {
+        ParameterBuilder tokenParameter = new ParameterBuilder();
+        List<Parameter> parameters = new ArrayList<>();
+        tokenParameter.name("Authorization").description("Token").modelRef(new ModelRef("String")).parameterType("header").required(true).build();
+        parameters.add(tokenParameter.build());
+        return parameters;
     }
 
     /**
@@ -88,7 +105,7 @@ public class MySwagger2Config {
     private Predicate<String> allowPaths() {
         return or(
                 regex("/userInfo.*"),
-                regex("/test.*")
+                regex("/menuInfos.*")
         );
     }
 }
