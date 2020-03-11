@@ -20,6 +20,21 @@ public class SysMenuInfoDTO implements Serializable {
     @ApiModelProperty(value = "用户id", dataType = "long", required = true, hidden = true)
     private Long userInfoId; // 用户id
 
-    @ApiModelProperty(value = "菜单url", dataType = "String", required = true)
-    private String menuInfoUrl; // 菜单url
+    @ApiModelProperty(value = "父级菜单id", dataType = "long", required = true)
+    private Long parentId; // 用户id
+
+    @ApiModelProperty(value = "菜单名称", dataType = "String", required = true)
+    private String menuName; // 菜单名称
+
+    @ApiModelProperty(value = "菜单路由", dataType = "String", required = true)
+    private String menuRoute; // 菜单路由
+
+    @ApiModelProperty(value = "菜单序号", dataType = "Integer", required = true)
+    private Short menuOrder; // 菜单序号
+
+    @ApiModelProperty(value = "菜单图标", dataType = "String", required = true)
+    private String menuIcon; // 菜单图标
+
+    @ApiModelProperty(value = "菜单描述", dataType = "String")
+    private String menuDescription; // 菜单描述
 }

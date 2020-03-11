@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zhshzh.system.user.dao.SysMenuInfoMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.user.po.SysMenuInfoPO" >
+    <id column="menu_info_id" jdbcType="BIGINT" property="menuInfoId" javaType="java.lang.Long" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" javaType="java.lang.String" />
+    <result column="menu_route" jdbcType="VARCHAR" property="menuRoute" javaType="java.lang.String" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" javaType="java.lang.Long" />
+    <result column="menu_order" jdbcType="SMALLINT" property="menuOrder" javaType="java.lang.Short" />
+    <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon" javaType="java.lang.String" />
+    <result column="menu_description" jdbcType="VARCHAR" property="menuDescription" javaType="java.lang.String" />
+    <result column="is_delete" jdbcType="BIT" property="delete" javaType="java.lang.Boolean" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" javaType="java.lang.Long" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    menu_info_id, menu_name, menu_route, parent_id, menu_order, menu_icon, menu_description, is_delete, create_time,
+    update_time, create_by, update_by
+  </sql>
+
+  <!-- 查询条件的拼装 -->
+  <sql id="Where_Clause" >
+    <where>
+      <if test="conditionList != null and conditionList.size() != 0">
+        <foreach collection="conditionList" item="item" index="index" separator="AND" >
+          <choose>
+            <when test="item.whereConditionEnum.condition == 'LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'BETWEEN'" >
+              <trim prefix=" " suffix=" " suffixOverrides="AND" >
+                <if test="item.startValue != null and item.startValue != ''" >
+                  ${item.columnName} &gt;= #{item.startValue} AND
+                </if>
+                <if test="item.endValue != null and item.endValue != ''" >
+                  ${item.columnName} &lt;= #{item.endValue} AND
+                </if>
+                <if test="(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')" >
+                  1 = 1
+                </if>
+              </trim>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <otherwise>
+              ${item.columnName} ${item.whereConditionEnum.condition} #{item.value}
+            </otherwise>
+          </choose>
+        </foreach>
+      </if>
+      AND is_delete = 0
+    </where>
+  </sql>
+
+  <!-- 新增系统菜单 -->
+  <insert id="insertSysMenuInfo" parameterType="cn.com.zhshzh.system.user.po.SysMenuInfoPO" >
+    INSERT INTO sys_menu_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="menuInfoId != null" > menu_info_id, </if>
+      <if test="menuName != null" > menu_name, </if>
+      <if test="menuRoute != null" > menu_route, </if>
+      <if test="parentId != null" > parent_id, </if>
+      <if test="menuOrder != null" > menu_order, </if>
+      <if test="menuIcon != null" > menu_icon, </if>
+      <if test="menuDescription != null" > menu_description, </if>
+      <if test="delete != null" > is_delete, </if>
+      <if test="createTime != null" > create_time, </if>
+      <if test="updateTime != null" > update_time, </if>
+      <if test="createBy != null" > create_by, </if>
+      <if test="updateBy != null" > update_by, </if>
+    </trim>
+    <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+      <if test="menuInfoId != null" > #{menuInfoId, jdbcType=BIGINT}, </if>
+      <if test="menuName != null" > #{menuName, jdbcType=VARCHAR}, </if>
+      <if test="menuRoute != null" > #{menuRoute, jdbcType=VARCHAR}, </if>
+      <if test="parentId != null" > #{parentId, jdbcType=BIGINT}, </if>
+      <if test="menuOrder != null" > #{menuOrder, jdbcType=SMALLINT}, </if>
+      <if test="menuIcon != null" > #{menuIcon, jdbcType=VARCHAR}, </if>
+      <if test="menuDescription != null" > #{menuDescription, jdbcType=VARCHAR}, </if>
+      <if test="delete != null" > #{delete, jdbcType=BIT}, </if>
+      <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
+      <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
+      <if test="createBy != null" > #{createBy, jdbcType=BIGINT}, </if>
+      <if test="updateBy != null" > #{updateBy, jdbcType=BIGINT}, </if>
+    </trim>
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="menuInfoId" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <!-- 批量新增系统菜单 -->
+  <insert id="insertSysMenuInfoBatch" parameterType="java.util.List" >
+    INSERT INTO sys_menu_info (
+      <include refid="Base_Column_List" />
+    )
+    VALUES
+    <foreach collection="sysMenuInfoPOList" item="item" index="index" separator="," >
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+        #{item.menuInfoId, jdbcType=BIGINT},
+        #{item.menuName, jdbcType=VARCHAR},
+        #{item.menuRoute, jdbcType=VARCHAR},
+        #{item.parentId, jdbcType=BIGINT},
+        #{item.menuOrder, jdbcType=SMALLINT},
+        #{item.menuIcon, jdbcType=VARCHAR},
+        #{item.menuDescription, jdbcType=VARCHAR},
+        0,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP,
+        #{item.createBy, jdbcType=BIGINT},
+        #{item.updateBy, jdbcType=BIGINT},
+      </trim>
+    </foreach>
+  </insert>
+
+  <!-- 根据id逻辑删除系统菜单 -->
+  <update id="deleteByIdLogical" >
+    UPDATE sys_menu_info
+    SET is_delete = 1,
+    update_by = #{userInfoId, jdbcType=BIGINT}
+    WHERE menu_info_id = #{menuInfoId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量逻辑删除系统菜单 -->
+  <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
+    UPDATE sys_menu_info
+    SET is_delete = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE menu_info_id IN
+    <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id物理删除系统菜单 -->
+  <delete id="deleteByIdPhysical" parameterType="java.lang.Long" >
+    DELETE FROM sys_menu_info
+    WHERE menu_info_id = #{menuInfoId, jdbcType=BIGINT}
+  </delete>
+
+  <!-- 批量物理删除系统菜单 -->
+  <delete id="deleteBatchPhysical" >
+    DELETE FROM sys_menu_info
+    WHERE menu_info_id IN
+    <foreach collection="sysMenuInfos" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </delete>
+
+  <!-- 根据id修改系统菜单 -->
+  <update id="updateSysMenuInfo" parameterType="cn.com.zhshzh.system.user.po.SysMenuInfoPO" >
+    UPDATE sys_menu_info
+    <set>
+      <if test="menuInfoId != null" > menu_info_id = #{menuInfoId, jdbcType=BIGINT}, </if>
+      <if test="menuName != null" > menu_name = #{menuName, jdbcType=VARCHAR}, </if>
+      <if test="menuRoute != null" > menu_route = #{menuRoute, jdbcType=VARCHAR}, </if>
+      <if test="parentId != null" > parent_id = #{parentId, jdbcType=BIGINT}, </if>
+      <if test="menuOrder != null" > menu_order = #{menuOrder, jdbcType=SMALLINT}, </if>
+      <if test="menuIcon != null" > menu_icon = #{menuIcon, jdbcType=VARCHAR}, </if>
+      <if test="menuDescription != null" > menu_description = #{menuDescription, jdbcType=VARCHAR}, </if>
+      update_by = #{updateBy, jdbcType=BIGINT}
+    </set>
+    WHERE menu_info_id = #{menuInfoId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量修改系统菜单 -->
+  <update id="updateSysMenuInfoBatch" parameterType="java.util.List" >
+    <foreach collection="sysMenuInfoPOList" item="item" index="index" separator=";" >
+      UPDATE sys_menu_info
+      <set>
+        <if test="item.menuInfoId != null" > menu_info_id = #{item.menuInfoId, jdbcType=BIGINT}, </if>
+        <if test="item.menuName != null" > menu_name = #{item.menuName, jdbcType=VARCHAR}, </if>
+        <if test="item.menuRoute != null" > menu_route = #{item.menuRoute, jdbcType=VARCHAR}, </if>
+        <if test="item.parentId != null" > parent_id = #{item.parentId, jdbcType=BIGINT}, </if>
+        <if test="item.menuOrder != null" > menu_order = #{item.menuOrder, jdbcType=SMALLINT}, </if>
+        <if test="item.menuIcon != null" > menu_icon = #{item.menuIcon, jdbcType=VARCHAR}, </if>
+        <if test="item.menuDescription != null" > menu_description = #{item.menuDescription, jdbcType=VARCHAR}, </if>
+        update_by = #{item.updateBy, jdbcType=BIGINT}
+      </set>
+      WHERE menu_info_id = #{item.menuInfoId, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id查询系统菜单 -->
+  <select id="getSysMenuInfo" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_menu_info
+    WHERE menu_info_id = #{menuInfoId, jdbcType=BIGINT}
+    AND is_delete = 0
+  </select>
+
+  <!-- 条件查询系统菜单 -->
+  <select id="listSysMenuInfos" parameterType="cn.com.zhshzh.core.model.WhereConditions" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_menu_info
+    <include refid="Where_Clause" />
+    <if test="orderByList != null and orderByList.size() != 0">
+      ORDER BY
+      <foreach collection="orderByList" item="item" index="index" separator="," >
+        ${item.sort} ${item.orderByEnum.order}
+      </foreach>
+    </if>
+  </select>
+
+  <!-- 查询所有的系统菜单 -->
+  <select id="listAllSysMenuInfos" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_menu_info
+    WHERE is_delete = 0
+  </select>
+
+  <!-- 条件查询系统菜单条数 -->
+  <select id="countSysMenuInfos"  parameterType="cn.com.zhshzh.core.model.WhereConditions" resultType="java.lang.Integer" >
+    SELECT COUNT(*) FROM sys_menu_info
+    <include refid="Where_Clause" />
+  </select>
+
+  <!-- 以上代码由代码生成器自动生成，原则上不允许任何修改, 如需自定义，请在下面补充 -->
+</mapper>

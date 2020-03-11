@@ -22,7 +22,7 @@ axios.interceptors.request.use(
     // 每次发送请求之前判断sessionStorage中是否存在token
     // 如果存在，则统一在http请求的header都加上token，这样后台根据token判断你的登录情况
     let token = getToken()
-    if (!token) {
+    if (token) {
       config.headers.Authorization = token
     }
     return config
@@ -114,7 +114,7 @@ axios.interceptors.response.use(
  * @param {String} url [请求的url地址]
  * @param {Object} params [请求时携带的参数]
  */
-export function get (url, params) {
+export const get = (url, params) => {
   return new Promise((resolve, reject) => {
     axios.get(url, {
       params: params
@@ -131,7 +131,7 @@ export function get (url, params) {
  * @param {String} url [请求的url地址]
  * @param {Object} params [请求时携带的参数]
  */
-export function post (url, params) {
+export const post = (url, params) => {
   return new Promise((resolve, reject) => {
     // axios.post(url, QS.stringify(params))
     axios.post(url, params)

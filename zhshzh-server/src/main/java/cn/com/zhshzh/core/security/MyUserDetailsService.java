@@ -111,11 +111,19 @@ public class MyUserDetailsService implements UserDetailsService {
         userRoleConditionModelList.add(userRoleConditionModel);
         WhereConditions userRoleWhereConditions = new WhereConditions(userRoleConditionModelList);
         List<SysUserRoleRelationPO> sysUserRoleRelationPOList = sysUserRoleRelationMapper.listSysUserRoleRelations(userRoleWhereConditions);
+        // redis中存放用户角色的key
+        String roleIdsKey = RedisKeyConstants.ROLEID_PREFIX + userInfoId + RedisKeyConstants.ROLEID_SUFFIX;
+        // 每次登录的时候，先将该用户之前的角色id从redis中删除，后面重新存
+        stringRedisTemplate.delete(roleIdsKey);
         if (!CollectionUtils.isEmpty(sysUserRoleRelationPOList)) {
             // 如果用户有关联的角色，则用Lambda表达式取出所有角色的id
             String[] roleInfoIds = sysUserRoleRelationPOList.stream().map(sysUserRoleRelationPO -> {
-                return String.valueOf(sysUserRoleRelationPO.getRoleInfoId());
+                String roleInfoId = String.valueOf(sysUserRoleRelationPO.getRoleInfoId());
+                // 将用户所拥有的所有角色id依次放入redis中
+                stringRedisTemplate.opsForList().leftPush(roleIdsKey, roleInfoId);
+                return roleInfoId;
             }).collect(Collectors.toList()).toArray(new String[sysUserRoleRelationPOList.size()]);
+
             // 根据角色id查询所有的角色信息
             ConditionModel roleConditionModel = new ConditionModel("role_info_id", WhereConditionEnum.IN, roleInfoIds);
             List<ConditionModel> roleConditionModelList = new ArrayList<>();

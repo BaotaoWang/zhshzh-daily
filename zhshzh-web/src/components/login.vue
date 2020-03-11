@@ -126,7 +126,6 @@ export default {
                 removeAutoLoginState()
               }
 
-              console.log(response)
               // 将用户姓名保存到sessionStorage中
               saveUserFullName(response.data.fullName)
 

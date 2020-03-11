@@ -10,6 +10,8 @@ public enum HttpResultEnum {
     SUCCESS(10000, "成功"),
     FAIL(9000, "失败"),
 
+    EMPTY_DATA(9001, "数据不存在"),
+
     EMPTY_USERNAME(9101, "用户名为空"),
     EMPTY_PASSWORD(9102, "密码为空"),
     BAD_CREDENTIALS(9103, "用户名或密码错误"),
