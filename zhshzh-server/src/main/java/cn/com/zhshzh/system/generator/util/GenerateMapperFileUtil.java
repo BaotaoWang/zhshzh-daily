@@ -63,8 +63,7 @@ public class GenerateMapperFileUtil {
         generateInsertBatchSql(tableName, tableComment, upperCamelCaseTableName,
                 lowerCamelCaseTableName, generatorStringModel.getInsertBatchSql(), builder);
         // 生成mapper.xml的根据id逻辑删除SQL
-        generateDeleteLogicalSql(tableName, tableComment, primaryKey, priJdbcType,
-                lowerCamelCasePrimaryKey, poFileType, builder);
+        generateDeleteLogicalSql(tableName, tableComment, primaryKey, priJdbcType, lowerCamelCasePrimaryKey, builder);
         // 生成mapper.xml的根据批量逻辑删除SQL
         generateDeleteBatchLogicalSql(tableName, tableComment, primaryKey, priJdbcType,
                 lowerCamelCasePrimaryKey, builder);
@@ -86,6 +85,8 @@ public class GenerateMapperFileUtil {
                 priJdbcType, priJavaType, lowerCamelCasePrimaryKey, builder);
         // 生成mapper.xml的条件查询的SQL
         generateSelectByConditionsSql(tableName, tableComment, upperCamelCaseTableName, builder);
+        // 生成mapper.xml的查询全部的SQL
+        generateSelectAllSql(tableName, tableComment, upperCamelCaseTableName, builder);
         // 生成mapper.xml的条件查询条数SQL
         generateSelectCountSql(tableName, tableComment, upperCamelCaseTableName, builder);
         // 生成mapper.xml的尾部
@@ -150,7 +151,6 @@ public class GenerateMapperFileUtil {
         builder.append("  <!-- 查询条件的拼装 -->").append("\r\n");
         builder.append("  <sql id=\"Where_Clause\" >").append("\r\n");
         builder.append("    <where>").append("\r\n");
-        builder.append("      is_delete = 0 AND").append("\r\n");
         builder.append("      <if test=\"conditionList != null and conditionList.size() != 0\">").append("\r\n");
         builder.append("        <foreach collection=\"conditionList\" item=\"item\" index=\"index\" separator=\"AND\" >").append("\r\n");
         builder.append("          <choose>").append("\r\n");
@@ -191,6 +191,7 @@ public class GenerateMapperFileUtil {
         builder.append("          </choose>").append("\r\n");
         builder.append("        </foreach>").append("\r\n");
         builder.append("      </if>").append("\r\n");
+        builder.append("      AND is_delete = 0").append("\r\n");
         builder.append("    </where>").append("\r\n");
         builder.append("  </sql>").append("\r\n");
     }
@@ -271,20 +272,18 @@ public class GenerateMapperFileUtil {
      * @param primaryKey               主键
      * @param priJdbcType              主键的jdbcType
      * @param lowerCamelCasePrimaryKey 首字母小写的驼峰格式的主键
-     * @param poFileType               po文件类型
      * @param builder                  拼接的mapper.xml文件文本
      */
     private static void generateDeleteLogicalSql(String tableName, String tableComment, String primaryKey,
-                                                 String priJdbcType, String lowerCamelCasePrimaryKey,
-                                                 String poFileType, StringBuilder builder) {
+                                                 String priJdbcType, String lowerCamelCasePrimaryKey, StringBuilder builder) {
         builder.append("\r\n");
         // 生成sql的注释
         builder.append("  <!-- 根据id逻辑删除").append(tableComment).append(" -->").append("\r\n");
         // 拼接update语句
-        builder.append("  <update id=\"deleteByIdLogical\" parameterType=\"").append(poFileType).append("\" >").append("\r\n");
+        builder.append("  <update id=\"deleteByIdLogical\" >").append("\r\n");
         builder.append("    UPDATE ").append(tableName).append("\r\n");
         builder.append("    SET is_delete = 1,").append("\r\n");
-        builder.append("    update_by = #{updateBy, jdbcType=BIGINT}").append("\r\n");
+        builder.append("    update_by = #{userInfoId, jdbcType=BIGINT}").append("\r\n");
         builder.append("    WHERE ").append(primaryKey).append(" = #{").append(lowerCamelCasePrimaryKey).append(", jdbcType=")
                 .append(priJdbcType).append("}").append("\r\n");
         builder.append("  </update>").append("\r\n");
@@ -461,6 +460,7 @@ public class GenerateMapperFileUtil {
         builder.append("    FROM ").append(tableName).append("\r\n");
         builder.append("    WHERE ").append(primaryKey).append(" = #{").append(lowerCamelCasePrimaryKey).append(", jdbcType=")
                 .append(priJdbcType).append("}").append("\r\n");
+        builder.append("    AND is_delete = 0").append("\r\n");
         builder.append("  </select>").append("\r\n");
     }
 
@@ -491,6 +491,29 @@ public class GenerateMapperFileUtil {
         builder.append("        ${item.sort} ${item.orderByEnum.order}").append("\r\n");
         builder.append("      </foreach>").append("\r\n");
         builder.append("    </if>").append("\r\n");
+        builder.append("  </select>").append("\r\n");
+    }
+
+    /**
+     * 生成mapper.xml的查询全部的SQL
+     *
+     * @param tableName               数据库表名
+     * @param tableComment            数据库表的备注
+     * @param upperCamelCaseTableName 首字母大写的驼峰格式数据库表名
+     * @param builder                 拼接的mapper.xml文件文本
+     */
+    private static void generateSelectAllSql(String tableName, String tableComment, String upperCamelCaseTableName,
+                                             StringBuilder builder) {
+        builder.append("\r\n");
+        // 生成sql的注释
+        builder.append("  <!-- 查询所有的").append(tableComment).append(" -->").append("\r\n");
+        // 拼接selectSQL
+        builder.append("  <select id=\"listAll").append(upperCamelCaseTableName)
+                .append("s\" resultMap=\"BaseResultMap\" >").append("\r\n");
+        builder.append("    SELECT").append("\r\n");
+        builder.append("    <include refid=\"Base_Column_List\" />").append("\r\n");
+        builder.append("    FROM ").append(tableName).append("\r\n");
+        builder.append("    WHERE is_delete = 0").append("\r\n");
         builder.append("  </select>").append("\r\n");
     }
 

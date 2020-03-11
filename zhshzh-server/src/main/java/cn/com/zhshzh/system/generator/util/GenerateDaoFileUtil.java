@@ -56,7 +56,7 @@ public class GenerateDaoFileUtil {
         // 生成mapper.java的批量插入方法
         generateInsertBatchMethod(upperCamelCaseTableName, lowerCamelCasePoName, tableComment, builder);
         // 生成mapper.java的根据id逻辑删除方法
-        generateDeleteByIdLogicalMethod(upperCamelCaseTableName, lowerCamelCaseTableName, tableComment, builder);
+        generateDeleteByIdLogicalMethod(tableComment, lowerCamelCasePrimaryKey, priFieldType, builder);
         // 生成mapper.java的批量逻辑删除方法
         generateDeleteBatchLogicalMethod(lowerCamelCasePrimaryKey, tableComment, builder);
         // 生成mapper.java的根据id物理删除方法
@@ -71,6 +71,8 @@ public class GenerateDaoFileUtil {
         generateGetPoMethod(upperCamelCaseTableName, lowerCamelCasePrimaryKey, priFieldType, tableComment, builder);
         // 生成mapper.java的条件查询的方法
         generateListPosMethod(upperCamelCaseTableName, tableComment, builder);
+        // 生成mapper.java的listAllPos方法
+        generateListAllPosMethod(upperCamelCaseTableName, tableComment, builder);
         // 生成mapper.java的条件查询条数方法
         generateCountMethod(upperCamelCaseTableName, tableComment, builder);
         // 生成mapper.java的尾部
@@ -164,21 +166,23 @@ public class GenerateDaoFileUtil {
     /**
      * 生成mapper.java的deleteByIdLogical方法
      *
-     * @param upperCamelCaseTableName 首字母大写的驼峰格式数据库表名
-     * @param lowerCamelCaseTableName 首字母小写的驼峰格式数据库表名
-     * @param tableComment            数据库表的注释
-     * @param builder                 拼接的mapper.java文件文本
+     * @param tableComment             数据库表的注释
+     * @param lowerCamelCasePrimaryKey 首字母小写的驼峰格式主键
+     * @param priFieldType             主键的fieldType
+     * @param builder                  拼接的mapper.java文件文本
      */
-    private static void generateDeleteByIdLogicalMethod(String upperCamelCaseTableName, String lowerCamelCaseTableName,
-                                                        String tableComment, StringBuilder builder) {
+    private static void generateDeleteByIdLogicalMethod(String tableComment, String lowerCamelCasePrimaryKey,
+                                                        String priFieldType, StringBuilder builder) {
         builder.append("\r\n");
         builder.append("    /**").append("\r\n");
         builder.append("     * 根据id逻辑删除").append(tableComment).append("\r\n");
         builder.append("     *").append("\r\n");
-        builder.append("     * @param ").append(lowerCamelCaseTableName).append("PO ").append(tableComment).append("\r\n");
+        builder.append("     * @param ").append(lowerCamelCasePrimaryKey).append(" 主键id").append("\r\n");
+        builder.append("     * @param userInfoId 用户id").append("\r\n");
         builder.append("     */").append("\r\n");
-        builder.append("    void deleteByIdLogical(").append(upperCamelCaseTableName).append("PO ")
-                .append(lowerCamelCaseTableName).append("PO);").append("\r\n");
+        builder.append("    void deleteByIdLogical(").append("@Param(\"").append(lowerCamelCasePrimaryKey)
+                .append("\") ").append(priFieldType).append(" ").append(lowerCamelCasePrimaryKey)
+                .append(", @Param(\"userInfoId\") Long userInfoId").append(");").append("\r\n");
     }
 
     /**
@@ -320,6 +324,24 @@ public class GenerateDaoFileUtil {
         builder.append("     */").append("\r\n");
         builder.append("    List<").append(upperCamelCaseTableName).append("PO> list").append(upperCamelCaseTableName)
                 .append("s(WhereConditions whereConditions);").append("\r\n");
+    }
+
+    /**
+     * 生成mapper.java的listAllPos方法
+     *
+     * @param upperCamelCaseTableName 首字母大写的驼峰格式数据库表名
+     * @param tableComment            数据库表的注释
+     * @param builder                 拼接的mapper.java文件文本
+     */
+    private static void generateListAllPosMethod(String upperCamelCaseTableName, String tableComment, StringBuilder builder) {
+        builder.append("\r\n");
+        builder.append("    /**").append("\r\n");
+        builder.append("     * 查询所有的").append(tableComment).append("\r\n");
+        builder.append("     *").append("\r\n");
+        builder.append("     * @return ").append(tableComment).append("list").append("\r\n");
+        builder.append("     */").append("\r\n");
+        builder.append("    List<").append(upperCamelCaseTableName).append("PO> listAll").append(upperCamelCaseTableName)
+                .append("s();").append("\r\n");
     }
 
     /**
