@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.interfaceLog.po.SysInterfaceLogPO" >
     <id column="interface_log_id" jdbcType="BIGINT" property="interfaceLogId" javaType="java.lang.Long" />
     <result column="request_url" jdbcType="VARCHAR" property="requestUrl" javaType="java.lang.String" />
-    <result column="type" jdbcType="VARCHAR" property="type" javaType="java.lang.String" />
+    <result column="request_type" jdbcType="VARCHAR" property="requestType" javaType="java.lang.String" />
     <result column="request_data" jdbcType="LONGVARCHAR" property="requestData" javaType="java.lang.String" />
     <result column="response_data" jdbcType="LONGVARCHAR" property="responseData" javaType="java.lang.String" />
     <result column="process_time" jdbcType="BIGINT" property="processTime" javaType="java.lang.Long" />
@@ -25,15 +25,14 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    interface_log_id, request_url, type, request_data, response_data, process_time, class_name, method_name, user_id,
-    user_name, principal, client_ip, server_ip, server_port, request_exception, is_delete, create_time, update_time, create_by,
-    update_by
+    interface_log_id, request_url, request_type, request_data, response_data, process_time, class_name, method_name,
+    user_id, user_name, principal, client_ip, server_ip, server_port, request_exception, is_delete, create_time, update_time,
+    create_by, update_by
   </sql>
 
   <!-- 查询条件的拼装 -->
   <sql id="Where_Clause" >
     <where>
-      is_delete = 0 AND
       <if test="conditionList != null and conditionList.size() != 0">
         <foreach collection="conditionList" item="item" index="index" separator="AND" >
           <choose>
@@ -74,6 +73,7 @@
           </choose>
         </foreach>
       </if>
+      AND is_delete = 0
     </where>
   </sql>
 
@@ -83,7 +83,7 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="interfaceLogId != null" > interface_log_id, </if>
       <if test="requestUrl != null" > request_url, </if>
-      <if test="type != null" > type, </if>
+      <if test="requestType != null" > request_type, </if>
       <if test="requestData != null" > request_data, </if>
       <if test="responseData != null" > response_data, </if>
       <if test="processTime != null" > process_time, </if>
@@ -105,7 +105,7 @@
     <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
       <if test="interfaceLogId != null" > #{interfaceLogId, jdbcType=BIGINT}, </if>
       <if test="requestUrl != null" > #{requestUrl, jdbcType=VARCHAR}, </if>
-      <if test="type != null" > #{type, jdbcType=VARCHAR}, </if>
+      <if test="requestType != null" > #{requestType, jdbcType=VARCHAR}, </if>
       <if test="requestData != null" > #{requestData, jdbcType=LONGVARCHAR}, </if>
       <if test="responseData != null" > #{responseData, jdbcType=LONGVARCHAR}, </if>
       <if test="processTime != null" > #{processTime, jdbcType=BIGINT}, </if>
@@ -139,7 +139,7 @@
       <trim prefix="(" suffix=")" suffixOverrides="," >
         #{item.interfaceLogId, jdbcType=BIGINT},
         #{item.requestUrl, jdbcType=VARCHAR},
-        #{item.type, jdbcType=VARCHAR},
+        #{item.requestType, jdbcType=VARCHAR},
         #{item.requestData, jdbcType=LONGVARCHAR},
         #{item.responseData, jdbcType=LONGVARCHAR},
         #{item.processTime, jdbcType=BIGINT},
@@ -162,10 +162,10 @@
   </insert>
 
   <!-- 根据id逻辑删除系统接口日志 -->
-  <update id="deleteByIdLogical" parameterType="cn.com.zhshzh.system.interfaceLog.po.SysInterfaceLogPO" >
+  <update id="deleteByIdLogical" >
     UPDATE sys_interface_log
     SET is_delete = 1,
-    update_by = #{updateBy, jdbcType=BIGINT}
+    update_by = #{userInfoId, jdbcType=BIGINT}
     WHERE interface_log_id = #{interfaceLogId, jdbcType=BIGINT}
   </update>
 
@@ -201,7 +201,7 @@
     <set>
       <if test="interfaceLogId != null" > interface_log_id = #{interfaceLogId, jdbcType=BIGINT}, </if>
       <if test="requestUrl != null" > request_url = #{requestUrl, jdbcType=VARCHAR}, </if>
-      <if test="type != null" > type = #{type, jdbcType=VARCHAR}, </if>
+      <if test="requestType != null" > request_type = #{requestType, jdbcType=VARCHAR}, </if>
       <if test="requestData != null" > request_data = #{requestData, jdbcType=LONGVARCHAR}, </if>
       <if test="responseData != null" > response_data = #{responseData, jdbcType=LONGVARCHAR}, </if>
       <if test="processTime != null" > process_time = #{processTime, jdbcType=BIGINT}, </if>
@@ -226,7 +226,7 @@
       <set>
         <if test="item.interfaceLogId != null" > interface_log_id = #{item.interfaceLogId, jdbcType=BIGINT}, </if>
         <if test="item.requestUrl != null" > request_url = #{item.requestUrl, jdbcType=VARCHAR}, </if>
-        <if test="item.type != null" > type = #{item.type, jdbcType=VARCHAR}, </if>
+        <if test="item.requestType != null" > request_type = #{item.requestType, jdbcType=VARCHAR}, </if>
         <if test="item.requestData != null" > request_data = #{item.requestData, jdbcType=LONGVARCHAR}, </if>
         <if test="item.responseData != null" > response_data = #{item.responseData, jdbcType=LONGVARCHAR}, </if>
         <if test="item.processTime != null" > process_time = #{item.processTime, jdbcType=BIGINT}, </if>
@@ -251,6 +251,7 @@
     <include refid="Base_Column_List" />
     FROM sys_interface_log
     WHERE interface_log_id = #{interfaceLogId, jdbcType=BIGINT}
+    AND is_delete = 0
   </select>
 
   <!-- 条件查询系统接口日志 -->
@@ -265,6 +266,22 @@
         ${item.sort} ${item.orderByEnum.order}
       </foreach>
     </if>
+    <choose>
+      <when test="limitFrom != null and limitFrom != 0">
+        LIMIT #{limitFrom}, #{limitTo}
+      </when>
+      <when test="limitTo != null and limitTo != 0">
+        LIMIT #{limitTo}
+      </when>
+    </choose>
+  </select>
+
+  <!-- 查询所有的系统接口日志 -->
+  <select id="listAllSysInterfaceLogs" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_interface_log
+    WHERE is_delete = 0
   </select>
 
   <!-- 条件查询系统接口日志条数 -->

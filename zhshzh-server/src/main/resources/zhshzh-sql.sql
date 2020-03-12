@@ -330,7 +330,7 @@ DROP TABLE IF EXISTS `sys_interface_log`;
 CREATE TABLE `sys_interface_log` (
   `interface_log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '接口日志id',
   `request_url` varchar(300) DEFAULT NULL COMMENT '请求url',
-  `type` varchar(10) DEFAULT NULL COMMENT '请求方式',
+  `request_type` varchar(10) DEFAULT NULL COMMENT '请求方式',
   `request_data` text COMMENT '请求数据',
   `response_data` text COMMENT '请求数据',
   `process_time` bigint(20) DEFAULT NULL COMMENT '请求数据处理时长（ms）',

@@ -10,7 +10,7 @@ import java.util.Date;
  * 系统接口日志PO
  *
  * @author Generator
- * @since 2020/01/06
+ * @since 2020/03/12
  */
 @Data
 public class SysInterfaceLogPO implements Serializable {
@@ -28,10 +28,10 @@ public class SysInterfaceLogPO implements Serializable {
     private String requestUrl;
 
     /**
-     * type
+     * request_type
      * 请求方式
      */
-    private String type;
+    private String requestType;
 
     /**
      * request_data

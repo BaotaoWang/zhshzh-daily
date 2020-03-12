@@ -13,7 +13,7 @@ import java.util.List;
  * 系统接口日志Mapper
  *
  * @author Generator
- * @since 2020/01/06
+ * @since 2020/03/12
  */
 @Mapper
 public interface SysInterfaceLogMapper {
@@ -34,9 +34,10 @@ public interface SysInterfaceLogMapper {
     /**
      * 根据id逻辑删除系统接口日志
      *
-     * @param sysInterfaceLogPO 系统接口日志
+     * @param interfaceLogId 主键id
+     * @param userInfoId 用户id
      */
-    void deleteByIdLogical(SysInterfaceLogPO sysInterfaceLogPO);
+    void deleteByIdLogical(@Param("interfaceLogId") Long interfaceLogId, @Param("userInfoId") Long userInfoId);
 
     /**
      * 批量逻辑删除系统接口日志
@@ -88,6 +89,13 @@ public interface SysInterfaceLogMapper {
      * @return 系统接口日志list
      */
     List<SysInterfaceLogPO> listSysInterfaceLogs(WhereConditions whereConditions);
+
+    /**
+     * 查询所有的系统接口日志
+     *
+     * @return 系统接口日志list
+     */
+    List<SysInterfaceLogPO> listAllSysInterfaceLogs();
 
     /**
      * 条件查询系统接口日志条数

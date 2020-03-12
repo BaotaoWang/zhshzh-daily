@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.ServletRequest;
@@ -110,7 +111,7 @@ public class SysInterfaceLogAspect {
             // 响应数据
             sysInterfaceLogPO.setResponseData(JSON.toJSONString(result));
             // 请求方式
-            sysInterfaceLogPO.setType(request.getMethod());
+            sysInterfaceLogPO.setRequestType(request.getMethod());
             if (HttpMethod.GET.matches(request.getMethod())) {
                 // GET请求获取参数
                 sysInterfaceLogPO.setRequestData(request.getQueryString());
@@ -120,7 +121,8 @@ public class SysInterfaceLogAspect {
                 if (args != null) {
                     List<Object> objects = new ArrayList<>();
                     for (Object arg : args) {
-                        if (arg instanceof ServletRequest || arg instanceof MultipartRequest || arg instanceof ServletResponse) {
+                        if (arg instanceof ServletRequest || arg instanceof MultipartRequest
+                                || arg instanceof ServletResponse || arg instanceof MultipartFile) {
                             continue;
                         }
                         objects.add(arg);
