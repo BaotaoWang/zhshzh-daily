@@ -491,6 +491,14 @@ public class GenerateMapperFileUtil {
         builder.append("        ${item.sort} ${item.orderByEnum.order}").append("\r\n");
         builder.append("      </foreach>").append("\r\n");
         builder.append("    </if>").append("\r\n");
+        builder.append("    <choose>").append("\r\n");
+        builder.append("      <when test=\"limitFrom != null and limitFrom != 0\">").append("\r\n");
+        builder.append("        LIMIT #{limitFrom}, #{limitTo}").append("\r\n");
+        builder.append("      </when>").append("\r\n");
+        builder.append("      <when test=\"limitTo != null and limitTo != 0\">").append("\r\n");
+        builder.append("        LIMIT #{limitTo}").append("\r\n");
+        builder.append("      </when>").append("\r\n");
+        builder.append("    </choose>").append("\r\n");
         builder.append("  </select>").append("\r\n");
     }
 

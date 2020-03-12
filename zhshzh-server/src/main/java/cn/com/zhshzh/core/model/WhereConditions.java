@@ -22,6 +22,16 @@ public class WhereConditions {
      */
     private List<OrderByModel> orderByList;
 
+    /**
+     * 条数限制-起始
+     */
+    private int limitFrom;
+
+    /**
+     * 条数限制-结束
+     */
+    private int limitTo;
+
     public WhereConditions(List<ConditionModel> conditionList) {
         this.conditionList = conditionList;
     }
@@ -30,4 +40,29 @@ public class WhereConditions {
         this.conditionList = conditionList;
         this.orderByList = orderByList;
     }
+
+    public WhereConditions(List<ConditionModel> conditionList, int limitTo) {
+        this.conditionList = conditionList;
+        this.limitTo = limitTo;
+    }
+
+    public WhereConditions(List<ConditionModel> conditionList, int limitFrom, int limitTo) {
+        this.conditionList = conditionList;
+        this.limitFrom = limitFrom;
+        this.limitTo = limitTo;
+    }
+
+    public WhereConditions(List<ConditionModel> conditionList, List<OrderByModel> orderByList, int limitTo) {
+        this.conditionList = conditionList;
+        this.orderByList = orderByList;
+        this.limitTo = limitTo;
+    }
+
+    public WhereConditions(List<ConditionModel> conditionList, List<OrderByModel> orderByList, int limitFrom, int limitTo) {
+        this.conditionList = conditionList;
+        this.orderByList = orderByList;
+        this.limitFrom = limitFrom;
+        this.limitTo = limitTo;
+    }
+
 }
