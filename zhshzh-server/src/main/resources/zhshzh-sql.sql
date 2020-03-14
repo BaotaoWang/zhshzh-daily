@@ -524,3 +524,22 @@ CREATE TABLE `sys_user_role_relation` (
 INSERT INTO `sys_user_role_relation` VALUES ('1', '100000', '1', '\0', '2020-01-07 21:01:54', '2020-01-07 21:01:54', '0', '0');
 INSERT INTO `sys_user_role_relation` VALUES ('2', '100000', '2', '\0', '2020-03-10 21:24:19', '2020-03-10 21:28:03', '0', '0');
 INSERT INTO `sys_user_role_relation` VALUES ('3', '100001', '2', '\0', '2020-03-11 20:52:29', '2020-03-11 20:52:29', '0', '0');
+
+
+CREATE TABLE `file_head_portrait` (
+    `head_portrait_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '头像id',
+    `user_info_id` bigint(20) unsigned NOT NULL COMMENT '用户id',
+    `version` int(10) unsigned NOT NULL COMMENT '版本号',
+    `image_name` varchar(100) NOT NULL COMMENT '图片名称',
+    `image_path` varchar(300) NOT NULL COMMENT '图片存放路径',
+    `image_size` bigint(20) unsigned NOT NULL COMMENT '图片大小（单位：byte）',
+    `image_type` varchar(32) NOT NULL COMMENT '图片格式',
+    `is_delete` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+    `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `create_by` bigint(20) unsigned NOT NULL COMMENT '创建人',
+    `update_by` bigint(20) unsigned NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`head_portrait_id`),
+    KEY `file_head_portrait_user_info_id_FOREIGN` (`user_info_id`),
+    CONSTRAINT `file_head_portrait_user_info_id_FOREIGN` FOREIGN KEY (`user_info_id`) REFERENCES `sys_user_info` (`user_info_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='用户头像表'

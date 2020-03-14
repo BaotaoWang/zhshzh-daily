@@ -14,7 +14,7 @@
             Fatal:输出每个严重的错误事件将会导致应用程序的退出的日志.
             OFF:最高等级的，用于关闭所有日志记录 -->
         <!-- 配置日志文件输出目录 -->
-        <Property name="LOG_HOME">E:/logs</Property>
+        <Property name="LOG_HOME">D:/logs</Property>
         <property name="LOG_FILE_NAME_ALL">${LOG_HOME}</property>
         <property name="LOG_FILE_NAME_INFO">${LOG_HOME}/info</property>
         <property name="LOG_FILE_NAME_WARN">${LOG_HOME}/warn</property>

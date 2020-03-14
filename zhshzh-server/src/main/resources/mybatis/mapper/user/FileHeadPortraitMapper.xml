@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zhshzh.system.user.dao.FileHeadPortraitMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.user.po.FileHeadPortraitPO" >
+    <id column="head_portrait_id" jdbcType="BIGINT" property="headPortraitId" javaType="java.lang.Long" />
+    <result column="user_info_id" jdbcType="BIGINT" property="userInfoId" javaType="java.lang.Long" />
+    <result column="version" jdbcType="INTEGER" property="version" javaType="java.lang.Integer" />
+    <result column="image_name" jdbcType="VARCHAR" property="imageName" javaType="java.lang.String" />
+    <result column="image_path" jdbcType="VARCHAR" property="imagePath" javaType="java.lang.String" />
+    <result column="image_size" jdbcType="BIGINT" property="imageSize" javaType="java.lang.Long" />
+    <result column="image_type" jdbcType="VARCHAR" property="imageType" javaType="java.lang.String" />
+    <result column="is_delete" jdbcType="BIT" property="delete" javaType="java.lang.Boolean" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" javaType="java.lang.Long" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    head_portrait_id, user_info_id, version, image_name, image_path, image_size, image_type, is_delete, create_time,
+    update_time, create_by, update_by
+  </sql>
+
+  <!-- 查询条件的拼装 -->
+  <sql id="Where_Clause" >
+    <where>
+      <if test="conditionList != null and conditionList.size() != 0">
+        <foreach collection="conditionList" item="item" index="index" separator="AND" >
+          <choose>
+            <when test="item.whereConditionEnum.condition == 'LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'BETWEEN'" >
+              <trim prefix=" " suffix=" " suffixOverrides="AND" >
+                <if test="item.startValue != null and item.startValue != ''" >
+                  ${item.columnName} &gt;= #{item.startValue} AND
+                </if>
+                <if test="item.endValue != null and item.endValue != ''" >
+                  ${item.columnName} &lt;= #{item.endValue} AND
+                </if>
+                <if test="(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')" >
+                  1 = 1
+                </if>
+              </trim>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <otherwise>
+              ${item.columnName} ${item.whereConditionEnum.condition} #{item.value}
+            </otherwise>
+          </choose>
+        </foreach>
+      </if>
+      AND is_delete = 0
+    </where>
+  </sql>
+
+  <!-- 新增用户头像 -->
+  <insert id="insertFileHeadPortrait" parameterType="cn.com.zhshzh.system.user.po.FileHeadPortraitPO" >
+    INSERT INTO file_head_portrait
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="headPortraitId != null" > head_portrait_id, </if>
+      <if test="userInfoId != null" > user_info_id, </if>
+      <if test="version != null" > version, </if>
+      <if test="imageName != null" > image_name, </if>
+      <if test="imagePath != null" > image_path, </if>
+      <if test="imageSize != null" > image_size, </if>
+      <if test="imageType != null" > image_type, </if>
+      <if test="delete != null" > is_delete, </if>
+      <if test="createTime != null" > create_time, </if>
+      <if test="updateTime != null" > update_time, </if>
+      <if test="createBy != null" > create_by, </if>
+      <if test="updateBy != null" > update_by, </if>
+    </trim>
+    <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+      <if test="headPortraitId != null" > #{headPortraitId, jdbcType=BIGINT}, </if>
+      <if test="userInfoId != null" > #{userInfoId, jdbcType=BIGINT}, </if>
+      <if test="version != null" > #{version, jdbcType=INTEGER}, </if>
+      <if test="imageName != null" > #{imageName, jdbcType=VARCHAR}, </if>
+      <if test="imagePath != null" > #{imagePath, jdbcType=VARCHAR}, </if>
+      <if test="imageSize != null" > #{imageSize, jdbcType=BIGINT}, </if>
+      <if test="imageType != null" > #{imageType, jdbcType=VARCHAR}, </if>
+      <if test="delete != null" > #{delete, jdbcType=BIT}, </if>
+      <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
+      <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
+      <if test="createBy != null" > #{createBy, jdbcType=BIGINT}, </if>
+      <if test="updateBy != null" > #{updateBy, jdbcType=BIGINT}, </if>
+    </trim>
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="headPortraitId" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <!-- 批量新增用户头像 -->
+  <insert id="insertFileHeadPortraitBatch" parameterType="java.util.List" >
+    INSERT INTO file_head_portrait (
+      <include refid="Base_Column_List" />
+    )
+    VALUES
+    <foreach collection="fileHeadPortraitPOList" item="item" index="index" separator="," >
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+        #{item.headPortraitId, jdbcType=BIGINT},
+        #{item.userInfoId, jdbcType=BIGINT},
+        #{item.version, jdbcType=INTEGER},
+        #{item.imageName, jdbcType=VARCHAR},
+        #{item.imagePath, jdbcType=VARCHAR},
+        #{item.imageSize, jdbcType=BIGINT},
+        #{item.imageType, jdbcType=VARCHAR},
+        0,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP,
+        #{item.createBy, jdbcType=BIGINT},
+        #{item.updateBy, jdbcType=BIGINT},
+      </trim>
+    </foreach>
+  </insert>
+
+  <!-- 根据id逻辑删除用户头像 -->
+  <update id="deleteByIdLogical" >
+    UPDATE file_head_portrait
+    SET is_delete = 1,
+    update_by = #{userInfoId, jdbcType=BIGINT}
+    WHERE head_portrait_id = #{headPortraitId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量逻辑删除用户头像 -->
+  <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
+    UPDATE file_head_portrait
+    SET is_delete = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE head_portrait_id IN
+    <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id物理删除用户头像 -->
+  <delete id="deleteByIdPhysical" parameterType="java.lang.Long" >
+    DELETE FROM file_head_portrait
+    WHERE head_portrait_id = #{headPortraitId, jdbcType=BIGINT}
+  </delete>
+
+  <!-- 批量物理删除用户头像 -->
+  <delete id="deleteBatchPhysical" >
+    DELETE FROM file_head_portrait
+    WHERE head_portrait_id IN
+    <foreach collection="fileHeadPortraits" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </delete>
+
+  <!-- 根据id修改用户头像 -->
+  <update id="updateFileHeadPortrait" parameterType="cn.com.zhshzh.system.user.po.FileHeadPortraitPO" >
+    UPDATE file_head_portrait
+    <set>
+      <if test="headPortraitId != null" > head_portrait_id = #{headPortraitId, jdbcType=BIGINT}, </if>
+      <if test="userInfoId != null" > user_info_id = #{userInfoId, jdbcType=BIGINT}, </if>
+      <if test="version != null" > version = #{version, jdbcType=INTEGER}, </if>
+      <if test="imageName != null" > image_name = #{imageName, jdbcType=VARCHAR}, </if>
+      <if test="imagePath != null" > image_path = #{imagePath, jdbcType=VARCHAR}, </if>
+      <if test="imageSize != null" > image_size = #{imageSize, jdbcType=BIGINT}, </if>
+      <if test="imageType != null" > image_type = #{imageType, jdbcType=VARCHAR}, </if>
+      update_by = #{updateBy, jdbcType=BIGINT}
+    </set>
+    WHERE head_portrait_id = #{headPortraitId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量修改用户头像 -->
+  <update id="updateFileHeadPortraitBatch" parameterType="java.util.List" >
+    <foreach collection="fileHeadPortraitPOList" item="item" index="index" separator=";" >
+      UPDATE file_head_portrait
+      <set>
+        <if test="item.headPortraitId != null" > head_portrait_id = #{item.headPortraitId, jdbcType=BIGINT}, </if>
+        <if test="item.userInfoId != null" > user_info_id = #{item.userInfoId, jdbcType=BIGINT}, </if>
+        <if test="item.version != null" > version = #{item.version, jdbcType=INTEGER}, </if>
+        <if test="item.imageName != null" > image_name = #{item.imageName, jdbcType=VARCHAR}, </if>
+        <if test="item.imagePath != null" > image_path = #{item.imagePath, jdbcType=VARCHAR}, </if>
+        <if test="item.imageSize != null" > image_size = #{item.imageSize, jdbcType=BIGINT}, </if>
+        <if test="item.imageType != null" > image_type = #{item.imageType, jdbcType=VARCHAR}, </if>
+        update_by = #{item.updateBy, jdbcType=BIGINT}
+      </set>
+      WHERE head_portrait_id = #{item.headPortraitId, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id查询用户头像 -->
+  <select id="getFileHeadPortrait" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM file_head_portrait
+    WHERE head_portrait_id = #{headPortraitId, jdbcType=BIGINT}
+    AND is_delete = 0
+  </select>
+
+  <!-- 条件查询用户头像 -->
+  <select id="listFileHeadPortraits" parameterType="cn.com.zhshzh.core.model.WhereConditions" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM file_head_portrait
+    <include refid="Where_Clause" />
+    <if test="orderByList != null and orderByList.size() != 0">
+      ORDER BY
+      <foreach collection="orderByList" item="item" index="index" separator="," >
+        ${item.sort} ${item.orderByEnum.order}
+      </foreach>
+    </if>
+    <choose>
+      <when test="limitFrom != null and limitFrom != 0">
+        LIMIT #{limitFrom}, #{limitTo}
+      </when>
+      <when test="limitTo != null and limitTo != 0">
+        LIMIT #{limitTo}
+      </when>
+    </choose>
+  </select>
+
+  <!-- 查询所有的用户头像 -->
+  <select id="listAllFileHeadPortraits" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM file_head_portrait
+    WHERE is_delete = 0
+  </select>
+
+  <!-- 条件查询用户头像条数 -->
+  <select id="countFileHeadPortraits"  parameterType="cn.com.zhshzh.core.model.WhereConditions" resultType="java.lang.Integer" >
+    SELECT COUNT(*) FROM file_head_portrait
+    <include refid="Where_Clause" />
+  </select>
+
+  <!-- 以上代码由代码生成器自动生成，原则上不允许任何修改, 如需自定义，请在下面补充 -->
+</mapper>
