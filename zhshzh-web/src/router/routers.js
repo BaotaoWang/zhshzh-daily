@@ -1,14 +1,6 @@
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 
-// 下面4行代码是为了解决elementui当点击激活的菜单时会在浏览器控制台报红错(NavigationDuplicated)的问题
-// 貌似elementui在2.13.0版本会解决该问题
-// 2.13.0版本发布后，更新elementui版本，删除以下代码测试不报错的话，就永久性删除
-const originalPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push (location) {
-  return originalPush.call(this, location).catch(err => err)
-}
-
 // Vue全局使用Router
 Vue.use(VueRouter)
 
