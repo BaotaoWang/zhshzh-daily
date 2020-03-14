@@ -363,6 +363,7 @@ CREATE TABLE `sys_menu_info` (
   `menu_order` smallint(5) unsigned DEFAULT NULL COMMENT '菜单序号',
   `menu_icon` varchar(64) DEFAULT NULL COMMENT '菜单图标',
   `menu_description` varchar(200) DEFAULT NULL COMMENT '菜单描述',
+  `is_disabled` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否禁用（0：false-不禁用； 1：true-禁用）',
   `is_delete` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',

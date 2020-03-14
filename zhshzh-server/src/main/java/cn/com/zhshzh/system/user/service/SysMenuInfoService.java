@@ -55,6 +55,16 @@ public interface SysMenuInfoService {
     HttpResult<?> updateSysMenuInfo(long menuInfoId, SysMenuInfoDTO sysMenuInfoDTO);
 
     /**
+     * 修改菜单状态（启用/禁用）
+     *
+     * @param menuInfoId
+     * @param disabled
+     * @param userInfoId
+     * @return
+     */
+    HttpResult<?> changeMenuState(long menuInfoId, Boolean disabled, long userInfoId);
+
+    /**
      * 删除菜单信息
      *
      * @param id

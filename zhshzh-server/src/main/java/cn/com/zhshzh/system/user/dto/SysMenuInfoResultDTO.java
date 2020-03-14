@@ -34,4 +34,7 @@ public class SysMenuInfoResultDTO implements Serializable {
 
     @ApiModelProperty(value = "菜单描述", dataType = "String")
     private String menuDescription; // 菜单描述
+
+    @ApiModelProperty(value = "是否禁用", dataType = "Boolean")
+    private Boolean disabled; // 是否禁用
 }

@@ -34,7 +34,10 @@ public enum HttpResultEnum {
     EMPTY_HEAD_PORTRAIT(9141, "未发现头像文件"),
 
     /* minio异常 */
-    MINIO_EXCEPTION(9161, "文件系统异常");
+    MINIO_EXCEPTION(9161, "文件系统异常"),
+
+    /* 菜单异常 */
+    NULL_MENU_STATE(9181, "菜单状态为空");
 
 
     private int code;

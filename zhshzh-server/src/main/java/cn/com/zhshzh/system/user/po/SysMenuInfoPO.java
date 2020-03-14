@@ -10,7 +10,7 @@ import java.util.Date;
  * 系统菜单PO
  *
  * @author Generator
- * @since 2020/03/11
+ * @since 2020/03/14
  */
 @Data
 public class SysMenuInfoPO implements Serializable {
@@ -56,6 +56,12 @@ public class SysMenuInfoPO implements Serializable {
      * 菜单描述
      */
     private String menuDescription;
+
+    /**
+     * is_disabled
+     * 是否禁用（0：false-不禁用； 1：true-禁用）
+     */
+    private Boolean disabled;
 
     /**
      * is_delete

@@ -4,6 +4,7 @@ import cn.com.zhshzh.core.constant.HttpResultEnum;
 import cn.com.zhshzh.core.constant.RedisKeyConstants;
 import cn.com.zhshzh.core.constant.WhereConditionEnum;
 import cn.com.zhshzh.core.model.ConditionModel;
+import cn.com.zhshzh.core.model.DeleteBatchLogicalModel;
 import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.core.model.WhereConditions;
 import cn.com.zhshzh.system.user.dao.SysMenuInfoMapper;
@@ -98,8 +99,11 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
         }
         String[] menuInfoIds = sysRoleMenuRelationPOList.stream().map(sysRoleMenuRelationPO -> String.valueOf(sysRoleMenuRelationPO.getMenuInfoId()))
                 .collect(Collectors.toList()).toArray(new String[sysRoleMenuRelationPOList.size()]);
-        ConditionModel menuConditionModel = new ConditionModel("menu_info_id", WhereConditionEnum.IN, menuInfoIds);
         List<ConditionModel> menuConditionModelList = new ArrayList<>();
+        ConditionModel menuConditionModel = new ConditionModel("menu_info_id", WhereConditionEnum.IN, menuInfoIds);
+        menuConditionModelList.add(menuConditionModel);
+        // 只查询启用的菜单
+        menuConditionModel = new ConditionModel("is_disabled", "0");
         menuConditionModelList.add(menuConditionModel);
         // 封装查询菜单信息的查询条件
         WhereConditions menuWhereConditions = new WhereConditions(menuConditionModelList);
@@ -137,6 +141,8 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
         BeanUtils.copyProperties(sysMenuInfoDTO, sysMenuInfoPO);
         // 自增主键，防止乱设置id
         sysMenuInfoPO.setMenuInfoId(null);
+        // 新增的菜单默认启用
+        sysMenuInfoPO.setDisabled(false);
         sysMenuInfoPO.setCreateBy(sysMenuInfoDTO.getUserInfoId());
         sysMenuInfoPO.setUpdateBy(sysMenuInfoDTO.getUserInfoId());
         // 新增菜单信息
@@ -167,6 +173,57 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
     }
 
     /**
+     * 修改菜单状态（启用/禁用）
+     *
+     * @param menuInfoId
+     * @param disabled
+     * @param userInfoId
+     * @return
+     */
+    @Override
+    public HttpResult<?> changeMenuState(long menuInfoId, Boolean disabled, long userInfoId) {
+        if (disabled == null) {
+            return HttpResult.error(HttpResultEnum.NULL_MENU_STATE);
+        }
+        // 根据要更新的菜单id查询是否有这条菜单信息
+        SysMenuInfoPO sysMenuInfoPO = sysMenuInfoMapper.getSysMenuInfo(menuInfoId);
+        // 如果未查到要更新的数据，直接返回
+        if (ObjectUtils.isEmpty(sysMenuInfoPO)) {
+            return HttpResult.error(HttpResultEnum.EMPTY_DATA);
+        }
+        List<SysMenuInfoPO> sysMenuInfoPOList = new ArrayList<>();
+        if (disabled) {
+            // 禁用。禁用菜单时，所有的子级菜单也禁用
+            // 要禁用的菜单id的集合
+            List<String> menuInfoIdList = new ArrayList<>();
+            // 递归获取该菜单下所有的子级菜单id，并添加到集合中
+            this.getChildMenuInfoIds(menuInfoIdList, menuInfoId);
+            menuInfoIdList.forEach(id -> {
+                SysMenuInfoPO sysMenuInfo = new SysMenuInfoPO();
+                sysMenuInfo.setMenuInfoId(Long.parseLong(id));
+                sysMenuInfo.setUpdateBy(userInfoId);
+                sysMenuInfo.setDisabled(true);
+                sysMenuInfoPOList.add(sysMenuInfo);
+            });
+        } else {
+            // 启用。启用菜单时，所有的父级菜单也启用
+            List<Long> menuInfoIdList = new ArrayList<>();
+            // 递归获取该菜单下所有的父级菜单id，并添加到集合中
+            this.getParentInfoIds(menuInfoIdList, menuInfoId);
+            menuInfoIdList.forEach(id -> {
+                SysMenuInfoPO sysMenuInfo = new SysMenuInfoPO();
+                sysMenuInfo.setMenuInfoId(id);
+                sysMenuInfo.setUpdateBy(userInfoId);
+                sysMenuInfo.setDisabled(false);
+                sysMenuInfoPOList.add(sysMenuInfo);
+            });
+        }
+        // 批量更新菜单状态
+        sysMenuInfoMapper.updateSysMenuInfoBatch(sysMenuInfoPOList);
+        return HttpResult.success();
+    }
+
+    /**
      * 删除菜单信息
      *
      * @param menuInfoId
@@ -175,7 +232,13 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
      */
     @Override
     public HttpResult<?> deleteSysMenuInfo(long menuInfoId, long userInfoId) {
-        sysMenuInfoMapper.deleteByIdLogical(menuInfoId, userInfoId);
+        // 要删除的菜单id的集合
+        List<String> menuInfoIdList = new ArrayList<>();
+        // 递归获取该菜单下所有的子级菜单id，并添加到集合中
+        this.getChildMenuInfoIds(menuInfoIdList, menuInfoId);
+        DeleteBatchLogicalModel deleteBatchLogicalModel = new DeleteBatchLogicalModel(userInfoId, menuInfoIdList.toArray(new String[0]));
+        // 批量逻辑删除菜单
+        sysMenuInfoMapper.deleteBatchLogical(deleteBatchLogicalModel);
         return HttpResult.success();
     }
 
@@ -201,6 +264,45 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
                 // 利用Lambda表达式进行排序(按order升序)
                 sysMenuInfoTreeDTOList.sort(Comparator.comparingInt(SysMenuInfoTreeDTO::getMenuOrder));
             }
+        }
+    }
+
+    /**
+     * 递归获取指定菜单下所有的子级菜单id
+     *
+     * @param menuInfoIdList
+     * @param parentId
+     */
+    private void getChildMenuInfoIds(List<String> menuInfoIdList, long parentId) {
+        String id = String.valueOf(parentId);
+        // 将该菜单id添加到集合中
+        menuInfoIdList.add(id);
+        ConditionModel conditionModel = new ConditionModel("parent_id", id);
+        List<ConditionModel> conditionModelList = new ArrayList<>();
+        conditionModelList.add(conditionModel);
+        // 封装查询菜单信息的查询条件
+        WhereConditions whereConditions = new WhereConditions(conditionModelList);
+        // 根据菜单id查询该菜单所有的子菜单
+        List<SysMenuInfoPO> sysMenuInfoPOList = sysMenuInfoMapper.listSysMenuInfos(whereConditions);
+        if (!CollectionUtils.isEmpty(sysMenuInfoPOList)) {
+            sysMenuInfoPOList.forEach(sysMenuInfoPO -> {
+                long menuInfoId = sysMenuInfoPO.getMenuInfoId();
+                this.getChildMenuInfoIds(menuInfoIdList, menuInfoId);
+            });
+        }
+    }
+
+    /**
+     * 递归查询指定菜单的所有父级菜单
+     *
+     * @param menuInfoIdList
+     * @param menuInfoId
+     */
+    private void getParentInfoIds(List<Long> menuInfoIdList, long menuInfoId) {
+        SysMenuInfoPO sysMenuInfoPO = sysMenuInfoMapper.getSysMenuInfo(menuInfoId);
+        if (!ObjectUtils.isEmpty(sysMenuInfoPO)) {
+            menuInfoIdList.add(menuInfoId);
+            getParentInfoIds(menuInfoIdList, sysMenuInfoPO.getParentId());
         }
     }
 }

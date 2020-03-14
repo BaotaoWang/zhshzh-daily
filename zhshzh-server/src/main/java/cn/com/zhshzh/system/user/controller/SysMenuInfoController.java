@@ -4,6 +4,7 @@ import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.core.util.RedisUtil;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoDTO;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoResultDTO;
+import cn.com.zhshzh.system.user.dto.SysMenuInfoStateDTO;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoTreeDTO;
 import cn.com.zhshzh.system.user.service.SysMenuInfoService;
 import io.swagger.annotations.Api;
@@ -104,6 +105,24 @@ public class SysMenuInfoController {
                                            HttpServletRequest request) {
         RedisUtil.copyUserInfoId(request, sysMenuInfoDTO);
         return sysMenuInfoService.updateSysMenuInfo(id, sysMenuInfoDTO);
+    }
+
+    /**
+     * 修改菜单状态（启用/禁用）
+     *
+     * @param id
+     * @param sysMenuInfoStateDTO
+     * @param request
+     * @return
+     */
+    @PutMapping("menuState/{id}/admin")
+    @ApiOperation("修改菜单状态（启用/禁用）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "菜单id", required = true, paramType = "path", dataType = "long", example = "0"),
+    })
+    public HttpResult<?> changeMenuState(@PathVariable("id") long id, @RequestBody SysMenuInfoStateDTO sysMenuInfoStateDTO,
+                                         HttpServletRequest request) {
+        return sysMenuInfoService.changeMenuState(id, sysMenuInfoStateDTO.getDisabled(), RedisUtil.getUserInfoId(request));
     }
 
     /**

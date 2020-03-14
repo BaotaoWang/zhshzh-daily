@@ -9,6 +9,7 @@
     <result column="menu_order" jdbcType="SMALLINT" property="menuOrder" javaType="java.lang.Short" />
     <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon" javaType="java.lang.String" />
     <result column="menu_description" jdbcType="VARCHAR" property="menuDescription" javaType="java.lang.String" />
+    <result column="is_disabled" jdbcType="BIT" property="disabled" javaType="java.lang.Boolean" />
     <result column="is_delete" jdbcType="BIT" property="delete" javaType="java.lang.Boolean" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
@@ -17,8 +18,8 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    menu_info_id, menu_name, menu_route, parent_id, menu_order, menu_icon, menu_description, is_delete, create_time,
-    update_time, create_by, update_by
+    menu_info_id, menu_name, menu_route, parent_id, menu_order, menu_icon, menu_description, is_disabled, is_delete,
+    create_time, update_time, create_by, update_by
   </sql>
 
   <!-- 查询条件的拼装 -->
@@ -79,6 +80,7 @@
       <if test="menuOrder != null" > menu_order, </if>
       <if test="menuIcon != null" > menu_icon, </if>
       <if test="menuDescription != null" > menu_description, </if>
+      <if test="disabled != null" > is_disabled, </if>
       <if test="delete != null" > is_delete, </if>
       <if test="createTime != null" > create_time, </if>
       <if test="updateTime != null" > update_time, </if>
@@ -93,6 +95,7 @@
       <if test="menuOrder != null" > #{menuOrder, jdbcType=SMALLINT}, </if>
       <if test="menuIcon != null" > #{menuIcon, jdbcType=VARCHAR}, </if>
       <if test="menuDescription != null" > #{menuDescription, jdbcType=VARCHAR}, </if>
+      <if test="disabled != null" > #{disabled, jdbcType=BIT}, </if>
       <if test="delete != null" > #{delete, jdbcType=BIT}, </if>
       <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
       <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
@@ -119,6 +122,7 @@
         #{item.menuOrder, jdbcType=SMALLINT},
         #{item.menuIcon, jdbcType=VARCHAR},
         #{item.menuDescription, jdbcType=VARCHAR},
+        #{item.disabled, jdbcType=BIT},
         0,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP,
@@ -173,6 +177,7 @@
       <if test="menuOrder != null" > menu_order = #{menuOrder, jdbcType=SMALLINT}, </if>
       <if test="menuIcon != null" > menu_icon = #{menuIcon, jdbcType=VARCHAR}, </if>
       <if test="menuDescription != null" > menu_description = #{menuDescription, jdbcType=VARCHAR}, </if>
+      <if test="disabled != null" > is_disabled = #{disabled, jdbcType=BIT}, </if>
       update_by = #{updateBy, jdbcType=BIGINT}
     </set>
     WHERE menu_info_id = #{menuInfoId, jdbcType=BIGINT}
@@ -190,6 +195,7 @@
         <if test="item.menuOrder != null" > menu_order = #{item.menuOrder, jdbcType=SMALLINT}, </if>
         <if test="item.menuIcon != null" > menu_icon = #{item.menuIcon, jdbcType=VARCHAR}, </if>
         <if test="item.menuDescription != null" > menu_description = #{item.menuDescription, jdbcType=VARCHAR}, </if>
+        <if test="item.disabled != null" > is_disabled = #{item.disabled, jdbcType=BIT}, </if>
         update_by = #{item.updateBy, jdbcType=BIGINT}
       </set>
       WHERE menu_info_id = #{item.menuInfoId, jdbcType=BIGINT}
@@ -217,6 +223,14 @@
         ${item.sort} ${item.orderByEnum.order}
       </foreach>
     </if>
+    <choose>
+      <when test="limitFrom != null and limitFrom != 0">
+        LIMIT #{limitFrom}, #{limitTo}
+      </when>
+      <when test="limitTo != null and limitTo != 0">
+        LIMIT #{limitTo}
+      </when>
+    </choose>
   </select>
 
   <!-- 查询所有的系统菜单 -->

@@ -35,4 +35,7 @@ public class SysMenuInfoTreeDTO {
 
     @ApiModelProperty(value = "子菜单", dataType = "List")
     private List<SysMenuInfoTreeDTO> children; // 子菜单
+
+    @ApiModelProperty(value = "是否禁用", dataType = "Boolean")
+    private Boolean disabled; // 是否禁用
 }
