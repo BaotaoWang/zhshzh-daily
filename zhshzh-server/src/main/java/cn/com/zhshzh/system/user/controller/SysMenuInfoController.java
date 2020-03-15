@@ -1,5 +1,6 @@
 package cn.com.zhshzh.system.user.controller;
 
+import cn.com.zhshzh.core.model.CascaderDataModel;
 import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.core.util.RedisUtil;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoDTO;
@@ -72,6 +73,17 @@ public class SysMenuInfoController {
     @ApiOperation(value = "查询所有的菜单")
     public HttpResult<List<SysMenuInfoTreeDTO>> listAllSysMenuInfos() {
         return sysMenuInfoService.listAllSysMenuInfos();
+    }
+
+    /**
+     * 查询所有的菜单(element-ui级联选择器)
+     *
+     * @return
+     */
+    @GetMapping("/cascader/admin")
+    @ApiOperation(value = "查询所有的菜单(element-ui级联选择器)")
+    public HttpResult<List<CascaderDataModel>> listCascaderSysMenuInfos() {
+        return sysMenuInfoService.listCascaderSysMenuInfos();
     }
 
     /**

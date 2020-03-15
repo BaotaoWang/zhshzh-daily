@@ -10,6 +10,7 @@ const Home = () => import('@/components/home/home')
 const TestHomePage = () => import('@/components/home/testHomePage')
 const TestWorkPLan = () => import('@/components/home/testWorkPlan')
 const TestWorkLog = () => import('@/components/home/testWorkLog')
+const Menus = () => import('@/components/menu/menus')
 const Suggestion = () => import('@/components/suggestion/suggestion')
 
 // 创建 router 实例
@@ -52,6 +53,14 @@ export default new VueRouter({
           component: TestWorkLog,
           meta: {
             title: '工作日志'
+          }
+        },
+        {
+          path: '/menus',
+          name: 'menus',
+          component: Menus,
+          meta: {
+            title: '菜单管理'
           }
         },
         {

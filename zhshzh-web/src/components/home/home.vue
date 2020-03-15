@@ -10,11 +10,11 @@
           <div v-else class="el-icon-s-fold" style="font-size: 20px;"></div>
         </div>
         <div class="home-aside-style">
-          <home-aside :isCollapse="isCollapse"></home-aside>
+          <home-aside :isCollapse="isCollapse" />
         </div>
       </el-aside>
       <el-main>
-        <home-main ref="homeMain"></home-main>
+        <home-main ref="homeMain" />
       </el-main>
     </el-container>
   </el-container>

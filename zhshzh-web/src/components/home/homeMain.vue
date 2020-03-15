@@ -6,8 +6,8 @@
         </el-tab-pane>
       </el-tabs>
     </div>
-    <div style="margin: 0 20px;">
-      <keep-alive>
+    <div class="router-view" :style="{height: viewHeight}">
+      <keep-alive :include="keepAliveList">
         <router-view />
       </keep-alive>
     </div>
@@ -18,7 +18,15 @@
 export default {
   name: 'homeMain',
   data () {
-    return {}
+    return {
+      viewHeight: '',
+      keepAliveList: this.$store.state.keepAliveList
+    }
+  },
+  created () {
+    // 根据屏幕分辨率动态修改主页面的高度
+    // 头部高度54px，tabs高度41px，所以主页面高度=窗口高度-95
+    this.viewHeight = window.innerHeight - 95 + 'px'
   },
   methods: {
     // tab切换时，动态的切换路由
@@ -36,8 +44,11 @@ export default {
         }
         index++
       }
-      // 从options数组中移除删除的选项卡
+      // 从options数组中移除关闭的选项卡
       options.splice(index, 1)
+      // 从keepAliveList数组中移除关闭的选项卡
+      // 如果不移除，该组件生命周期不会结束，下次再打开，页面不会刷新
+      this.$store.state.keepAliveList.splice(index, 1)
       // 如果删除的是当前激活的选项卡
       if (this.activeIndex === targetName) {
         // 设置当前激活的路由
@@ -86,5 +97,21 @@ export default {
 </script>
 
 <style scoped>
+.router-view {
+  margin: 0 20px;
+  padding-right: 5px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
+.router-view::-webkit-scrollbar
+{
+  width: 3px;
+}
+
+.router-view::-webkit-scrollbar-thumb
+{
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 0 6px rgba(150,150,150,0.5);
+}
 </style>

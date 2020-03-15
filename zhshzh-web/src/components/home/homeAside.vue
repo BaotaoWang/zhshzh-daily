@@ -15,7 +15,7 @@
         <template v-if="menu.children.length > 0">
           <el-submenu :index="menu.menuRoute" :key="menu.menuRoute">
             <template slot="title">
-              <i :class="menu.menuIcon"></i>
+              <i :class="menu.menuIcon" />
               <span slot="title">{{menu.menuName}}</span>
             </template>
             <el-menu-item-group>
@@ -25,7 +25,7 @@
         </template>
         <template v-else>
           <el-menu-item :index="menu.menuRoute" :key="menu.menuRoute">
-            <i :class="menu.menuIcon"></i>
+            <i :class="menu.menuIcon" />
             <span slot="title">{{menu.menuName}}</span>
           </el-menu-item>
         </template>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import {getMenuInfos} from '@/http/api'
+import {getMenuTree} from '@/http/api'
 
 export default {
   name: 'homeAside',
@@ -71,14 +71,18 @@ export default {
       this.$store.commit('addTabs', {title: this.$route.meta.title, name: this.$route.name})
       this.$store.commit('setActiveIndex', this.$route.name)
     }
+
+    // 查询当前用户有权限查看的树状菜单
     this.getMenuInfos()
   },
   methods: {
+    /**
+     * 查询当前用户有权限查看的树状菜单
+     */
     getMenuInfos: function () {
-      getMenuInfos().then(response => {
+      getMenuTree().then(response => {
         if (response.code === 10000) {
           this.menus = response.data
-          console.log(response.data)
         }
       })
     }

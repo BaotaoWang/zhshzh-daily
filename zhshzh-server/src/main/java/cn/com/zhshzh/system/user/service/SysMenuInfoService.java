@@ -1,5 +1,6 @@
 package cn.com.zhshzh.system.user.service;
 
+import cn.com.zhshzh.core.model.CascaderDataModel;
 import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoDTO;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoResultDTO;
@@ -36,6 +37,14 @@ public interface SysMenuInfoService {
      * @return
      */
     HttpResult<List<SysMenuInfoTreeDTO>> listAllSysMenuInfos();
+
+    /**
+     * 查询所有的菜单(element-ui级联选择器)
+     *
+     * @return
+     */
+
+    HttpResult<List<CascaderDataModel>> listCascaderSysMenuInfos();
 
     /**
      * 新增菜单信息

@@ -3,10 +3,7 @@ package cn.com.zhshzh.system.user.service.impl;
 import cn.com.zhshzh.core.constant.HttpResultEnum;
 import cn.com.zhshzh.core.constant.RedisKeyConstants;
 import cn.com.zhshzh.core.constant.WhereConditionEnum;
-import cn.com.zhshzh.core.model.ConditionModel;
-import cn.com.zhshzh.core.model.DeleteBatchLogicalModel;
-import cn.com.zhshzh.core.model.HttpResult;
-import cn.com.zhshzh.core.model.WhereConditions;
+import cn.com.zhshzh.core.model.*;
 import cn.com.zhshzh.system.user.dao.SysMenuInfoMapper;
 import cn.com.zhshzh.system.user.dao.SysRoleMenuRelationMapper;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoDTO;
@@ -127,6 +124,27 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
         // 对查询出所有的菜单进行递归操作，得到树状结构的菜单
         this.getMenuInfoTree(sysMenuInfoPOList, sysMenuInfoTreeDTOList, ROOT_NODE_ID);
         return HttpResult.success(sysMenuInfoTreeDTOList);
+    }
+
+    /**
+     * 查询所有的菜单(element-ui级联选择器)
+     *
+     * @return
+     */
+    @Override
+    public HttpResult<List<CascaderDataModel>> listCascaderSysMenuInfos() {
+        List<SysMenuInfoPO> sysMenuInfoPOList = sysMenuInfoMapper.listAllSysMenuInfos();
+        List<CascaderDataModel> cascaderDataModelList = new ArrayList<>();
+        // 对查询出所有的菜单进行递归操作，得到级联选择器所需数据
+        this.getMenuInfoCascader(sysMenuInfoPOList, cascaderDataModelList, ROOT_NODE_ID);
+        // 手动添加根菜单
+        List<CascaderDataModel> parentList = new ArrayList<>();
+        CascaderDataModel parent = new CascaderDataModel();
+        parent.setValue("0");
+        parent.setLabel("根菜单");
+        parent.setChildren(cascaderDataModelList);
+        parentList.add(parent);
+        return HttpResult.success(parentList);
     }
 
     /**
@@ -263,6 +281,35 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
                 sysMenuInfoTreeDTOList.add(sysMenuInfoTreeDTO);
                 // 利用Lambda表达式进行排序(按order升序)
                 sysMenuInfoTreeDTOList.sort(Comparator.comparingInt(SysMenuInfoTreeDTO::getMenuOrder));
+            }
+        }
+    }
+
+    /**
+     * 递归得到树状结构的菜单（element-ui级联选择器用）
+     *
+     * @param sysMenuInfoPOList
+     * @param cascaderDataModelList
+     * @param parentId
+     */
+    private void getMenuInfoCascader(List<SysMenuInfoPO> sysMenuInfoPOList, List<CascaderDataModel> cascaderDataModelList, long parentId) {
+        // 遍历菜单集合
+        for (SysMenuInfoPO sysMenuInfoPO : sysMenuInfoPOList) {
+            // 当前菜单的parentId等于传入的parentId时，添加到树状菜单中
+            if (parentId == sysMenuInfoPO.getParentId()) {
+                CascaderDataModel cascaderDataModel = new CascaderDataModel();
+                // 将菜单的po对象转为级联选择器数据模型
+                cascaderDataModel.setValue(String.valueOf(sysMenuInfoPO.getMenuInfoId()));
+                cascaderDataModel.setLabel(sysMenuInfoPO.getMenuName());
+                cascaderDataModel.setOrder(Integer.valueOf(sysMenuInfoPO.getMenuOrder()));
+                List<CascaderDataModel> childrenList = new ArrayList<>();
+                this.getMenuInfoCascader(sysMenuInfoPOList, childrenList, sysMenuInfoPO.getMenuInfoId());
+                if (!CollectionUtils.isEmpty(childrenList)) {
+                    cascaderDataModel.setChildren(childrenList);
+                }
+                cascaderDataModelList.add(cascaderDataModel);
+                // 利用Lambda表达式进行排序(按order升序)
+                cascaderDataModelList.sort(Comparator.comparingInt(CascaderDataModel::getOrder));
             }
         }
     }

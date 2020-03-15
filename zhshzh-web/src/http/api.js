@@ -1,4 +1,18 @@
-import {get, post} from '@/http/axios'
+import {GET, POST, PUT, DELETE} from '@/http/axios'
 
-export const login = params => post('/login', params)
-export const getMenuInfos = params => get('/menuInfos', params)
+// 登录
+export const login = params => POST('/login', params)
+// 查询有权限查看的菜单
+export const getMenuTree = params => GET('/menuInfos', params)
+// 查询所有的菜单
+export const listMenuInfos = params => GET('/menuInfos/all/admin', params)
+// 查询所有的菜单(级联选择器数据模型)
+export const listCascaderSysMenuInfos = params => GET('/menuInfos/cascader/admin', params)
+// 新增菜单
+export const addMenu = params => POST('/menuInfos/admin', params)
+// 修改菜单状态
+export const changeMenuState = (id, params) => PUT('/menuInfos/menuState/' + id + '/admin', params)
+// 修改菜单
+export const updateMenu = (id, params) => PUT('/menuInfos/' + id + '/admin', params)
+// 删除菜单
+export const deleteMenu = (id, params) => DELETE('/menuInfos/' + id + '/admin', params)

@@ -18,6 +18,9 @@ public class SysMenuInfoTreeDTO {
     @ApiModelProperty(value = "菜单id", dataType = "Long")
     private Long menuInfoId; // 菜单id
 
+    @ApiModelProperty(value = "父级菜单id", dataType = "Long")
+    private Long parentId; // 父级菜单id
+
     @ApiModelProperty(value = "菜单名称", dataType = "String")
     private String menuName; // 菜单名称
 

@@ -114,7 +114,7 @@ axios.interceptors.response.use(
  * @param {String} url [请求的url地址]
  * @param {Object} params [请求时携带的参数]
  */
-export const get = (url, params) => {
+export const GET = (url, params) => {
   return new Promise((resolve, reject) => {
     axios.get(url, {
       params: params
@@ -131,10 +131,46 @@ export const get = (url, params) => {
  * @param {String} url [请求的url地址]
  * @param {Object} params [请求时携带的参数]
  */
-export const post = (url, params) => {
+export const POST = (url, params) => {
   return new Promise((resolve, reject) => {
     // axios.post(url, QS.stringify(params))
     axios.post(url, params)
+      .then(response => {
+        resolve(response.data)
+      })
+      .catch(error => {
+        reject(error.data)
+      })
+  })
+}
+
+/**
+ * put方法，对应put请求
+ * @param {String} url [请求的url地址]
+ * @param {Object} params [请求时携带的参数]
+ */
+export const PUT = (url, params) => {
+  return new Promise((resolve, reject) => {
+    // axios.put(url, QS.stringify(params))
+    axios.put(url, params)
+      .then(response => {
+        resolve(response.data)
+      })
+      .catch(error => {
+        reject(error.data)
+      })
+  })
+}
+
+/**
+ * delete方法，对应delete请求
+ * @param {String} url [请求的url地址]
+ * @param {Object} params [请求时携带的参数]
+ */
+export const DELETE = (url, params) => {
+  return new Promise((resolve, reject) => {
+    // axios.delete(url, QS.stringify(params))
+    axios.delete(url, params)
       .then(response => {
         resolve(response.data)
       })

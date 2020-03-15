@@ -41,7 +41,7 @@ public class SysInterfaceLogPO implements Serializable {
 
     /**
      * response_data
-     * 请求数据
+     * 响应数据
      */
     private String responseData;
 
