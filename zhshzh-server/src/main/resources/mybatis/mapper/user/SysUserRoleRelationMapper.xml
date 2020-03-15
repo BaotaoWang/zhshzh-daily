@@ -5,7 +5,7 @@
     <id column="ur_relation_id" jdbcType="BIGINT" property="urRelationId" javaType="java.lang.Long" />
     <result column="user_info_id" jdbcType="BIGINT" property="userInfoId" javaType="java.lang.Long" />
     <result column="role_info_id" jdbcType="BIGINT" property="roleInfoId" javaType="java.lang.Long" />
-    <result column="is_delete" jdbcType="BIT" property="delete" javaType="java.lang.Boolean" />
+    <result column="is_deleted" jdbcType="BIT" property="deleted" javaType="java.lang.Boolean" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
@@ -13,13 +13,12 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    ur_relation_id, user_info_id, role_info_id, is_delete, create_time, update_time, create_by, update_by
+    ur_relation_id, user_info_id, role_info_id, is_deleted, create_time, update_time, create_by, update_by
   </sql>
 
   <!-- 查询条件的拼装 -->
   <sql id="Where_Clause" >
     <where>
-      is_delete = 0 AND
       <if test="conditionList != null and conditionList.size() != 0">
         <foreach collection="conditionList" item="item" index="index" separator="AND" >
           <choose>
@@ -60,6 +59,7 @@
           </choose>
         </foreach>
       </if>
+      AND is_deleted = 0
     </where>
   </sql>
 
@@ -70,7 +70,7 @@
       <if test="urRelationId != null" > ur_relation_id, </if>
       <if test="userInfoId != null" > user_info_id, </if>
       <if test="roleInfoId != null" > role_info_id, </if>
-      <if test="delete != null" > is_delete, </if>
+      <if test="deleted != null" > is_deleted, </if>
       <if test="createTime != null" > create_time, </if>
       <if test="updateTime != null" > update_time, </if>
       <if test="createBy != null" > create_by, </if>
@@ -80,7 +80,7 @@
       <if test="urRelationId != null" > #{urRelationId, jdbcType=BIGINT}, </if>
       <if test="userInfoId != null" > #{userInfoId, jdbcType=BIGINT}, </if>
       <if test="roleInfoId != null" > #{roleInfoId, jdbcType=BIGINT}, </if>
-      <if test="delete != null" > #{delete, jdbcType=BIT}, </if>
+      <if test="deleted != null" > #{deleted, jdbcType=BIT}, </if>
       <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
       <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
       <if test="createBy != null" > #{createBy, jdbcType=BIGINT}, </if>
@@ -112,9 +112,9 @@
   </insert>
 
   <!-- 根据id逻辑删除用户-角色关系 -->
-  <update id="deleteByIdLogical" parameterType="cn.com.zhshzh.system.user.po.SysUserRoleRelationPO" >
+  <update id="deleteByIdLogical" >
     UPDATE sys_user_role_relation
-    SET is_delete = 1,
+    SET is_deleted = 1,
     update_by = #{updateBy, jdbcType=BIGINT}
     WHERE ur_relation_id = #{urRelationId, jdbcType=BIGINT}
   </update>
@@ -122,7 +122,7 @@
   <!-- 批量逻辑删除用户-角色关系 -->
   <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
     UPDATE sys_user_role_relation
-    SET is_delete = 1,
+    SET is_deleted = 1,
     update_by = #{updateBy, jdbcType=BIGINT}
     WHERE ur_relation_id IN
     <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
@@ -177,6 +177,7 @@
     <include refid="Base_Column_List" />
     FROM sys_user_role_relation
     WHERE ur_relation_id = #{urRelationId, jdbcType=BIGINT}
+    AND is_deleted = 0
   </select>
 
   <!-- 条件查询用户-角色关系 -->
@@ -191,6 +192,22 @@
         ${item.sort} ${item.orderByEnum.order}
       </foreach>
     </if>
+    <choose>
+      <when test="limitFrom != null and limitFrom != 0">
+        LIMIT #{limitFrom}, #{limitTo}
+      </when>
+      <when test="limitTo != null and limitTo != 0">
+        LIMIT #{limitTo}
+      </when>
+    </choose>
+  </select>
+
+  <!-- 查询所有的用户-角色关系 -->
+  <select id="listAllSysUserRoleRelations" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_user_role_relation
+    WHERE is_deleted = 0
   </select>
 
   <!-- 条件查询用户-角色关系条数 -->

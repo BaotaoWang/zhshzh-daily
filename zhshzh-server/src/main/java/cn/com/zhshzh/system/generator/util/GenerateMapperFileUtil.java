@@ -191,7 +191,7 @@ public class GenerateMapperFileUtil {
         builder.append("          </choose>").append("\r\n");
         builder.append("        </foreach>").append("\r\n");
         builder.append("      </if>").append("\r\n");
-        builder.append("      AND is_delete = 0").append("\r\n");
+        builder.append("      AND is_deleted = 0").append("\r\n");
         builder.append("    </where>").append("\r\n");
         builder.append("  </sql>").append("\r\n");
     }
@@ -282,8 +282,8 @@ public class GenerateMapperFileUtil {
         // 拼接update语句
         builder.append("  <update id=\"deleteByIdLogical\" >").append("\r\n");
         builder.append("    UPDATE ").append(tableName).append("\r\n");
-        builder.append("    SET is_delete = 1,").append("\r\n");
-        builder.append("    update_by = #{userInfoId, jdbcType=BIGINT}").append("\r\n");
+        builder.append("    SET is_deleted = 1,").append("\r\n");
+        builder.append("    update_by = #{updateBy, jdbcType=BIGINT}").append("\r\n");
         builder.append("    WHERE ").append(primaryKey).append(" = #{").append(lowerCamelCasePrimaryKey).append(", jdbcType=")
                 .append(priJdbcType).append("}").append("\r\n");
         builder.append("  </update>").append("\r\n");
@@ -308,7 +308,7 @@ public class GenerateMapperFileUtil {
         // 拼接update语句
         builder.append("  <update id=\"deleteBatchLogical\" parameterType=\"cn.com.zhshzh.core.model.DeleteBatchLogicalModel\" >").append("\r\n");
         builder.append("    UPDATE ").append(tableName).append("\r\n");
-        builder.append("    SET is_delete = 1,").append("\r\n");
+        builder.append("    SET is_deleted = 1,").append("\r\n");
         builder.append("    update_by = #{updateBy, jdbcType=BIGINT}").append("\r\n");
         builder.append("    WHERE ").append(primaryKey).append(" IN").append("\r\n");
         builder.append("    <foreach collection=\"deleteIds\" item=\"item\" index=\"index\" open=\"(\" close=\")\" separator=\",\" >").append("\r\n");
@@ -460,7 +460,7 @@ public class GenerateMapperFileUtil {
         builder.append("    FROM ").append(tableName).append("\r\n");
         builder.append("    WHERE ").append(primaryKey).append(" = #{").append(lowerCamelCasePrimaryKey).append(", jdbcType=")
                 .append(priJdbcType).append("}").append("\r\n");
-        builder.append("    AND is_delete = 0").append("\r\n");
+        builder.append("    AND is_deleted = 0").append("\r\n");
         builder.append("  </select>").append("\r\n");
     }
 
@@ -521,7 +521,7 @@ public class GenerateMapperFileUtil {
         builder.append("    SELECT").append("\r\n");
         builder.append("    <include refid=\"Base_Column_List\" />").append("\r\n");
         builder.append("    FROM ").append(tableName).append("\r\n");
-        builder.append("    WHERE is_delete = 0").append("\r\n");
+        builder.append("    WHERE is_deleted = 0").append("\r\n");
         builder.append("  </select>").append("\r\n");
     }
 

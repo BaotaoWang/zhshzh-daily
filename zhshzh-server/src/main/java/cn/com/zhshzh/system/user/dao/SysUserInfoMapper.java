@@ -1,8 +1,8 @@
 package cn.com.zhshzh.system.user.dao;
 
+import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 import cn.com.zhshzh.core.model.DeleteBatchLogicalModel;
 import cn.com.zhshzh.core.model.WhereConditions;
-import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * 系统用户Mapper
  *
  * @author Generator
- * @since 2019/12/25
+ * @since 2020/03/15
  */
 @Mapper
 public interface SysUserInfoMapper {
@@ -34,9 +34,10 @@ public interface SysUserInfoMapper {
     /**
      * 根据id逻辑删除系统用户
      *
-     * @param sysUserInfoPO 系统用户
+     * @param userInfoId 主键id
+     * @param updateBy 用户id
      */
-    void deleteByIdLogical(SysUserInfoPO sysUserInfoPO);
+    void deleteByIdLogical(@Param("userInfoId") Long userInfoId, @Param("updateBy") Long updateBy);
 
     /**
      * 批量逻辑删除系统用户
@@ -88,6 +89,13 @@ public interface SysUserInfoMapper {
      * @return 系统用户list
      */
     List<SysUserInfoPO> listSysUserInfos(WhereConditions whereConditions);
+
+    /**
+     * 查询所有的系统用户
+     *
+     * @return 系统用户list
+     */
+    List<SysUserInfoPO> listAllSysUserInfos();
 
     /**
      * 条件查询系统用户条数

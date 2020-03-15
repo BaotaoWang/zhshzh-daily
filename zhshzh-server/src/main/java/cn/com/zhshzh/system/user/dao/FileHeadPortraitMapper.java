@@ -13,7 +13,7 @@ import java.util.List;
  * 用户头像Mapper
  *
  * @author Generator
- * @since 2020/03/14
+ * @since 2020/03/15
  */
 @Mapper
 public interface FileHeadPortraitMapper {
@@ -35,9 +35,9 @@ public interface FileHeadPortraitMapper {
      * 根据id逻辑删除用户头像
      *
      * @param headPortraitId 主键id
-     * @param userInfoId 用户id
+     * @param updateBy 用户id
      */
-    void deleteByIdLogical(@Param("headPortraitId") Long headPortraitId, @Param("userInfoId") Long userInfoId);
+    void deleteByIdLogical(@Param("headPortraitId") Long headPortraitId, @Param("updateBy") Long updateBy);
 
     /**
      * 批量逻辑删除用户头像

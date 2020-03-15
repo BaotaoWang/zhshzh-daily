@@ -33,7 +33,7 @@ public class GeneratorUtil {
     // 数据库名
     public static final String TABLE_SCHEMA = "daily";
     // 是否删除的标识
-    private static final String IS_DELETE = "is_delete";
+    private static final String IS_DELETED = "is_deleted";
     // 创建时间
     private static final String CREATE_TIME = "create_time";
     // 修改时间
@@ -136,7 +136,7 @@ public class GeneratorUtil {
             // java字段名称（下划线转驼峰）
             String camelCaseColumnName = StringUtil.underlineToCamelCase(columnName, true);
             // java字段的boolean类型一般对应数据库字段的bit类型，如果数据库字段是bit类型，并且以is开头，则将is删除，并将首字母小写
-            // 比如数据库字段类型是bit，字段是is_delete这种格式，直接转驼峰是isDelete，参考阿里Java开发手册，将其改为delete
+            // 比如数据库字段类型是bit，字段是is_deleted这种格式，直接转驼峰是isDeleted，参考阿里Java开发手册，将其改为deleted
             if ("bit".equals(dataType.toLowerCase()) && camelCaseColumnName.startsWith("is")) {
                 camelCaseColumnName = camelCaseColumnName.substring(2, 3).toLowerCase() + camelCaseColumnName.substring(3);
             }
@@ -360,7 +360,7 @@ public class GeneratorUtil {
                                               StringBuilder insertBatchSqlBuilder) {
         // 对是否删除、创建时间、更新时间特殊处理
         switch (columnName) {
-            case IS_DELETE:
+            case IS_DELETED:
                 insertBatchSqlBuilder.append("        0,").append("\r\n");
                 break;
             case CREATE_TIME:
@@ -384,7 +384,7 @@ public class GeneratorUtil {
     private static void iterateUpdateSql(String columnName, String camelCaseColumnName, String jdbcType,
                                          StringBuilder updateSqlBuilder) {
         // 更新数据时，不更新是否删除字段和创建时间
-        if (IS_DELETE.equals(columnName) || CREATE_TIME.equals(columnName)
+        if (IS_DELETED.equals(columnName) || CREATE_TIME.equals(columnName)
                 || UPDATE_TIME.equals(columnName) || CREATE_BY.equals(columnName)) {
             return;
         }
@@ -411,7 +411,7 @@ public class GeneratorUtil {
     private static void iterateUpdateBatchSql(String columnName, String camelCaseColumnName, String jdbcType,
                                               StringBuilder updateBatchSqlBuilder) {
         // 更新数据时，不更新是否删除字段和创建时间
-        if (IS_DELETE.equals(columnName) || CREATE_TIME.equals(columnName)
+        if (IS_DELETED.equals(columnName) || CREATE_TIME.equals(columnName)
                 || UPDATE_TIME.equals(columnName) || CREATE_BY.equals(columnName)) {
             return;
         }

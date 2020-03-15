@@ -10,7 +10,7 @@ import java.util.Date;
  * 系统用户PO
  *
  * @author Generator
- * @since 2019/12/25
+ * @since 2020/03/15
  */
 @Data
 public class SysUserInfoPO implements Serializable {
@@ -70,10 +70,10 @@ public class SysUserInfoPO implements Serializable {
     private String email;
 
     /**
-     * is_delete
+     * is_deleted
      * 是否已删除（0：false-未删除； 1：true-已删除）
      */
-    private Boolean delete;
+    private Boolean deleted;
 
     /**
      * create_time

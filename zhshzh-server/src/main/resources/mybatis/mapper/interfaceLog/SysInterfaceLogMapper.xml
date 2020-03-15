@@ -17,7 +17,7 @@
     <result column="server_ip" jdbcType="VARCHAR" property="serverIp" javaType="java.lang.String" />
     <result column="server_port" jdbcType="INTEGER" property="serverPort" javaType="java.lang.Integer" />
     <result column="request_exception" jdbcType="LONGVARCHAR" property="requestException" javaType="java.lang.String" />
-    <result column="is_delete" jdbcType="BIT" property="delete" javaType="java.lang.Boolean" />
+    <result column="is_deleted" jdbcType="BIT" property="deleted" javaType="java.lang.Boolean" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" javaType="java.lang.String" />
@@ -26,7 +26,7 @@
 
   <sql id="Base_Column_List" >
     interface_log_id, request_url, request_type, request_data, response_data, process_time, class_name, method_name,
-    user_id, user_name, principal, client_ip, server_ip, server_port, request_exception, is_delete, create_time, update_time,
+    user_id, user_name, principal, client_ip, server_ip, server_port, request_exception, is_deleted, create_time, update_time,
     create_by, update_by
   </sql>
 
@@ -73,7 +73,7 @@
           </choose>
         </foreach>
       </if>
-      AND is_delete = 0
+      AND is_deleted = 0
     </where>
   </sql>
 
@@ -96,7 +96,7 @@
       <if test="serverIp != null" > server_ip, </if>
       <if test="serverPort != null" > server_port, </if>
       <if test="requestException != null" > request_exception, </if>
-      <if test="delete != null" > is_delete, </if>
+      <if test="deleted != null" > is_deleted, </if>
       <if test="createTime != null" > create_time, </if>
       <if test="updateTime != null" > update_time, </if>
       <if test="createBy != null" > create_by, </if>
@@ -118,7 +118,7 @@
       <if test="serverIp != null" > #{serverIp, jdbcType=VARCHAR}, </if>
       <if test="serverPort != null" > #{serverPort, jdbcType=INTEGER}, </if>
       <if test="requestException != null" > #{requestException, jdbcType=LONGVARCHAR}, </if>
-      <if test="delete != null" > #{delete, jdbcType=BIT}, </if>
+      <if test="deleted != null" > #{deleted, jdbcType=BIT}, </if>
       <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
       <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
       <if test="createBy != null" > #{createBy, jdbcType=VARCHAR}, </if>
@@ -164,15 +164,15 @@
   <!-- 根据id逻辑删除系统接口日志 -->
   <update id="deleteByIdLogical" >
     UPDATE sys_interface_log
-    SET is_delete = 1,
-    update_by = #{userInfoId, jdbcType=BIGINT}
+    SET is_deleted = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
     WHERE interface_log_id = #{interfaceLogId, jdbcType=BIGINT}
   </update>
 
   <!-- 批量逻辑删除系统接口日志 -->
   <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
     UPDATE sys_interface_log
-    SET is_delete = 1,
+    SET is_deleted = 1,
     update_by = #{updateBy, jdbcType=BIGINT}
     WHERE interface_log_id IN
     <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
@@ -251,7 +251,7 @@
     <include refid="Base_Column_List" />
     FROM sys_interface_log
     WHERE interface_log_id = #{interfaceLogId, jdbcType=BIGINT}
-    AND is_delete = 0
+    AND is_deleted = 0
   </select>
 
   <!-- 条件查询系统接口日志 -->
@@ -281,7 +281,7 @@
     SELECT
     <include refid="Base_Column_List" />
     FROM sys_interface_log
-    WHERE is_delete = 0
+    WHERE is_deleted = 0
   </select>
 
   <!-- 条件查询系统接口日志条数 -->

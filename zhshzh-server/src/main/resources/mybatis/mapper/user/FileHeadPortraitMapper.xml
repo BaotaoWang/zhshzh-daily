@@ -9,7 +9,7 @@
     <result column="image_path" jdbcType="VARCHAR" property="imagePath" javaType="java.lang.String" />
     <result column="image_size" jdbcType="BIGINT" property="imageSize" javaType="java.lang.Long" />
     <result column="image_type" jdbcType="VARCHAR" property="imageType" javaType="java.lang.String" />
-    <result column="is_delete" jdbcType="BIT" property="delete" javaType="java.lang.Boolean" />
+    <result column="is_deleted" jdbcType="BIT" property="deleted" javaType="java.lang.Boolean" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
@@ -17,7 +17,7 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    head_portrait_id, user_info_id, version, image_name, image_path, image_size, image_type, is_delete, create_time,
+    head_portrait_id, user_info_id, version, image_name, image_path, image_size, image_type, is_deleted, create_time,
     update_time, create_by, update_by
   </sql>
 
@@ -64,7 +64,7 @@
           </choose>
         </foreach>
       </if>
-      AND is_delete = 0
+      AND is_deleted = 0
     </where>
   </sql>
 
@@ -79,7 +79,7 @@
       <if test="imagePath != null" > image_path, </if>
       <if test="imageSize != null" > image_size, </if>
       <if test="imageType != null" > image_type, </if>
-      <if test="delete != null" > is_delete, </if>
+      <if test="deleted != null" > is_deleted, </if>
       <if test="createTime != null" > create_time, </if>
       <if test="updateTime != null" > update_time, </if>
       <if test="createBy != null" > create_by, </if>
@@ -93,7 +93,7 @@
       <if test="imagePath != null" > #{imagePath, jdbcType=VARCHAR}, </if>
       <if test="imageSize != null" > #{imageSize, jdbcType=BIGINT}, </if>
       <if test="imageType != null" > #{imageType, jdbcType=VARCHAR}, </if>
-      <if test="delete != null" > #{delete, jdbcType=BIT}, </if>
+      <if test="deleted != null" > #{deleted, jdbcType=BIT}, </if>
       <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
       <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
       <if test="createBy != null" > #{createBy, jdbcType=BIGINT}, </if>
@@ -131,15 +131,15 @@
   <!-- 根据id逻辑删除用户头像 -->
   <update id="deleteByIdLogical" >
     UPDATE file_head_portrait
-    SET is_delete = 1,
-    update_by = #{userInfoId, jdbcType=BIGINT}
+    SET is_deleted = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
     WHERE head_portrait_id = #{headPortraitId, jdbcType=BIGINT}
   </update>
 
   <!-- 批量逻辑删除用户头像 -->
   <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
     UPDATE file_head_portrait
-    SET is_delete = 1,
+    SET is_deleted = 1,
     update_by = #{updateBy, jdbcType=BIGINT}
     WHERE head_portrait_id IN
     <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
@@ -202,7 +202,7 @@
     <include refid="Base_Column_List" />
     FROM file_head_portrait
     WHERE head_portrait_id = #{headPortraitId, jdbcType=BIGINT}
-    AND is_delete = 0
+    AND is_deleted = 0
   </select>
 
   <!-- 条件查询用户头像 -->
@@ -232,7 +232,7 @@
     SELECT
     <include refid="Base_Column_List" />
     FROM file_head_portrait
-    WHERE is_delete = 0
+    WHERE is_deleted = 0
   </select>
 
   <!-- 条件查询用户头像条数 -->

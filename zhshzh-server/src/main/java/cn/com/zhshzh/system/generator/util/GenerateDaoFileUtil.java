@@ -178,11 +178,11 @@ public class GenerateDaoFileUtil {
         builder.append("     * 根据id逻辑删除").append(tableComment).append("\r\n");
         builder.append("     *").append("\r\n");
         builder.append("     * @param ").append(lowerCamelCasePrimaryKey).append(" 主键id").append("\r\n");
-        builder.append("     * @param userInfoId 用户id").append("\r\n");
+        builder.append("     * @param updateBy 用户id").append("\r\n");
         builder.append("     */").append("\r\n");
         builder.append("    void deleteByIdLogical(").append("@Param(\"").append(lowerCamelCasePrimaryKey)
                 .append("\") ").append(priFieldType).append(" ").append(lowerCamelCasePrimaryKey)
-                .append(", @Param(\"userInfoId\") Long userInfoId").append(");").append("\r\n");
+                .append(", @Param(\"updateBy\") Long updateBy").append(");").append("\r\n");
     }
 
     /**

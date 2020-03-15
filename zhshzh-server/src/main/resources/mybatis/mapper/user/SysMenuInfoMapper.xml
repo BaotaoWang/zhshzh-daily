@@ -10,7 +10,7 @@
     <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon" javaType="java.lang.String" />
     <result column="menu_description" jdbcType="VARCHAR" property="menuDescription" javaType="java.lang.String" />
     <result column="is_disabled" jdbcType="BIT" property="disabled" javaType="java.lang.Boolean" />
-    <result column="is_delete" jdbcType="BIT" property="delete" javaType="java.lang.Boolean" />
+    <result column="is_deleted" jdbcType="BIT" property="deleted" javaType="java.lang.Boolean" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
@@ -18,7 +18,7 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    menu_info_id, menu_name, menu_route, parent_id, menu_order, menu_icon, menu_description, is_disabled, is_delete,
+    menu_info_id, menu_name, menu_route, parent_id, menu_order, menu_icon, menu_description, is_disabled, is_deleted,
     create_time, update_time, create_by, update_by
   </sql>
 
@@ -65,7 +65,7 @@
           </choose>
         </foreach>
       </if>
-      AND is_delete = 0
+      AND is_deleted = 0
     </where>
   </sql>
 
@@ -81,7 +81,7 @@
       <if test="menuIcon != null" > menu_icon, </if>
       <if test="menuDescription != null" > menu_description, </if>
       <if test="disabled != null" > is_disabled, </if>
-      <if test="delete != null" > is_delete, </if>
+      <if test="deleted != null" > is_deleted, </if>
       <if test="createTime != null" > create_time, </if>
       <if test="updateTime != null" > update_time, </if>
       <if test="createBy != null" > create_by, </if>
@@ -96,7 +96,7 @@
       <if test="menuIcon != null" > #{menuIcon, jdbcType=VARCHAR}, </if>
       <if test="menuDescription != null" > #{menuDescription, jdbcType=VARCHAR}, </if>
       <if test="disabled != null" > #{disabled, jdbcType=BIT}, </if>
-      <if test="delete != null" > #{delete, jdbcType=BIT}, </if>
+      <if test="deleted != null" > #{deleted, jdbcType=BIT}, </if>
       <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
       <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
       <if test="createBy != null" > #{createBy, jdbcType=BIGINT}, </if>
@@ -135,15 +135,15 @@
   <!-- 根据id逻辑删除系统菜单 -->
   <update id="deleteByIdLogical" >
     UPDATE sys_menu_info
-    SET is_delete = 1,
-    update_by = #{userInfoId, jdbcType=BIGINT}
+    SET is_deleted = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
     WHERE menu_info_id = #{menuInfoId, jdbcType=BIGINT}
   </update>
 
   <!-- 批量逻辑删除系统菜单 -->
   <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
     UPDATE sys_menu_info
-    SET is_delete = 1,
+    SET is_deleted = 1,
     update_by = #{updateBy, jdbcType=BIGINT}
     WHERE menu_info_id IN
     <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
@@ -208,7 +208,7 @@
     <include refid="Base_Column_List" />
     FROM sys_menu_info
     WHERE menu_info_id = #{menuInfoId, jdbcType=BIGINT}
-    AND is_delete = 0
+    AND is_deleted = 0
   </select>
 
   <!-- 条件查询系统菜单 -->
@@ -238,7 +238,7 @@
     SELECT
     <include refid="Base_Column_List" />
     FROM sys_menu_info
-    WHERE is_delete = 0
+    WHERE is_deleted = 0
   </select>
 
   <!-- 条件查询系统菜单条数 -->

@@ -13,7 +13,7 @@ import java.util.List;
  * 系统菜单Mapper
  *
  * @author Generator
- * @since 2020/03/14
+ * @since 2020/03/15
  */
 @Mapper
 public interface SysMenuInfoMapper {
@@ -35,9 +35,9 @@ public interface SysMenuInfoMapper {
      * 根据id逻辑删除系统菜单
      *
      * @param menuInfoId 主键id
-     * @param userInfoId 用户id
+     * @param updateBy 用户id
      */
-    void deleteByIdLogical(@Param("menuInfoId") Long menuInfoId, @Param("userInfoId") Long userInfoId);
+    void deleteByIdLogical(@Param("menuInfoId") Long menuInfoId, @Param("updateBy") Long updateBy);
 
     /**
      * 批量逻辑删除系统菜单

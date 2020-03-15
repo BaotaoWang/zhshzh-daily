@@ -10,7 +10,7 @@ import java.util.Date;
  * 系统接口日志PO
  *
  * @author Generator
- * @since 2020/03/12
+ * @since 2020/03/15
  */
 @Data
 public class SysInterfaceLogPO implements Serializable {
@@ -106,10 +106,10 @@ public class SysInterfaceLogPO implements Serializable {
     private String requestException;
 
     /**
-     * is_delete
+     * is_deleted
      * 是否已删除（0：false-未删除； 1：true-已删除）
      */
-    private Boolean delete;
+    private Boolean deleted;
 
     /**
      * create_time

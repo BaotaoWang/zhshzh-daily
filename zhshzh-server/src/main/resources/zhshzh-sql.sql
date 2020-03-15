@@ -18,10 +18,36 @@ Target Server Type    : MYSQL
 Target Server Version : 80018
 File Encoding         : 65001
 
-Date: 2020-03-11 23:56:12
+Date: 2020-03-15 23:02:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for file_head_portrait
+-- ----------------------------
+DROP TABLE IF EXISTS `file_head_portrait`;
+CREATE TABLE `file_head_portrait` (
+  `head_portrait_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '头像id',
+  `user_info_id` bigint(20) unsigned NOT NULL COMMENT '用户id',
+  `version` int(10) unsigned NOT NULL COMMENT '版本号',
+  `image_name` varchar(100) NOT NULL COMMENT '图片名称',
+  `image_path` varchar(300) NOT NULL COMMENT '图片存放路径',
+  `image_size` bigint(20) unsigned NOT NULL COMMENT '图片大小（单位：byte）',
+  `image_type` varchar(32) NOT NULL COMMENT '图片格式',
+  `is_deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `create_by` bigint(20) unsigned NOT NULL COMMENT '创建人',
+  `update_by` bigint(20) unsigned NOT NULL COMMENT '修改人',
+  PRIMARY KEY (`head_portrait_id`),
+  KEY `file_head_portrait_user_info_id_FOREIGN` (`user_info_id`),
+  CONSTRAINT `file_head_portrait_user_info_id_FOREIGN` FOREIGN KEY (`user_info_id`) REFERENCES `sys_user_info` (`user_info_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='用户头像表';
+
+-- ----------------------------
+-- Records of file_head_portrait
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_icon_info
@@ -29,9 +55,9 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `sys_icon_info`;
 CREATE TABLE `sys_icon_info` (
   `icon_info_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '图标id',
-  `icon_name` varchar(64) NOT NULL COMMENT '图标名称',
+  `icon_name` varchar(32) NOT NULL COMMENT '图标名称',
   `icon_order` smallint(5) unsigned DEFAULT NULL COMMENT '图标顺序',
-  `is_delete` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+  `is_deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `create_by` bigint(20) unsigned NOT NULL COMMENT '创建人',
@@ -343,13 +369,13 @@ CREATE TABLE `sys_interface_log` (
   `server_ip` varchar(32) DEFAULT NULL COMMENT '服务端ip',
   `server_port` int(10) unsigned DEFAULT NULL COMMENT '服务端端口号',
   `request_exception` text COMMENT '请求异常',
-  `is_delete` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+  `is_deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `create_by` varchar(32) NOT NULL DEFAULT 'system' COMMENT '创建人',
   `update_by` varchar(32) NOT NULL DEFAULT 'system' COMMENT '修改人',
   PRIMARY KEY (`interface_log_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8 COMMENT='系统接口日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=1241 DEFAULT CHARSET=utf8 COMMENT='系统接口日志表';
 
 -- ----------------------------
 -- Table structure for sys_menu_info
@@ -357,45 +383,48 @@ CREATE TABLE `sys_interface_log` (
 DROP TABLE IF EXISTS `sys_menu_info`;
 CREATE TABLE `sys_menu_info` (
   `menu_info_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '菜单id',
-  `menu_name` varchar(64) NOT NULL COMMENT '菜单名称',
-  `menu_route` varchar(200) NOT NULL COMMENT '菜单路由',
+  `menu_name` varchar(32) NOT NULL COMMENT '菜单名称',
+  `menu_route` varchar(32) NOT NULL COMMENT '菜单路由',
   `parent_id` bigint(20) unsigned NOT NULL COMMENT '父级菜单id',
   `menu_order` smallint(5) unsigned NOT NULL COMMENT '菜单序号',
-  `menu_icon` varchar(64) DEFAULT NULL COMMENT '菜单图标',
+  `menu_icon` varchar(32) DEFAULT NULL COMMENT '菜单图标',
   `menu_description` varchar(200) DEFAULT NULL COMMENT '菜单描述',
   `is_disabled` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否禁用（0：false-不禁用； 1：true-禁用）',
-  `is_delete` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+  `is_deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `create_by` bigint(20) unsigned NOT NULL COMMENT '创建人',
   `update_by` bigint(20) unsigned NOT NULL COMMENT '修改人',
   PRIMARY KEY (`menu_info_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COMMENT='系统菜单表';
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COMMENT='系统菜单表';
 
 -- ----------------------------
 -- Records of sys_menu_info
 -- ----------------------------
-INSERT INTO `sys_menu_info` VALUES ('1', '首页', '/homePage', '0', '1', 'el-icon-s-home', '首页', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('2', '项目管理', '/project', '0', '2', 'el-icon-set-up', '项目管理', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('3', '项目列表', '/projectList', '2', '1', null, '项目列表', '\0', '2020-01-20 21:19:56', '2020-01-20 21:21:14', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('4', '日志管理', '/daily', '0', '3', 'el-icon-document', '日志管理', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('5', '周工作计划', '/addWorkPlan', '4', '1', null, '周工作计划', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('6', '工作日志', '/addWorkLog', '4', '2', null, '工作日志', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('7', '周工作计划查询', '/workPanList', '4', '3', null, '周工作计划查询', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('8', '工作日志查询', '/workLogList', '4', '4', null, '工作日志查询', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('9', '消息管理', '/message', '0', '4', 'el-icon-message', '消息管理', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('10', '评论', '/comment', '9', '1', null, '评论', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('11', '回复', '/reply', '9', '2', null, '回复', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('12', '提醒', '/remind', '9', '3', null, '提醒', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('13', '系统设置', '/settings', '0', '5', 'el-icon-setting', '系统设置', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('14', '组织管理', '/organization', '13', '1', null, '系统设置', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('15', '系统设置', '/role', '13', '2', null, '组织管理', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('16', '角色管理', '/authority', '13', '3', null, '角色管理', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('17', '人员管理', '/user', '13', '4', null, '人员管理', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('18', '参数管理', '/params', '13', '5', null, '参数管理', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('19', '审计管理', '/audit', '13', '6', null, '审计管理', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('20', '假期管理', '/holidays', '13', '7', null, '假期管理', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
-INSERT INTO `sys_menu_info` VALUES ('21', '反馈建议', '/suggestion', '0', '6', 'el-icon-chat-line-round', '反馈建议', '\0', '2020-01-20 21:19:56', '2020-01-20 21:19:56', '0', '0');
+INSERT INTO `sys_menu_info` VALUES ('1', '首页', '/homePage', '0', '1', 'el-icon-s-home', '首页', '\0', '\0', '2020-01-20 21:19:56', '2020-03-15 13:50:53', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('2', '项目管理', '/project', '0', '2', 'el-icon-set-up', '项目管理', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:49', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('3', '项目列表', '/projectList', '2', '1', null, '项目列表', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:49', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('4', '日志管理', '/daily', '0', '3', 'el-icon-document', '日志管理', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:41', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('5', '周工作计划', '/addWorkPlan', '4', '1', null, '周工作计划', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:41', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('6', '工作日志', '/addWorkLog', '4', '2', null, '工作日志', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:41', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('7', '周工作计划查询', '/workPanList', '4', '3', null, '周工作计划查询', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:41', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('8', '工作日志查询', '/workLogList', '4', '4', null, '工作日志查询', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:41', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('9', '消息管理', '/message', '0', '4', 'el-icon-message', '消息管理', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:36', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('10', '评论', '/comment', '9', '1', null, '评论', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:36', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('11', '回复', '/reply', '9', '2', null, '回复', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:36', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('12', '提醒', '/remind', '9', '3', null, '提醒', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:36', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('13', '系统设置', '/settings', '0', '5', 'el-icon-setting', '系统设置', '\0', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:29', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('14', '组织管理', '/organization', '13', '1', null, '系统设置', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:21', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('15', '系统设置', '/role', '13', '2', null, '组织管理', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:21', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('16', '角色管理', '/authority', '13', '3', null, '角色管理', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:21', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('17', '人员管理', '/user', '13', '4', null, '人员管理', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:21', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('18', '参数管理', '/params', '13', '5', null, '参数管理', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:21', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('19', '审计管理', '/audit', '13', '6', null, '审计管理', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:21', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('20', '假期管理', '/holidays', '13', '7', null, '假期管理', '', '\0', '2020-01-20 21:19:56', '2020-03-15 23:00:16', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('21', '反馈建议', '/suggestion', '0', '7', 'el-icon-chat-line-round', '反馈建议', '\0', '\0', '2020-01-20 21:19:56', '2020-03-15 18:33:32', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('24', '菜单管理', '/menus', '13', '5', null, '菜单管理', '\0', '\0', '2020-03-12 20:39:58', '2020-03-15 23:00:29', '0', '100000');
+INSERT INTO `sys_menu_info` VALUES ('32', '开发者工具', '1', '0', '6', 'el-icon-suitcase-1', '开发者工具', '\0', '\0', '2020-03-15 18:47:58', '2020-03-15 18:57:57', '100000', '100000');
+INSERT INTO `sys_menu_info` VALUES ('33', '代码生成器', '/generator', '32', '1', null, '代码生成器', '\0', '\0', '2020-03-15 18:49:24', '2020-03-15 18:49:24', '100000', '100000');
 
 -- ----------------------------
 -- Table structure for sys_role_info
@@ -406,7 +435,7 @@ CREATE TABLE `sys_role_info` (
   `role_code` varchar(32) NOT NULL COMMENT '角色标识',
   `role_name` varchar(32) NOT NULL COMMENT '角色名称',
   `role_description` varchar(200) DEFAULT NULL COMMENT '角色描述',
-  `is_delete` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+  `is_deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `create_by` bigint(20) unsigned NOT NULL COMMENT '创建人',
@@ -429,7 +458,7 @@ CREATE TABLE `sys_role_menu_relation` (
   `rm_relation_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '角色-菜单关系id',
   `role_info_id` bigint(20) unsigned NOT NULL COMMENT '角色id',
   `menu_info_id` bigint(20) unsigned NOT NULL COMMENT '菜单id',
-  `is_delete` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+  `is_deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `create_by` bigint(20) unsigned NOT NULL COMMENT '创建人',
@@ -439,7 +468,7 @@ CREATE TABLE `sys_role_menu_relation` (
   KEY `sys_role_menu_relation_menu_info_id_FOREIGN` (`menu_info_id`),
   CONSTRAINT `sys_role_menu_relation_menu_info_id_FOREIGN` FOREIGN KEY (`menu_info_id`) REFERENCES `sys_menu_info` (`menu_info_id`),
   CONSTRAINT `sys_role_menu_relation_role_info_id_FOREIGN` FOREIGN KEY (`role_info_id`) REFERENCES `sys_role_info` (`role_info_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='角色-菜单关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COMMENT='角色-菜单关系表';
 
 -- ----------------------------
 -- Records of sys_role_menu_relation
@@ -466,6 +495,9 @@ INSERT INTO `sys_role_menu_relation` VALUES ('19', '1', '19', '\0', '2020-01-20 
 INSERT INTO `sys_role_menu_relation` VALUES ('20', '1', '20', '\0', '2020-01-20 21:45:53', '2020-01-20 21:45:53', '0', '0');
 INSERT INTO `sys_role_menu_relation` VALUES ('21', '1', '21', '\0', '2020-01-20 21:45:53', '2020-01-20 21:45:53', '0', '0');
 INSERT INTO `sys_role_menu_relation` VALUES ('22', '2', '1', '\0', '2020-03-11 20:53:28', '2020-03-11 20:53:28', '0', '0');
+INSERT INTO `sys_role_menu_relation` VALUES ('23', '1', '24', '\0', '2020-03-12 20:40:45', '2020-03-12 20:40:45', '0', '0');
+INSERT INTO `sys_role_menu_relation` VALUES ('24', '1', '32', '\0', '2020-03-15 18:50:08', '2020-03-15 18:50:08', '0', '0');
+INSERT INTO `sys_role_menu_relation` VALUES ('25', '1', '33', '\0', '2020-03-15 18:50:17', '2020-03-15 18:50:17', '0', '0');
 
 -- ----------------------------
 -- Table structure for sys_user_info
@@ -481,7 +513,7 @@ CREATE TABLE `sys_user_info` (
   `birth` date DEFAULT NULL COMMENT '出生日期',
   `phone_number` varchar(16) DEFAULT NULL COMMENT '联系电话',
   `email` varchar(64) DEFAULT NULL COMMENT '员工邮箱',
-  `is_delete` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+  `is_deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `create_by` bigint(20) unsigned NOT NULL COMMENT '创建人',
@@ -507,7 +539,7 @@ CREATE TABLE `sys_user_role_relation` (
   `ur_relation_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户-角色关系id',
   `user_info_id` bigint(20) unsigned NOT NULL COMMENT '用户id',
   `role_info_id` bigint(20) unsigned NOT NULL COMMENT '角色id',
-  `is_delete` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+  `is_deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `create_by` bigint(20) unsigned NOT NULL COMMENT '创建人',
@@ -525,22 +557,3 @@ CREATE TABLE `sys_user_role_relation` (
 INSERT INTO `sys_user_role_relation` VALUES ('1', '100000', '1', '\0', '2020-01-07 21:01:54', '2020-01-07 21:01:54', '0', '0');
 INSERT INTO `sys_user_role_relation` VALUES ('2', '100000', '2', '\0', '2020-03-10 21:24:19', '2020-03-10 21:28:03', '0', '0');
 INSERT INTO `sys_user_role_relation` VALUES ('3', '100001', '2', '\0', '2020-03-11 20:52:29', '2020-03-11 20:52:29', '0', '0');
-
-
-CREATE TABLE `file_head_portrait` (
-    `head_portrait_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '头像id',
-    `user_info_id` bigint(20) unsigned NOT NULL COMMENT '用户id',
-    `version` int(10) unsigned NOT NULL COMMENT '版本号',
-    `image_name` varchar(100) NOT NULL COMMENT '图片名称',
-    `image_path` varchar(300) NOT NULL COMMENT '图片存放路径',
-    `image_size` bigint(20) unsigned NOT NULL COMMENT '图片大小（单位：byte）',
-    `image_type` varchar(32) NOT NULL COMMENT '图片格式',
-    `is_delete` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
-    `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-    `create_by` bigint(20) unsigned NOT NULL COMMENT '创建人',
-    `update_by` bigint(20) unsigned NOT NULL COMMENT '修改人',
-    PRIMARY KEY (`head_portrait_id`),
-    KEY `file_head_portrait_user_info_id_FOREIGN` (`user_info_id`),
-    CONSTRAINT `file_head_portrait_user_info_id_FOREIGN` FOREIGN KEY (`user_info_id`) REFERENCES `sys_user_info` (`user_info_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='用户头像表'

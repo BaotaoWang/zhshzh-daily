@@ -13,7 +13,7 @@ import java.util.List;
  * 系统接口日志Mapper
  *
  * @author Generator
- * @since 2020/03/12
+ * @since 2020/03/15
  */
 @Mapper
 public interface SysInterfaceLogMapper {
@@ -35,9 +35,9 @@ public interface SysInterfaceLogMapper {
      * 根据id逻辑删除系统接口日志
      *
      * @param interfaceLogId 主键id
-     * @param userInfoId 用户id
+     * @param updateBy 用户id
      */
-    void deleteByIdLogical(@Param("interfaceLogId") Long interfaceLogId, @Param("userInfoId") Long userInfoId);
+    void deleteByIdLogical(@Param("interfaceLogId") Long interfaceLogId, @Param("updateBy") Long updateBy);
 
     /**
      * 批量逻辑删除系统接口日志

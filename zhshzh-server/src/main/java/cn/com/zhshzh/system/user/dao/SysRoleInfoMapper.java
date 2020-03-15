@@ -13,7 +13,7 @@ import java.util.List;
  * 系统角色Mapper
  *
  * @author Generator
- * @since 2020/01/07
+ * @since 2020/03/15
  */
 @Mapper
 public interface SysRoleInfoMapper {
@@ -34,9 +34,10 @@ public interface SysRoleInfoMapper {
     /**
      * 根据id逻辑删除系统角色
      *
-     * @param sysRoleInfoPO 系统角色
+     * @param roleInfoId 主键id
+     * @param updateBy 用户id
      */
-    void deleteByIdLogical(SysRoleInfoPO sysRoleInfoPO);
+    void deleteByIdLogical(@Param("roleInfoId") Long roleInfoId, @Param("updateBy") Long updateBy);
 
     /**
      * 批量逻辑删除系统角色
@@ -88,6 +89,13 @@ public interface SysRoleInfoMapper {
      * @return 系统角色list
      */
     List<SysRoleInfoPO> listSysRoleInfos(WhereConditions whereConditions);
+
+    /**
+     * 查询所有的系统角色
+     *
+     * @return 系统角色list
+     */
+    List<SysRoleInfoPO> listAllSysRoleInfos();
 
     /**
      * 条件查询系统角色条数

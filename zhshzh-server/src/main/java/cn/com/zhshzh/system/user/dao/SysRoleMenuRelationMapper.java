@@ -13,7 +13,7 @@ import java.util.List;
  * 角色-菜单关系Mapper
  *
  * @author Generator
- * @since 2020/01/13
+ * @since 2020/03/15
  */
 @Mapper
 public interface SysRoleMenuRelationMapper {
@@ -34,9 +34,10 @@ public interface SysRoleMenuRelationMapper {
     /**
      * 根据id逻辑删除角色-菜单关系
      *
-     * @param sysRoleMenuRelationPO 角色-菜单关系
+     * @param rmRelationId 主键id
+     * @param updateBy 用户id
      */
-    void deleteByIdLogical(SysRoleMenuRelationPO sysRoleMenuRelationPO);
+    void deleteByIdLogical(@Param("rmRelationId") Long rmRelationId, @Param("updateBy") Long updateBy);
 
     /**
      * 批量逻辑删除角色-菜单关系
@@ -88,6 +89,13 @@ public interface SysRoleMenuRelationMapper {
      * @return 角色-菜单关系list
      */
     List<SysRoleMenuRelationPO> listSysRoleMenuRelations(WhereConditions whereConditions);
+
+    /**
+     * 查询所有的角色-菜单关系
+     *
+     * @return 角色-菜单关系list
+     */
+    List<SysRoleMenuRelationPO> listAllSysRoleMenuRelations();
 
     /**
      * 条件查询角色-菜单关系条数

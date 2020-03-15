@@ -10,7 +10,7 @@ import java.util.Date;
  * 用户-角色关系PO
  *
  * @author Generator
- * @since 2020/01/07
+ * @since 2020/03/15
  */
 @Data
 public class SysUserRoleRelationPO implements Serializable {
@@ -34,10 +34,10 @@ public class SysUserRoleRelationPO implements Serializable {
     private Long roleInfoId;
 
     /**
-     * is_delete
+     * is_deleted
      * 是否已删除（0：false-未删除； 1：true-已删除）
      */
-    private Boolean delete;
+    private Boolean deleted;
 
     /**
      * create_time

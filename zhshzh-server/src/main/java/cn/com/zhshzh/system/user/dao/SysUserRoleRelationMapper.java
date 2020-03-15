@@ -13,7 +13,7 @@ import java.util.List;
  * 用户-角色关系Mapper
  *
  * @author Generator
- * @since 2020/01/07
+ * @since 2020/03/15
  */
 @Mapper
 public interface SysUserRoleRelationMapper {
@@ -34,9 +34,10 @@ public interface SysUserRoleRelationMapper {
     /**
      * 根据id逻辑删除用户-角色关系
      *
-     * @param sysUserRoleRelationPO 用户-角色关系
+     * @param urRelationId 主键id
+     * @param updateBy 用户id
      */
-    void deleteByIdLogical(SysUserRoleRelationPO sysUserRoleRelationPO);
+    void deleteByIdLogical(@Param("urRelationId") Long urRelationId, @Param("updateBy") Long updateBy);
 
     /**
      * 批量逻辑删除用户-角色关系
@@ -88,6 +89,13 @@ public interface SysUserRoleRelationMapper {
      * @return 用户-角色关系list
      */
     List<SysUserRoleRelationPO> listSysUserRoleRelations(WhereConditions whereConditions);
+
+    /**
+     * 查询所有的用户-角色关系
+     *
+     * @return 用户-角色关系list
+     */
+    List<SysUserRoleRelationPO> listAllSysUserRoleRelations();
 
     /**
      * 条件查询用户-角色关系条数
