@@ -14,10 +14,7 @@
         <el-input v-model="form.menuName" clearable class="input-width" />
       </el-form-item>
       <el-form-item label="菜单路由" prop="menuRoute" >
-        <el-input
-          type="textarea"
-          autosize
-          v-model="form.menuRoute" clearable class="input-width" />
+        <el-input v-model="form.menuRoute" clearable class="input-width" />
       </el-form-item>
       <el-form-item label="菜单序号" prop="menuOrder" >
         <el-input-number
@@ -71,6 +68,7 @@ export default {
           { max: 32, message: '长度不得大于32个字符', trigger: 'blur' }
         ],
         menuRoute: [
+          { required: true, message: '必填项', trigger: 'blur' },
           { max: 32, message: '长度不得大于32个字符', trigger: 'blur' }
         ],
         menuOrder: [
