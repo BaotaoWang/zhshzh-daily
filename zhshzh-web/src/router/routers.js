@@ -11,6 +11,7 @@ const TestHomePage = () => import('@/components/home/testHomePage')
 const TestWorkPLan = () => import('@/components/home/testWorkPlan')
 const TestWorkLog = () => import('@/components/home/testWorkLog')
 const Menus = () => import('@/components/menu/menus')
+const Generator = () => import('@/components/developer/generator')
 const Suggestion = () => import('@/components/suggestion/suggestion')
 
 // 创建 router 实例
@@ -61,6 +62,14 @@ export default new VueRouter({
           component: Menus,
           meta: {
             title: '菜单管理'
+          }
+        },
+        {
+          path: '/generator',
+          name: 'generator',
+          component: Generator,
+          meta: {
+            title: '代码生成器'
           }
         },
         {

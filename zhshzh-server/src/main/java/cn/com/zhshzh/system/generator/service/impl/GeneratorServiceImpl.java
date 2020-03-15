@@ -2,6 +2,7 @@ package cn.com.zhshzh.system.generator.service.impl;
 
 import cn.com.zhshzh.core.constant.HttpResultEnum;
 import cn.com.zhshzh.core.model.HttpResult;
+import cn.com.zhshzh.core.model.SuggestionModel;
 import cn.com.zhshzh.system.generator.dao.ColumnsMapper;
 import cn.com.zhshzh.system.generator.dao.TablesMapper;
 import cn.com.zhshzh.system.generator.dto.CodeGenerationDTO;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 代码生成器impl
@@ -47,7 +49,7 @@ public class GeneratorServiceImpl implements GeneratorService {
      * @return 生成代码后的结果
      */
     @Override
-    public HttpResult<CodeGenerationDTO> generator(CodeGenerationDTO codeGenerationDTO) {
+    public HttpResult<?> generator(CodeGenerationDTO codeGenerationDTO) {
         // 数据库名
         String tableSchema = codeGenerationDTO.getTableSchema();
         if (StringUtils.isEmpty(tableSchema)) {
@@ -78,4 +80,24 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
         return HttpResult.success();
     }
+
+    /**
+     * 查询数据库中所有的表名
+     *
+     * @param database
+     * @return
+     */
+    @Override
+    public HttpResult<List<SuggestionModel>> listAllTables(String database) {
+        // 查询数据库中所有表的集合
+        List<TablesPO> tablesPOList = tablesMapper.listAllTables(StringUtils.isEmpty(database) ? GeneratorUtil.TABLE_SCHEMA : database);
+        // 取出表名放入新的集合
+        List<SuggestionModel> tableNameList = tablesPOList.stream().map(tablesPO -> {
+            SuggestionModel suggestionModel = new SuggestionModel();
+            suggestionModel.setValue(tablesPO.getTableName());
+            return suggestionModel;
+        }).collect(Collectors.toList());
+        return HttpResult.success(tableNameList);
+    }
+
 }

@@ -2,15 +2,14 @@ package cn.com.zhshzh.system.generator.controller;
 
 import cn.com.zhshzh.core.constant.HttpResultEnum;
 import cn.com.zhshzh.core.model.HttpResult;
+import cn.com.zhshzh.core.model.SuggestionModel;
 import cn.com.zhshzh.system.generator.dto.CodeGenerationDTO;
 import cn.com.zhshzh.system.generator.service.GeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 代码生成器controller
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2019/12/15
  */
 @RestController
-@RequestMapping("/generator")
+@RequestMapping("/generator/admin")
 public class GeneratorController {
     @Autowired
     private GeneratorService generatorService;
@@ -35,8 +34,8 @@ public class GeneratorController {
      * @param codeGenerationDTO 生成代码的相关参数
      * @return JsonResultUtil 返回到前台的信息
      */
-    @PostMapping("/codeGeneration")
-    public HttpResult<CodeGenerationDTO> codeGeneration(@RequestBody CodeGenerationDTO codeGenerationDTO, HttpServletRequest request) {
+    @PostMapping
+    public HttpResult<?> codeGeneration(@RequestBody CodeGenerationDTO codeGenerationDTO, HttpServletRequest request) {
         // 请求端的ip地址
         String remoteAddr = request.getRemoteAddr();
         // 服务端的ip地址
@@ -48,5 +47,16 @@ public class GeneratorController {
         } else {
             return HttpResult.error(HttpResultEnum.GENERATOR_NOT_ALLOW);
         }
+    }
+
+    /**
+     * 查询数据库中所有的表名
+     *
+     * @param database
+     * @return
+     */
+    @GetMapping
+    public HttpResult<List<SuggestionModel>> listAllTables(@RequestParam(value = "database", required = false) String database) {
+        return generatorService.listAllTables(database);
     }
 }

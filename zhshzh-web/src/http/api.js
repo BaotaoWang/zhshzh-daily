@@ -16,3 +16,7 @@ export const changeMenuState = (id, params) => PUT('/menuInfos/menuState/' + id 
 export const updateMenu = (id, params) => PUT('/menuInfos/' + id + '/admin', params)
 // 删除菜单
 export const deleteMenu = (id, params) => DELETE('/menuInfos/' + id + '/admin', params)
+// 生成代码
+export const generator = params => POST('/generator/admin', params)
+// 查询数据库中所有的表名
+export const listTableNames = params => GET('/generator/admin', params)
