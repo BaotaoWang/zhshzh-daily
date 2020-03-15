@@ -73,18 +73,14 @@
       :close-on-click-modal="false"
       :lock-scroll="false"
       width="490px" >
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="closeMenuDialog(false, false)" size="small">取 消</el-button>
-        <el-button @click="closeMenuDialog(false, true)" size="small" type="primary">确 定</el-button>
-      </span>
-      <edit-menu v-if="dialogVisible" :menuInfo="menuInfo" @saveMenu="saveMenu" />
+      <edit-menu v-if="dialogVisible" :menuInfo="menuInfo" @closeMenuDialog="closeMenuDialog" />
     </el-dialog>
   </div>
 </template>
 
 <script>
 import EditMenu from './editMenu'
-import {listMenuInfos, changeMenuState, deleteMenu, addMenu, updateMenu} from '@/http/api'
+import {listMenuInfos, changeMenuState, deleteMenu} from '@/http/api'
 
 export default {
   name: 'menus',
@@ -96,8 +92,7 @@ export default {
       dialogTitle: '',
       refreshMenuButton: false,
       menus: [],
-      menuInfo: {},
-      isSaveMenu: false
+      menuInfo: {}
     }
   },
   comments: {
@@ -229,58 +224,11 @@ export default {
     },
     /**
      * 关闭dialog弹窗时的绑定事件
-     * @param dialogVisible
-     * @param isSaveMenu
      */
-    closeMenuDialog (dialogVisible, isSaveMenu) {
-      this.dialogVisible = dialogVisible
-      this.isSaveMenu = isSaveMenu
-    },
-    /**
-     * 保存菜单信息
-     * 只要关闭dialog弹窗就触发这个方法，但是只有点确定的时候才向后台保存数据
-     */
-    saveMenu (form) {
-      if (this.isSaveMenu) {
-        // 先将保存标识置为false，避免确认保存后，下次点x关闭dialog依然会保存
-        this.isSaveMenu = false
-        let menuInfoId = form.menuInfoId
-        if (menuInfoId) {
-          // 如果有menuInfoId，更新菜单信息
-          updateMenu(menuInfoId, form).then(response => {
-            if (response.code === 10000) {
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              // 保存成功后重新加载菜单树
-              this.listMenuInfos()
-            } else {
-              this.$alert(
-                response.message,
-                {type: 'error', lockScroll: false, confirmButtonText: '确定'}
-              )
-            }
-          })
-        } else {
-          // 如果没有menuInfoId，新增菜单信息
-          addMenu(form).then(response => {
-            if (response.code === 10000) {
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              // 保存成功后重新加载菜单树
-              this.listMenuInfos()
-            } else {
-              this.$alert(
-                response.message,
-                {type: 'error', lockScroll: false, confirmButtonText: '确定'}
-              )
-            }
-          })
-        }
-      }
+    closeMenuDialog () {
+      this.dialogVisible = false
+      // 关闭dialog弹窗时重新加载菜单树
+      this.listMenuInfos()
     }
   }
 }
