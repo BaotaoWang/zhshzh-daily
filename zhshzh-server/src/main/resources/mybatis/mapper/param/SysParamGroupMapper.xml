@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zhshzh.system.param.dao.SysParamGroupMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.param.po.SysParamGroupPO" >
+    <id column="param_group_id" jdbcType="BIGINT" property="paramGroupId" javaType="java.lang.Long" />
+    <result column="param_group_name" jdbcType="VARCHAR" property="paramGroupName" javaType="java.lang.String" />
+    <result column="description" jdbcType="VARCHAR" property="description" javaType="java.lang.String" />
+    <result column="is_deleted" jdbcType="BIT" property="deleted" javaType="java.lang.Boolean" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" javaType="java.lang.Long" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    param_group_id, param_group_name, description, is_deleted, create_time, update_time, create_by, update_by
+  </sql>
+
+  <!-- 查询条件的拼装 -->
+  <sql id="Where_Clause" >
+    <where>
+      <if test="conditionList != null and conditionList.size() != 0">
+        <foreach collection="conditionList" item="item" index="index" separator="AND" >
+          <choose>
+            <when test="item.whereConditionEnum.condition == 'LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'BETWEEN'" >
+              <trim prefix=" " suffix=" " suffixOverrides="AND" >
+                <if test="item.startValue != null and item.startValue != ''" >
+                  ${item.columnName} &gt;= #{item.startValue} AND
+                </if>
+                <if test="item.endValue != null and item.endValue != ''" >
+                  ${item.columnName} &lt;= #{item.endValue} AND
+                </if>
+                <if test="(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')" >
+                  1 = 1
+                </if>
+              </trim>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <otherwise>
+              ${item.columnName} ${item.whereConditionEnum.condition} #{item.value}
+            </otherwise>
+          </choose>
+        </foreach>
+      </if>
+      AND is_deleted = 0
+    </where>
+  </sql>
+
+  <!-- 新增系统参数组 -->
+  <insert id="insertSysParamGroup" parameterType="cn.com.zhshzh.system.param.po.SysParamGroupPO" >
+    INSERT INTO sys_param_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="paramGroupId != null" > param_group_id, </if>
+      <if test="paramGroupName != null" > param_group_name, </if>
+      <if test="description != null" > description, </if>
+      <if test="deleted != null" > is_deleted, </if>
+      <if test="createTime != null" > create_time, </if>
+      <if test="updateTime != null" > update_time, </if>
+      <if test="createBy != null" > create_by, </if>
+      <if test="updateBy != null" > update_by, </if>
+    </trim>
+    <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+      <if test="paramGroupId != null" > #{paramGroupId, jdbcType=BIGINT}, </if>
+      <if test="paramGroupName != null" > #{paramGroupName, jdbcType=VARCHAR}, </if>
+      <if test="description != null" > #{description, jdbcType=VARCHAR}, </if>
+      <if test="deleted != null" > #{deleted, jdbcType=BIT}, </if>
+      <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
+      <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
+      <if test="createBy != null" > #{createBy, jdbcType=BIGINT}, </if>
+      <if test="updateBy != null" > #{updateBy, jdbcType=BIGINT}, </if>
+    </trim>
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="paramGroupId" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <!-- 批量新增系统参数组 -->
+  <insert id="insertSysParamGroupBatch" parameterType="java.util.List" >
+    INSERT INTO sys_param_group (
+      <include refid="Base_Column_List" />
+    )
+    VALUES
+    <foreach collection="sysParamGroupPOList" item="item" index="index" separator="," >
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+        #{item.paramGroupId, jdbcType=BIGINT},
+        #{item.paramGroupName, jdbcType=VARCHAR},
+        #{item.description, jdbcType=VARCHAR},
+        0,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP,
+        #{item.createBy, jdbcType=BIGINT},
+        #{item.updateBy, jdbcType=BIGINT},
+      </trim>
+    </foreach>
+  </insert>
+
+  <!-- 根据id逻辑删除系统参数组 -->
+  <update id="deleteByIdLogical" >
+    UPDATE sys_param_group
+    SET is_deleted = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE param_group_id = #{paramGroupId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量逻辑删除系统参数组 -->
+  <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
+    UPDATE sys_param_group
+    SET is_deleted = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE param_group_id IN
+    <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id物理删除系统参数组 -->
+  <delete id="deleteByIdPhysical" parameterType="java.lang.Long" >
+    DELETE FROM sys_param_group
+    WHERE param_group_id = #{paramGroupId, jdbcType=BIGINT}
+  </delete>
+
+  <!-- 批量物理删除系统参数组 -->
+  <delete id="deleteBatchPhysical" >
+    DELETE FROM sys_param_group
+    WHERE param_group_id IN
+    <foreach collection="sysParamGroups" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </delete>
+
+  <!-- 根据id修改系统参数组 -->
+  <update id="updateSysParamGroup" parameterType="cn.com.zhshzh.system.param.po.SysParamGroupPO" >
+    UPDATE sys_param_group
+    <set>
+      <if test="paramGroupId != null" > param_group_id = #{paramGroupId, jdbcType=BIGINT}, </if>
+      <if test="paramGroupName != null" > param_group_name = #{paramGroupName, jdbcType=VARCHAR}, </if>
+      <if test="description != null" > description = #{description, jdbcType=VARCHAR}, </if>
+      update_by = #{updateBy, jdbcType=BIGINT}
+    </set>
+    WHERE param_group_id = #{paramGroupId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量修改系统参数组 -->
+  <update id="updateSysParamGroupBatch" parameterType="java.util.List" >
+    <foreach collection="sysParamGroupPOList" item="item" index="index" separator=";" >
+      UPDATE sys_param_group
+      <set>
+        <if test="item.paramGroupId != null" > param_group_id = #{item.paramGroupId, jdbcType=BIGINT}, </if>
+        <if test="item.paramGroupName != null" > param_group_name = #{item.paramGroupName, jdbcType=VARCHAR}, </if>
+        <if test="item.description != null" > description = #{item.description, jdbcType=VARCHAR}, </if>
+        update_by = #{item.updateBy, jdbcType=BIGINT}
+      </set>
+      WHERE param_group_id = #{item.paramGroupId, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id查询系统参数组 -->
+  <select id="getSysParamGroup" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_param_group
+    WHERE param_group_id = #{paramGroupId, jdbcType=BIGINT}
+    AND is_deleted = 0
+  </select>
+
+  <!-- 条件查询系统参数组 -->
+  <select id="listSysParamGroups" parameterType="cn.com.zhshzh.core.model.WhereConditions" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_param_group
+    <include refid="Where_Clause" />
+    <if test="orderByList != null and orderByList.size() != 0">
+      ORDER BY
+      <foreach collection="orderByList" item="item" index="index" separator="," >
+        ${item.sort} ${item.orderByEnum.order}
+      </foreach>
+    </if>
+    <choose>
+      <when test="limitFrom != null and limitFrom != 0">
+        LIMIT #{limitFrom}, #{limitTo}
+      </when>
+      <when test="limitTo != null and limitTo != 0">
+        LIMIT #{limitTo}
+      </when>
+    </choose>
+  </select>
+
+  <!-- 查询所有的系统参数组 -->
+  <select id="listAllSysParamGroups" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_param_group
+    WHERE is_deleted = 0
+  </select>
+
+  <!-- 条件查询系统参数组条数 -->
+  <select id="countSysParamGroups"  parameterType="cn.com.zhshzh.core.model.WhereConditions" resultType="java.lang.Integer" >
+    SELECT COUNT(*) FROM sys_param_group
+    <include refid="Where_Clause" />
+  </select>
+
+  <!-- 以上代码由代码生成器自动生成，原则上不允许任何修改, 如需自定义，请在下面补充 -->
+</mapper>

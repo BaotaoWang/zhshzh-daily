@@ -557,3 +557,36 @@ CREATE TABLE `sys_user_role_relation` (
 INSERT INTO `sys_user_role_relation` VALUES ('1', '100000', '1', '\0', '2020-01-07 21:01:54', '2020-01-07 21:01:54', '0', '0');
 INSERT INTO `sys_user_role_relation` VALUES ('2', '100000', '2', '\0', '2020-03-10 21:24:19', '2020-03-10 21:28:03', '0', '0');
 INSERT INTO `sys_user_role_relation` VALUES ('3', '100001', '2', '\0', '2020-03-11 20:52:29', '2020-03-11 20:52:29', '0', '0');
+
+
+drop table if exists sys_param_group;
+CREATE TABLE `sys_param_group` (
+    `param_group_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '参数组id',
+    `param_group_name` VARCHAR(32) NOT NULL COMMENT '参数组名',
+    `description` VARCHAR(200) DEFAULT NULL COMMENT '参数组描述',
+    `is_deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+    `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `create_by` bigint(20) unsigned NOT NULL COMMENT '创建人',
+    `update_by` bigint(20) unsigned NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`param_group_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='系统参数组表';
+
+drop table if exists sys_param_item;
+CREATE TABLE `sys_param_item` (
+    `param_item_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '参数id',
+    `parent_id` bigint(20) unsigned NOT NULL COMMENT '父级参数id',
+    `param_group_id` bigint(20) unsigned NOT NULL COMMENT '参数组id',
+    `param_item_value` VARCHAR(32) NOT NULL COMMENT '参数值',
+    `param_item_name` VARCHAR(32) NOT NULL COMMENT '参数名',
+    `param_item_order` smallint(5) unsigned NOT NULL COMMENT '参数序号',
+    `description` VARCHAR(200) DEFAULT NULL COMMENT '参数描述',
+    `is_deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已删除（0：false-未删除； 1：true-已删除）',
+    `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `create_by` bigint(20) unsigned NOT NULL COMMENT '创建人',
+    `update_by` bigint(20) unsigned NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`param_item_id`),
+    KEY `sys_param_item_param_group_id_FOREIGN` (`param_group_id`),
+    CONSTRAINT `sys_param_item_param_group_id_FOREIGN` FOREIGN KEY (`param_group_id`) REFERENCES `sys_param_group` (`param_group_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='系统参数表';

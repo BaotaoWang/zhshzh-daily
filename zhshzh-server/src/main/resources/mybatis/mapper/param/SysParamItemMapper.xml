@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zhshzh.system.param.dao.SysParamItemMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.zhshzh.system.param.po.SysParamItemPO" >
+    <id column="param_item_id" jdbcType="BIGINT" property="paramItemId" javaType="java.lang.Long" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" javaType="java.lang.Long" />
+    <result column="param_group_id" jdbcType="BIGINT" property="paramGroupId" javaType="java.lang.Long" />
+    <result column="param_item_value" jdbcType="VARCHAR" property="paramItemValue" javaType="java.lang.String" />
+    <result column="param_item_name" jdbcType="VARCHAR" property="paramItemName" javaType="java.lang.String" />
+    <result column="param_item_order" jdbcType="SMALLINT" property="paramItemOrder" javaType="java.lang.Short" />
+    <result column="description" jdbcType="VARCHAR" property="description" javaType="java.lang.String" />
+    <result column="is_deleted" jdbcType="BIT" property="deleted" javaType="java.lang.Boolean" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" javaType="java.lang.Long" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    param_item_id, parent_id, param_group_id, param_item_value, param_item_name, param_item_order, description,
+    is_deleted, create_time, update_time, create_by, update_by
+  </sql>
+
+  <!-- 查询条件的拼装 -->
+  <sql id="Where_Clause" >
+    <where>
+      <if test="conditionList != null and conditionList.size() != 0">
+        <foreach collection="conditionList" item="item" index="index" separator="AND" >
+          <choose>
+            <when test="item.whereConditionEnum.condition == 'LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT LIKE'" >
+              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            </when>
+            <when test="item.whereConditionEnum.condition == 'BETWEEN'" >
+              <trim prefix=" " suffix=" " suffixOverrides="AND" >
+                <if test="item.startValue != null and item.startValue != ''" >
+                  ${item.columnName} &gt;= #{item.startValue} AND
+                </if>
+                <if test="item.endValue != null and item.endValue != ''" >
+                  ${item.columnName} &lt;= #{item.endValue} AND
+                </if>
+                <if test="(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')" >
+                  1 = 1
+                </if>
+              </trim>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <when test="item.whereConditionEnum.condition == 'NOT IN'" >
+              ${item.columnName} ${item.whereConditionEnum.condition}
+              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+              </foreach>
+            </when>
+            <otherwise>
+              ${item.columnName} ${item.whereConditionEnum.condition} #{item.value}
+            </otherwise>
+          </choose>
+        </foreach>
+      </if>
+      AND is_deleted = 0
+    </where>
+  </sql>
+
+  <!-- 新增系统参数 -->
+  <insert id="insertSysParamItem" parameterType="cn.com.zhshzh.system.param.po.SysParamItemPO" >
+    INSERT INTO sys_param_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="paramItemId != null" > param_item_id, </if>
+      <if test="parentId != null" > parent_id, </if>
+      <if test="paramGroupId != null" > param_group_id, </if>
+      <if test="paramItemValue != null" > param_item_value, </if>
+      <if test="paramItemName != null" > param_item_name, </if>
+      <if test="paramItemOrder != null" > param_item_order, </if>
+      <if test="description != null" > description, </if>
+      <if test="deleted != null" > is_deleted, </if>
+      <if test="createTime != null" > create_time, </if>
+      <if test="updateTime != null" > update_time, </if>
+      <if test="createBy != null" > create_by, </if>
+      <if test="updateBy != null" > update_by, </if>
+    </trim>
+    <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+      <if test="paramItemId != null" > #{paramItemId, jdbcType=BIGINT}, </if>
+      <if test="parentId != null" > #{parentId, jdbcType=BIGINT}, </if>
+      <if test="paramGroupId != null" > #{paramGroupId, jdbcType=BIGINT}, </if>
+      <if test="paramItemValue != null" > #{paramItemValue, jdbcType=VARCHAR}, </if>
+      <if test="paramItemName != null" > #{paramItemName, jdbcType=VARCHAR}, </if>
+      <if test="paramItemOrder != null" > #{paramItemOrder, jdbcType=SMALLINT}, </if>
+      <if test="description != null" > #{description, jdbcType=VARCHAR}, </if>
+      <if test="deleted != null" > #{deleted, jdbcType=BIT}, </if>
+      <if test="createTime != null" > #{createTime, jdbcType=TIMESTAMP}, </if>
+      <if test="updateTime != null" > #{updateTime, jdbcType=TIMESTAMP}, </if>
+      <if test="createBy != null" > #{createBy, jdbcType=BIGINT}, </if>
+      <if test="updateBy != null" > #{updateBy, jdbcType=BIGINT}, </if>
+    </trim>
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="paramItemId" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <!-- 批量新增系统参数 -->
+  <insert id="insertSysParamItemBatch" parameterType="java.util.List" >
+    INSERT INTO sys_param_item (
+      <include refid="Base_Column_List" />
+    )
+    VALUES
+    <foreach collection="sysParamItemPOList" item="item" index="index" separator="," >
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+        #{item.paramItemId, jdbcType=BIGINT},
+        #{item.parentId, jdbcType=BIGINT},
+        #{item.paramGroupId, jdbcType=BIGINT},
+        #{item.paramItemValue, jdbcType=VARCHAR},
+        #{item.paramItemName, jdbcType=VARCHAR},
+        #{item.paramItemOrder, jdbcType=SMALLINT},
+        #{item.description, jdbcType=VARCHAR},
+        0,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP,
+        #{item.createBy, jdbcType=BIGINT},
+        #{item.updateBy, jdbcType=BIGINT},
+      </trim>
+    </foreach>
+  </insert>
+
+  <!-- 根据id逻辑删除系统参数 -->
+  <update id="deleteByIdLogical" >
+    UPDATE sys_param_item
+    SET is_deleted = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE param_item_id = #{paramItemId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量逻辑删除系统参数 -->
+  <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
+    UPDATE sys_param_item
+    SET is_deleted = 1,
+    update_by = #{updateBy, jdbcType=BIGINT}
+    WHERE param_item_id IN
+    <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id物理删除系统参数 -->
+  <delete id="deleteByIdPhysical" parameterType="java.lang.Long" >
+    DELETE FROM sys_param_item
+    WHERE param_item_id = #{paramItemId, jdbcType=BIGINT}
+  </delete>
+
+  <!-- 批量物理删除系统参数 -->
+  <delete id="deleteBatchPhysical" >
+    DELETE FROM sys_param_item
+    WHERE param_item_id IN
+    <foreach collection="sysParamItems" item="item" index="index" open="(" close=")" separator="," >
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </delete>
+
+  <!-- 根据id修改系统参数 -->
+  <update id="updateSysParamItem" parameterType="cn.com.zhshzh.system.param.po.SysParamItemPO" >
+    UPDATE sys_param_item
+    <set>
+      <if test="paramItemId != null" > param_item_id = #{paramItemId, jdbcType=BIGINT}, </if>
+      <if test="parentId != null" > parent_id = #{parentId, jdbcType=BIGINT}, </if>
+      <if test="paramGroupId != null" > param_group_id = #{paramGroupId, jdbcType=BIGINT}, </if>
+      <if test="paramItemValue != null" > param_item_value = #{paramItemValue, jdbcType=VARCHAR}, </if>
+      <if test="paramItemName != null" > param_item_name = #{paramItemName, jdbcType=VARCHAR}, </if>
+      <if test="paramItemOrder != null" > param_item_order = #{paramItemOrder, jdbcType=SMALLINT}, </if>
+      <if test="description != null" > description = #{description, jdbcType=VARCHAR}, </if>
+      update_by = #{updateBy, jdbcType=BIGINT}
+    </set>
+    WHERE param_item_id = #{paramItemId, jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量修改系统参数 -->
+  <update id="updateSysParamItemBatch" parameterType="java.util.List" >
+    <foreach collection="sysParamItemPOList" item="item" index="index" separator=";" >
+      UPDATE sys_param_item
+      <set>
+        <if test="item.paramItemId != null" > param_item_id = #{item.paramItemId, jdbcType=BIGINT}, </if>
+        <if test="item.parentId != null" > parent_id = #{item.parentId, jdbcType=BIGINT}, </if>
+        <if test="item.paramGroupId != null" > param_group_id = #{item.paramGroupId, jdbcType=BIGINT}, </if>
+        <if test="item.paramItemValue != null" > param_item_value = #{item.paramItemValue, jdbcType=VARCHAR}, </if>
+        <if test="item.paramItemName != null" > param_item_name = #{item.paramItemName, jdbcType=VARCHAR}, </if>
+        <if test="item.paramItemOrder != null" > param_item_order = #{item.paramItemOrder, jdbcType=SMALLINT}, </if>
+        <if test="item.description != null" > description = #{item.description, jdbcType=VARCHAR}, </if>
+        update_by = #{item.updateBy, jdbcType=BIGINT}
+      </set>
+      WHERE param_item_id = #{item.paramItemId, jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!-- 根据id查询系统参数 -->
+  <select id="getSysParamItem" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_param_item
+    WHERE param_item_id = #{paramItemId, jdbcType=BIGINT}
+    AND is_deleted = 0
+  </select>
+
+  <!-- 条件查询系统参数 -->
+  <select id="listSysParamItems" parameterType="cn.com.zhshzh.core.model.WhereConditions" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_param_item
+    <include refid="Where_Clause" />
+    <if test="orderByList != null and orderByList.size() != 0">
+      ORDER BY
+      <foreach collection="orderByList" item="item" index="index" separator="," >
+        ${item.sort} ${item.orderByEnum.order}
+      </foreach>
+    </if>
+    <choose>
+      <when test="limitFrom != null and limitFrom != 0">
+        LIMIT #{limitFrom}, #{limitTo}
+      </when>
+      <when test="limitTo != null and limitTo != 0">
+        LIMIT #{limitTo}
+      </when>
+    </choose>
+  </select>
+
+  <!-- 查询所有的系统参数 -->
+  <select id="listAllSysParamItems" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_param_item
+    WHERE is_deleted = 0
+  </select>
+
+  <!-- 条件查询系统参数条数 -->
+  <select id="countSysParamItems"  parameterType="cn.com.zhshzh.core.model.WhereConditions" resultType="java.lang.Integer" >
+    SELECT COUNT(*) FROM sys_param_item
+    <include refid="Where_Clause" />
+  </select>
+
+  <!-- 以上代码由代码生成器自动生成，原则上不允许任何修改, 如需自定义，请在下面补充 -->
+</mapper>
