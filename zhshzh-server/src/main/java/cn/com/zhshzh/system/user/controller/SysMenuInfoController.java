@@ -13,9 +13,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -95,7 +97,12 @@ public class SysMenuInfoController {
      */
     @PostMapping("/admin")
     @ApiOperation("新增菜单信息")
-    public HttpResult<?> insertSysMenuInfo(@RequestBody SysMenuInfoDTO sysMenuInfoDTO, HttpServletRequest request) {
+    public HttpResult<?> insertSysMenuInfo(@RequestBody @Valid SysMenuInfoDTO sysMenuInfoDTO, BindingResult bindingResult,
+                                           HttpServletRequest request) {
+        // 字段校验不成功，直接返回前台错误信息
+        if (bindingResult.hasErrors()) {
+            return HttpResult.error(bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
         RedisUtil.copyUserInfoId(request, sysMenuInfoDTO);
         return sysMenuInfoService.insertSysMenuInfo(sysMenuInfoDTO);
     }
@@ -113,8 +120,12 @@ public class SysMenuInfoController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "菜单id", required = true, paramType = "path", dataType = "long", example = "0")
     })
-    public HttpResult<?> updateSysMenuInfo(@PathVariable("id") long id, @RequestBody SysMenuInfoDTO sysMenuInfoDTO,
-                                           HttpServletRequest request) {
+    public HttpResult<?> updateSysMenuInfo(@PathVariable("id") long id, @RequestBody @Valid SysMenuInfoDTO sysMenuInfoDTO,
+                                           BindingResult bindingResult, HttpServletRequest request) {
+        // 字段校验不成功，直接返回前台错误信息
+        if (bindingResult.hasErrors()) {
+            return HttpResult.error(bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
         RedisUtil.copyUserInfoId(request, sysMenuInfoDTO);
         return sysMenuInfoService.updateSysMenuInfo(id, sysMenuInfoDTO);
     }

@@ -13,6 +13,7 @@ public enum HttpResultEnum {
 
     /* 系统级异常 */
     EMPTY_DATA(9001, "数据不存在"),
+    ERROR_PARAM(9002, "参数错误"),
 
     /* security异常 */
     EMPTY_USERNAME(9101, "用户名为空"),

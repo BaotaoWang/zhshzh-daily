@@ -16,10 +16,10 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -121,8 +121,8 @@ public class SysInterfaceLogAspect {
                 if (args != null) {
                     List<Object> objects = new ArrayList<>();
                     for (Object arg : args) {
-                        if (arg instanceof ServletRequest || arg instanceof MultipartRequest
-                                || arg instanceof ServletResponse || arg instanceof MultipartFile) {
+                        if (arg instanceof ServletRequest || arg instanceof ServletResponse
+                                || arg instanceof MultipartFile || arg instanceof BindingResult) {
                             continue;
                         }
                         objects.add(arg);

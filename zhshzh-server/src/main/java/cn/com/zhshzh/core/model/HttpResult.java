@@ -33,6 +33,16 @@ public class HttpResult<T> {
     }
 
     /**
+     * 定义返回失败消息的json对象（无返回数据）
+     *
+     * @param message
+     */
+    public HttpResult(String message) {
+        this.code = HttpResultEnum.ERROR_PARAM.getCode();
+        this.message = message;
+    }
+
+    /**
      * 自定义返回消息的json对象（无返回数据）
      *
      * @param httpResultEnum 返回消息的枚举
@@ -67,6 +77,7 @@ public class HttpResult<T> {
 
     /**
      * 返回成功的信息提示
+     *
      * @param <T>
      * @return
      */
@@ -76,6 +87,7 @@ public class HttpResult<T> {
 
     /**
      * 返回成功的请求数据
+     *
      * @param data
      * @param <T>
      * @return
@@ -86,11 +98,22 @@ public class HttpResult<T> {
 
     /**
      * 返回失败的信息提示
+     *
      * @param httpResultEnum
      * @param <T>
      * @return
      */
     public static <T> HttpResult<T> error(HttpResultEnum httpResultEnum) {
         return new HttpResult<>(httpResultEnum);
+    }
+
+    /**
+     * 返回失败的信息提示
+     *
+     * @param errorMessage
+     * @return
+     */
+    public static HttpResult<String> error(String errorMessage) {
+        return new HttpResult<>(errorMessage);
     }
 }
