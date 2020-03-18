@@ -17,7 +17,10 @@ public enum WhereConditionEnum {
     LESS_THAN_OR_EQUAL_TO("<=", "小于等于"),
     BETWEEN("BETWEEN", "区间"),
     IN("IN", "IN"),
-    NOT_IN("NOT IN", "NOT IN");
+    NOT_IN("NOT IN", "NOT IN"),
+    OR_START("OR_START", "OR语句开始"),
+    OR("OR", "OR连接符"),
+    OR_END("OR_END", "OR语句结束");
 
     private String condition;
     private String description;

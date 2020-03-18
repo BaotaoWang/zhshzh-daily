@@ -20,41 +20,55 @@
   <sql id="Where_Clause" >
     <where>
       <if test="conditionList != null and conditionList.size() != 0">
-        <foreach collection="conditionList" item="item" index="index" separator="AND" >
+        <foreach collection="conditionList" item="item" index="index" >
           <choose>
-            <when test="item.whereConditionEnum.condition == 'LIKE'" >
-              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            <when test="item.whereConditionEnum.condition == 'OR_START'" >
+              AND ((1 = 1
             </when>
-            <when test="item.whereConditionEnum.condition == 'NOT LIKE'" >
-              ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+            <when test="item.whereConditionEnum.condition == 'OR'" >
+              ) OR (1 = 1
             </when>
-            <when test="item.whereConditionEnum.condition == 'BETWEEN'" >
-              <trim prefix=" " suffix=" " suffixOverrides="AND" >
-                <if test="item.startValue != null and item.startValue != ''" >
-                  ${item.columnName} &gt;= #{item.startValue} AND
-                </if>
-                <if test="item.endValue != null and item.endValue != ''" >
-                  ${item.columnName} &lt;= #{item.endValue} AND
-                </if>
-                <if test="(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')" >
-                  1 = 1
-                </if>
-              </trim>
-            </when>
-            <when test="item.whereConditionEnum.condition == 'IN'" >
-              ${item.columnName} ${item.whereConditionEnum.condition}
-              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
-                #{item}
-              </foreach>
-            </when>
-            <when test="item.whereConditionEnum.condition == 'NOT IN'" >
-              ${item.columnName} ${item.whereConditionEnum.condition}
-              <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
-                #{item}
-              </foreach>
+            <when test="item.whereConditionEnum.condition == 'OR_END'" >
+              ))
             </when>
             <otherwise>
-              ${item.columnName} ${item.whereConditionEnum.condition} #{item.value}
+              AND
+              <choose>
+                <when test="item.whereConditionEnum.condition == 'LIKE'" >
+                  ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+                </when>
+                <when test="item.whereConditionEnum.condition == 'NOT LIKE'" >
+                  ${item.columnName} ${item.whereConditionEnum.condition} CONCAT(CONCAT('%', #{item.value}), '%')
+                </when>
+                <when test="item.whereConditionEnum.condition == 'BETWEEN'" >
+                  <trim prefix=" " suffix=" " suffixOverrides="AND" >
+                    <if test="item.startValue != null and item.startValue != ''" >
+                      ${item.columnName} &gt;= #{item.startValue} AND
+                    </if>
+                    <if test="item.endValue != null and item.endValue != ''" >
+                      ${item.columnName} &lt;= #{item.endValue} AND
+                    </if>
+                    <if test="(item.startValue == null or item.startValue == '') and (item.endValue == null or item.endValue == '')" >
+                      1 = 1
+                    </if>
+                  </trim>
+                </when>
+                <when test="item.whereConditionEnum.condition == 'IN'" >
+                  ${item.columnName} ${item.whereConditionEnum.condition}
+                  <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                    #{item}
+                  </foreach>
+                </when>
+                <when test="item.whereConditionEnum.condition == 'NOT IN'" >
+                  ${item.columnName} ${item.whereConditionEnum.condition}
+                  <foreach collection="item.values" item="item" index="index" open="(" close=")" separator="," >
+                    #{item}
+                  </foreach>
+                </when>
+                <otherwise>
+                  ${item.columnName} ${item.whereConditionEnum.condition} #{item.value}
+                </otherwise>
+              </choose>
             </otherwise>
           </choose>
         </foreach>
