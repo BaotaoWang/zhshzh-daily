@@ -3,14 +3,14 @@ package cn.com.zhshzh.system.user.po;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * sys_role_info
  * 系统角色PO
  *
  * @author Generator
- * @since 2020/03/15
+ * @since 2020/03/19
  */
 @Data
 public class SysRoleInfoPO implements Serializable {
@@ -49,13 +49,13 @@ public class SysRoleInfoPO implements Serializable {
      * create_time
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * update_time
      * 修改时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * create_by

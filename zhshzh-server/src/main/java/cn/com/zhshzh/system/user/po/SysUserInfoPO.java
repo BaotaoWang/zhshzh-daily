@@ -3,14 +3,15 @@ package cn.com.zhshzh.system.user.po;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * sys_user_info
  * 系统用户PO
  *
  * @author Generator
- * @since 2020/03/15
+ * @since 2020/03/19
  */
 @Data
 public class SysUserInfoPO implements Serializable {
@@ -55,7 +56,7 @@ public class SysUserInfoPO implements Serializable {
      * birth
      * 出生日期
      */
-    private Date birth;
+    private LocalDate birth;
 
     /**
      * phone_number
@@ -79,13 +80,13 @@ public class SysUserInfoPO implements Serializable {
      * create_time
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * update_time
      * 修改时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * create_by

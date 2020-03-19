@@ -27,7 +27,6 @@ public class SysUserInfoConvertUtil implements Convertable<SysUserInfoPO, SysUse
     public SysUserInfoDTO convertToDTO(SysUserInfoPO sysUserInfoPO) {
         SysUserInfoDTO sysUserInfoDTO = new SysUserInfoDTO();
         BeanUtils.copyProperties(sysUserInfoPO, sysUserInfoDTO);
-        sysUserInfoDTO.setBirth(DateFormatUtil.getDateString(sysUserInfoPO.getBirth()));
         return sysUserInfoDTO;
     }
 
@@ -41,7 +40,6 @@ public class SysUserInfoConvertUtil implements Convertable<SysUserInfoPO, SysUse
     public SysUserInfoPO convertToPO(SysUserInfoDTO sysUserInfoDTO) {
         SysUserInfoPO sysUserInfoPO = new SysUserInfoPO();
         BeanUtils.copyProperties(sysUserInfoDTO, sysUserInfoPO);
-        sysUserInfoPO.setBirth(DateFormatUtil.getDate(sysUserInfoDTO.getBirth()));
         return sysUserInfoPO;
     }
 }

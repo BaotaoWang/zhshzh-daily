@@ -2,7 +2,7 @@ package cn.com.zhshzh.system.generator.po;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 数据库表信息的实体对象
@@ -23,9 +23,9 @@ public class TablesPO {
     private Long indexLength;
     private Long dataFree;
     private Long autoIncrement;
-    private Date createTime;
-    private Date updateTime;
-    private Date checkTime;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
+    private LocalDateTime checkTime;
     private String tableCollation;
     private Long checksum;
     private String createOptions;

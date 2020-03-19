@@ -166,7 +166,7 @@ public class GeneratorUtil {
             }
 
             // 如果javaType不在java.lang包下，需要额外引包
-            // 目前只是针对java.math.BigDecimal和java.util.Date
+            // 目前只是针对java.math.BigDecimal、java.time.LocalDate和java.time.LocalDateTime
             if (!javaType.startsWith("java.lang") && !"_byte[]".equals(javaType)) {
                 importPackages.add("import " + javaType + ";");
             }

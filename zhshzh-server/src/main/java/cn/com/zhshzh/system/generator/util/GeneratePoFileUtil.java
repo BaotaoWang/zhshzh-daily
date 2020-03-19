@@ -5,7 +5,7 @@ import cn.com.zhshzh.core.util.DateFormatUtil;
 import cn.com.zhshzh.core.util.FileUtil;
 import cn.com.zhshzh.system.generator.model.GeneratorStringModel;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 /**
@@ -63,8 +63,8 @@ public class GeneratePoFileUtil {
     private static void generatePo(String poPackageName, String tableName, String tableComment, String upperCamelCasePoName,
                                    Set<String> importPackages, String memberVariables, StringBuilder builder) {
         // 当前日期
-        Date nowDate = new Date();
-        String nowDateStr = DateFormatUtil.getBackslashDateString(nowDate);
+        LocalDate localDate = LocalDate.now();
+        String nowDateStr = DateFormatUtil.getBackslashDateString(localDate);
 
         // 拼接mapper.xml的头部
         builder.append("package ").append(poPackageName).append(";").append("\r\n");

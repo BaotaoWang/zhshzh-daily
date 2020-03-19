@@ -18,8 +18,8 @@
     <result column="server_port" jdbcType="INTEGER" property="serverPort" javaType="java.lang.Integer" />
     <result column="request_exception" jdbcType="LONGVARCHAR" property="requestException" javaType="java.lang.String" />
     <result column="is_deleted" jdbcType="BIT" property="deleted" javaType="java.lang.Boolean" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.time.LocalDateTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.time.LocalDateTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" javaType="java.lang.String" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" javaType="java.lang.String" />
   </resultMap>

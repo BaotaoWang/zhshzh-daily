@@ -1,6 +1,10 @@
 package cn.com.zhshzh.system.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 /**
  * 系统用户信息的数据传输对象
@@ -35,7 +39,9 @@ public class SysUserInfoDTO {
     /**
      * 出生日期
      */
-    private String birth;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birth;
 
     /**
      * 联系电话

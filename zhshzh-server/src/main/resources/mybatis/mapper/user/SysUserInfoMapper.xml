@@ -8,12 +8,12 @@
     <result column="full_name" jdbcType="VARCHAR" property="fullName" javaType="java.lang.String" />
     <result column="serial_number" jdbcType="VARCHAR" property="serialNumber" javaType="java.lang.String" />
     <result column="sex" jdbcType="CHAR" property="sex" javaType="java.lang.String" />
-    <result column="birth" jdbcType="DATE" property="birth" javaType="java.util.Date" />
+    <result column="birth" jdbcType="DATE" property="birth" javaType="java.time.LocalDate" />
     <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" javaType="java.lang.String" />
     <result column="email" jdbcType="VARCHAR" property="email" javaType="java.lang.String" />
     <result column="is_deleted" jdbcType="BIT" property="deleted" javaType="java.lang.Boolean" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.time.LocalDateTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.time.LocalDateTime" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" javaType="java.lang.Long" />
   </resultMap>

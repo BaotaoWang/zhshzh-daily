@@ -143,21 +143,21 @@
     },
     {
       "columnType": "TIMESTAMP",
-      "fieldType": "Date",
+      "fieldType": "LocalDateTime",
       "jdbcType": "TIMESTAMP",
-      "javaType": "java.util.Date"
+      "javaType": "java.time.LocalDateTime"
     },
     {
       "columnType": "DATETIME",
-      "fieldType": "Date",
+      "fieldType": "LocalDateTime",
       "jdbcType": "TIMESTAMP",
-      "javaType": "java.util.Date"
+      "javaType": "java.time.LocalDateTime"
     },
     {
       "columnType": "DATE",
-      "fieldType": "Date",
+      "fieldType": "LocalDate",
       "jdbcType": "DATE",
-      "javaType": "java.util.Date"
+      "javaType": "java.time.LocalDate"
     }
   ]
 }

@@ -6,8 +6,8 @@
     <result column="param_group_name" jdbcType="VARCHAR" property="paramGroupName" javaType="java.lang.String" />
     <result column="description" jdbcType="VARCHAR" property="description" javaType="java.lang.String" />
     <result column="is_deleted" jdbcType="BIT" property="deleted" javaType="java.lang.Boolean" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.time.LocalDateTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.time.LocalDateTime" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" javaType="java.lang.Long" />
   </resultMap>
@@ -19,7 +19,7 @@
   <!-- 查询条件的拼装 -->
   <sql id="Where_Clause" >
     <where>
-      <if test="conditionList != null and conditionList.size() != 0">
+      <if test="conditionList != null and conditionList.size() != 0" >
         <foreach collection="conditionList" item="item" index="index" >
           <choose>
             <when test="item.whereConditionEnum.condition == 'OR_START'" >

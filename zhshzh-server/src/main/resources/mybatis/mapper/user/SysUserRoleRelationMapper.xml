@@ -6,8 +6,8 @@
     <result column="user_info_id" jdbcType="BIGINT" property="userInfoId" javaType="java.lang.Long" />
     <result column="role_info_id" jdbcType="BIGINT" property="roleInfoId" javaType="java.lang.Long" />
     <result column="is_deleted" jdbcType="BIT" property="deleted" javaType="java.lang.Boolean" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.time.LocalDateTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.time.LocalDateTime" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" javaType="java.lang.Long" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" javaType="java.lang.Long" />
   </resultMap>
