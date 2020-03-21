@@ -282,10 +282,10 @@
     </if>
     <choose>
       <when test="limitFrom != null and limitFrom != 0">
-        LIMIT #{limitFrom}, #{limitTo}
+        LIMIT #{limitFrom}, #{limitNumber}
       </when>
-      <when test="limitTo != null and limitTo != 0">
-        LIMIT #{limitTo}
+      <when test="limitNumber != null and limitNumber != 0">
+        LIMIT #{limitNumber}
       </when>
     </choose>
   </select>

@@ -9,7 +9,7 @@ import lombok.Data;
  * @since 2019/12/15
  */
 @Data
-public class CodeGenerationDTO {
+public class CodeGenerationInDTO {
     /**
      * 数据库名
      */

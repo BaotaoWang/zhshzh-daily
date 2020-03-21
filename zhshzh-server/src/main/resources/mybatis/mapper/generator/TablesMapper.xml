@@ -16,9 +16,9 @@
         <result column="index_length" jdbcType="BIGINT" property="indexLength" javaType="java.lang.Long"/>
         <result column="data_free" jdbcType="BIGINT" property="dataFree" javaType="java.lang.Long"/>
         <result column="auto_increment" jdbcType="BIGINT" property="autoIncrement" javaType="java.lang.Long"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date"/>
-        <result column="check_time" jdbcType="TIMESTAMP" property="checkTime" javaType="java.util.Date"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.time.LocalDateTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" javaType="java.time.LocalDateTime"/>
+        <result column="check_time" jdbcType="TIMESTAMP" property="checkTime" javaType="java.time.LocalDateTime"/>
         <result column="table_collation" jdbcType="VARCHAR" property="tableCollation" javaType="java.lang.String"/>
         <result column="checksum" jdbcType="BIGINT" property="checksum" javaType="java.lang.Long"/>
         <result column="create_options" jdbcType="VARCHAR" property="createOptions" javaType="java.lang.String"/>

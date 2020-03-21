@@ -4,7 +4,7 @@ import cn.com.zhshzh.core.model.CascaderDataModel;
 import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.core.util.RedisUtil;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoDTO;
-import cn.com.zhshzh.system.user.dto.SysMenuInfoResultDTO;
+import cn.com.zhshzh.system.user.dto.SysMenuInfoOutDTO;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoStateDTO;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoTreeDTO;
 import cn.com.zhshzh.system.user.service.SysMenuInfoService;
@@ -49,7 +49,7 @@ public class SysMenuInfoController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "菜单id", required = true, paramType = "path", dataType = "long", example = "0")
     })
-    public HttpResult<SysMenuInfoResultDTO> getSysMenuInfo(@PathVariable("id") long id) {
+    public HttpResult<SysMenuInfoOutDTO> getSysMenuInfo(@PathVariable("id") long id) {
         return sysMenuInfoService.getSysMenuInfo(id);
     }
 

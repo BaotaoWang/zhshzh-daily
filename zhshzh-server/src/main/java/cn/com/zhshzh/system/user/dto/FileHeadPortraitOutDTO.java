@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel(description = "头像信息模型(返回)")
-public class FileHeadPortraitResultDTO implements Serializable {
+public class FileHeadPortraitOutDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "头像版本", dataType = "Integer")

@@ -1,7 +1,7 @@
 package cn.com.zhshzh.system.user.service;
 
 import cn.com.zhshzh.core.model.HttpResult;
-import cn.com.zhshzh.system.user.dto.SysUserInfoDTO;
+import cn.com.zhshzh.system.user.dto.SysUserInfoInDTO;
 import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -20,7 +20,7 @@ public interface SysUserInfoService {
      * @param userInfoId 用户id
      * @return 用户信息
      */
-    SysUserInfoDTO getSysUserInfo(Long userInfoId);
+    SysUserInfoInDTO getSysUserInfo(Long userInfoId);
 
     /**
      * 根据用户登录账号查询用户信息（用户登录时用）
@@ -51,5 +51,5 @@ public interface SysUserInfoService {
      *
      * @param sysUserInfoPO 用户基本信息
      */
-    HttpResult<SysUserInfoDTO> saveSysUserInfo(SysUserInfoPO sysUserInfoPO);
+    HttpResult<SysUserInfoInDTO> saveSysUserInfo(SysUserInfoPO sysUserInfoPO);
 }

@@ -1,7 +1,7 @@
 package cn.com.zhshzh.system.user.service;
 
 import cn.com.zhshzh.core.model.HttpResult;
-import cn.com.zhshzh.system.user.dto.FileHeadPortraitResultDTO;
+import cn.com.zhshzh.system.user.dto.FileHeadPortraitOutDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -27,5 +27,5 @@ public interface FileHeadPortraitService {
      * @param userInfoId
      * @return
      */
-    HttpResult<FileHeadPortraitResultDTO> getPortrait(long userInfoId);
+    HttpResult<FileHeadPortraitOutDTO> getPortrait(long userInfoId);
 }

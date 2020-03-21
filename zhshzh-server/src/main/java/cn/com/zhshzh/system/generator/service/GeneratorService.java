@@ -2,7 +2,7 @@ package cn.com.zhshzh.system.generator.service;
 
 import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.core.model.SuggestionModel;
-import cn.com.zhshzh.system.generator.dto.CodeGenerationDTO;
+import cn.com.zhshzh.system.generator.dto.CodeGenerationInDTO;
 
 import java.util.List;
 
@@ -16,10 +16,10 @@ public interface GeneratorService {
     /**
      * 生成代码
      *
-     * @param codeGenerationDTO 生成代码的相关参数
+     * @param codeGenerationInDTO 生成代码的相关参数
      * @return 代码生成结果
      */
-    HttpResult<?> generator(CodeGenerationDTO codeGenerationDTO);
+    HttpResult<?> generator(CodeGenerationInDTO codeGenerationInDTO);
 
     /**
      * 查询数据库中所有的表名

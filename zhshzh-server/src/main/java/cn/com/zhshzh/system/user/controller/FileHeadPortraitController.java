@@ -2,7 +2,7 @@ package cn.com.zhshzh.system.user.controller;
 
 import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.core.util.RedisUtil;
-import cn.com.zhshzh.system.user.dto.FileHeadPortraitResultDTO;
+import cn.com.zhshzh.system.user.dto.FileHeadPortraitOutDTO;
 import cn.com.zhshzh.system.user.service.FileHeadPortraitService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class FileHeadPortraitController {
      * @return
      */
     @GetMapping
-    public HttpResult<FileHeadPortraitResultDTO> getPortrait(HttpServletRequest request) {
+    public HttpResult<FileHeadPortraitOutDTO> getPortrait(HttpServletRequest request) {
         return fileHeadPortraitService.getPortrait(RedisUtil.getUserInfoId(request));
     }
 }

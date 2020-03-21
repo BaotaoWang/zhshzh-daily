@@ -3,7 +3,7 @@ package cn.com.zhshzh.system.generator.controller;
 import cn.com.zhshzh.core.constant.HttpResultEnum;
 import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.core.model.SuggestionModel;
-import cn.com.zhshzh.system.generator.dto.CodeGenerationDTO;
+import cn.com.zhshzh.system.generator.dto.CodeGenerationInDTO;
 import cn.com.zhshzh.system.generator.service.GeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,11 +31,11 @@ public class GeneratorController {
      * mybatis版本: 3.5
      *
      * @param request           request
-     * @param codeGenerationDTO 生成代码的相关参数
+     * @param codeGenerationInDTO 生成代码的相关参数
      * @return JsonResultUtil 返回到前台的信息
      */
     @PostMapping
-    public HttpResult<?> codeGeneration(@RequestBody CodeGenerationDTO codeGenerationDTO, HttpServletRequest request) {
+    public HttpResult<?> codeGeneration(@RequestBody CodeGenerationInDTO codeGenerationInDTO, HttpServletRequest request) {
         // 请求端的ip地址
         String remoteAddr = request.getRemoteAddr();
         // 服务端的ip地址
@@ -43,7 +43,7 @@ public class GeneratorController {
         // 为避免恶意在非已服务端生成代码，只允许在本地生成代码
         if ("0:0:0:0:0:0:0:1".equals(remoteAddr) || "127.0.0.1".equals(remoteAddr) || "localhost".equals(remoteAddr)
                 || serverName.equals(remoteAddr)) {
-            return generatorService.generator(codeGenerationDTO);
+            return generatorService.generator(codeGenerationInDTO);
         } else {
             return HttpResult.error(HttpResultEnum.GENERATOR_NOT_ALLOW);
         }

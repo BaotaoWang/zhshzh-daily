@@ -91,4 +91,13 @@ public class ConditionModel {
         this.whereConditionEnum = whereConditionEnum;
         this.values = values;
     }
+
+    /**
+     * 查询条件连接符专用
+     *
+     * @param whereConditionEnum 查询条件的枚举
+     */
+    public ConditionModel(WhereConditionEnum whereConditionEnum) {
+        this.whereConditionEnum = whereConditionEnum;
+    }
 }

@@ -6,7 +6,7 @@ import lombok.Data;
  * 系统角色信息的数据传输对象
  */
 @Data
-public class SysRoleInfoDTO {
+public class SysRoleInfoInDTO {
     /**
      * 角色id
      */
@@ -27,7 +27,7 @@ public class SysRoleInfoDTO {
      */
     private String roleDescription;
 
-    public SysRoleInfoDTO() {
+    public SysRoleInfoInDTO() {
         super();
     }
 }

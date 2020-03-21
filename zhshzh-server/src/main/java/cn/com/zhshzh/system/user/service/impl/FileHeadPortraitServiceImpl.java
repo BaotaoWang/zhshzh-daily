@@ -9,7 +9,7 @@ import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.core.model.OrderByModel;
 import cn.com.zhshzh.core.model.WhereConditions;
 import cn.com.zhshzh.system.user.dao.FileHeadPortraitMapper;
-import cn.com.zhshzh.system.user.dto.FileHeadPortraitResultDTO;
+import cn.com.zhshzh.system.user.dto.FileHeadPortraitOutDTO;
 import cn.com.zhshzh.system.user.po.FileHeadPortraitPO;
 import cn.com.zhshzh.system.user.service.FileHeadPortraitService;
 import org.apache.logging.log4j.LogManager;
@@ -118,22 +118,22 @@ public class FileHeadPortraitServiceImpl implements FileHeadPortraitService {
      * @param userInfoId
      * @return
      */
-    public HttpResult<FileHeadPortraitResultDTO> getPortrait(long userInfoId) {
+    public HttpResult<FileHeadPortraitOutDTO> getPortrait(long userInfoId) {
         // 查询数据库中最新的头像信息
         FileHeadPortraitPO fileHeadPortraitPO = this.getLastHeadPortraitInfo(userInfoId);
         // 如果未上传过头像，直接返回
         if (ObjectUtils.isEmpty(fileHeadPortraitPO)) {
             return HttpResult.success();
         }
-        FileHeadPortraitResultDTO fileHeadPortraitResultDTO = new FileHeadPortraitResultDTO();
-        fileHeadPortraitResultDTO.setVersion(fileHeadPortraitPO.getVersion());
+        FileHeadPortraitOutDTO fileHeadPortraitOutDTO = new FileHeadPortraitOutDTO();
+        fileHeadPortraitOutDTO.setVersion(fileHeadPortraitPO.getVersion());
         try {
             // 从文件系统minio中获取base64位的头像
-            fileHeadPortraitResultDTO.setHeadPortrait(minioService.getBase64File(fileHeadPortraitPO.getImagePath()));
+            fileHeadPortraitOutDTO.setHeadPortrait(minioService.getBase64File(fileHeadPortraitPO.getImagePath()));
         } catch (DailyMinioException e) {
             logger.error(e.getMessage(), e);
         }
-        return HttpResult.success(fileHeadPortraitResultDTO);
+        return HttpResult.success(fileHeadPortraitOutDTO);
     }
 
     /**

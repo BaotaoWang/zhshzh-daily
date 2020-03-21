@@ -3,7 +3,7 @@ package cn.com.zhshzh.core.security;
 import cn.com.zhshzh.core.constant.HttpResultEnum;
 import cn.com.zhshzh.core.constant.RedisKeyConstants;
 import cn.com.zhshzh.core.util.ResponseUtil;
-import cn.com.zhshzh.system.user.dto.SysUserInfoDTO;
+import cn.com.zhshzh.system.user.dto.SysUserInfoInDTO;
 import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 import cn.com.zhshzh.system.user.service.SysUserInfoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -107,10 +107,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setHeader(JwtTokenUtils.TOKEN, JwtTokenUtils.TOKEN_PREFIX + token);
         // 根据用户名查询用户信息
         SysUserInfoPO sysUserInfoPO = sysUserInfoService.getSysUserInfoByUsername(username);
-        SysUserInfoDTO sysUserInfoDTO = new SysUserInfoDTO();
-        BeanUtils.copyProperties(sysUserInfoPO, sysUserInfoDTO);
+        SysUserInfoInDTO sysUserInfoInDTO = new SysUserInfoInDTO();
+        BeanUtils.copyProperties(sysUserInfoPO, sysUserInfoInDTO);
         // 返回成功的消息
-        ResponseUtil.writeMessage(response, sysUserInfoDTO);
+        ResponseUtil.writeMessage(response, sysUserInfoInDTO);
     }
 
     /**

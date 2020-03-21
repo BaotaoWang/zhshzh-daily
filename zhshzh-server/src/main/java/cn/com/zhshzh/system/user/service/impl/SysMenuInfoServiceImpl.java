@@ -7,7 +7,7 @@ import cn.com.zhshzh.core.model.*;
 import cn.com.zhshzh.system.user.dao.SysMenuInfoMapper;
 import cn.com.zhshzh.system.user.dao.SysRoleMenuRelationMapper;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoDTO;
-import cn.com.zhshzh.system.user.dto.SysMenuInfoResultDTO;
+import cn.com.zhshzh.system.user.dto.SysMenuInfoOutDTO;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoTreeDTO;
 import cn.com.zhshzh.system.user.po.SysMenuInfoPO;
 import cn.com.zhshzh.system.user.po.SysRoleMenuRelationPO;
@@ -54,16 +54,16 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
      * @return
      */
     @Override
-    public HttpResult<SysMenuInfoResultDTO> getSysMenuInfo(long menuInfoId) {
+    public HttpResult<SysMenuInfoOutDTO> getSysMenuInfo(long menuInfoId) {
         // 根据菜单id查询菜单信息
         SysMenuInfoPO sysMenuInfoPO = sysMenuInfoMapper.getSysMenuInfo(menuInfoId);
         if (ObjectUtils.isEmpty(sysMenuInfoPO)) {
             return HttpResult.error(HttpResultEnum.EMPTY_DATA);
         }
-        SysMenuInfoResultDTO sysMenuInfoResultDTO = new SysMenuInfoResultDTO();
+        SysMenuInfoOutDTO sysMenuInfoOutDTO = new SysMenuInfoOutDTO();
         // 将菜单信息po转为dto
-        BeanUtils.copyProperties(sysMenuInfoPO, sysMenuInfoResultDTO);
-        return HttpResult.success(sysMenuInfoResultDTO);
+        BeanUtils.copyProperties(sysMenuInfoPO, sysMenuInfoOutDTO);
+        return HttpResult.success(sysMenuInfoOutDTO);
     }
 
     /**

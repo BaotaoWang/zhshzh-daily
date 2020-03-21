@@ -1,6 +1,6 @@
 package cn.com.zhshzh.system.user.service;
 
-import cn.com.zhshzh.system.user.dto.SysRoleInfoDTO;
+import cn.com.zhshzh.system.user.dto.SysRoleInfoInDTO;
 
 /**
  * 系统角色信息service
@@ -15,5 +15,5 @@ public interface SysRoleInfoService {
      * @param roleInfoId 角色id
      * @return 用户信息
      */
-    SysRoleInfoDTO getSysUserInfo(Long roleInfoId);
+    SysRoleInfoInDTO getSysUserInfo(Long roleInfoId);
 }

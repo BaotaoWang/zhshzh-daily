@@ -5,7 +5,7 @@ import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.core.model.SuggestionModel;
 import cn.com.zhshzh.system.generator.dao.ColumnsMapper;
 import cn.com.zhshzh.system.generator.dao.TablesMapper;
-import cn.com.zhshzh.system.generator.dto.CodeGenerationDTO;
+import cn.com.zhshzh.system.generator.dto.CodeGenerationInDTO;
 import cn.com.zhshzh.system.generator.model.GeneratorStringModel;
 import cn.com.zhshzh.system.generator.po.ColumnsPO;
 import cn.com.zhshzh.system.generator.po.TablesPO;
@@ -45,18 +45,18 @@ public class GeneratorServiceImpl implements GeneratorService {
     /**
      * 生成代码
      *
-     * @param codeGenerationDTO 生成代码的相关参数
+     * @param codeGenerationInDTO 生成代码的相关参数
      * @return 生成代码后的结果
      */
     @Override
-    public HttpResult<?> generator(CodeGenerationDTO codeGenerationDTO) {
+    public HttpResult<?> generator(CodeGenerationInDTO codeGenerationInDTO) {
         // 数据库名
-        String tableSchema = codeGenerationDTO.getTableSchema();
+        String tableSchema = codeGenerationInDTO.getTableSchema();
         if (StringUtils.isEmpty(tableSchema)) {
             tableSchema = GeneratorUtil.TABLE_SCHEMA;
         }
         // 要生成代码的表名
-        String tableName = codeGenerationDTO.getTableName();
+        String tableName = codeGenerationInDTO.getTableName();
         // 数据库表的信息
         TablesPO tablesPO = tablesMapper.getTable(tableSchema, tableName);
         if (tablesPO == null) {
@@ -67,7 +67,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
         try {
             // 解析数据库表及列的信息
-            GeneratorStringModel generatorStringModel = GeneratorUtil.handleStringBuilders(codeGenerationDTO, tablesPO, columnsPOList);
+            GeneratorStringModel generatorStringModel = GeneratorUtil.handleStringBuilders(codeGenerationInDTO, tablesPO, columnsPOList);
             // 生成PO.java文件
             GeneratePoFileUtil.generatePoFile(generatorStringModel);
             // 生成mapper.java文件

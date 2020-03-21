@@ -2,7 +2,7 @@ package cn.com.zhshzh.system.user.controller;
 
 import cn.com.zhshzh.core.constant.HttpResultEnum;
 import cn.com.zhshzh.core.model.HttpResult;
-import cn.com.zhshzh.system.user.dto.SysUserInfoDTO;
+import cn.com.zhshzh.system.user.dto.SysUserInfoInDTO;
 import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 import cn.com.zhshzh.system.user.service.SysUserInfoService;
 import cn.com.zhshzh.system.user.util.SysUserInfoConvertUtil;
@@ -36,7 +36,7 @@ public class SysUserInfoController {
      */
     @ApiOperation(value = "获取用户信息", notes = "注意问题点")
     @GetMapping("/getSysUserInfo")
-    public SysUserInfoDTO getSysUserInfo(@ApiParam(name = "userInfoId", value = "用户id", required = true) Long userInfoId) {
+    public SysUserInfoInDTO getSysUserInfo(@ApiParam(name = "userInfoId", value = "用户id", required = true) Long userInfoId) {
         String code = HttpResultEnum.SUCCESS.getMessage();
         return sysUserInfoService.getSysUserInfo(userInfoId);
     }
@@ -44,14 +44,14 @@ public class SysUserInfoController {
     /**
      * 保存用户信息
      *
-     * @param sysUserInfoDTO 用户基本信息
+     * @param sysUserInfoInDTO 用户基本信息
      * @return 用户基本信息
      */
     @ApiOperation(value = "保存用户信息", notes = "注意问题点")
     @PostMapping("/saveSysUserInfo")
-    public HttpResult<SysUserInfoDTO> saveSysUserInfo(SysUserInfoDTO sysUserInfoDTO) {
+    public HttpResult<SysUserInfoInDTO> saveSysUserInfo(SysUserInfoInDTO sysUserInfoInDTO) {
         SysUserInfoConvertUtil sysUserInfoConvertUtil = new SysUserInfoConvertUtil();
-        SysUserInfoPO sysUserInfoPO = sysUserInfoConvertUtil.convertToPO(sysUserInfoDTO);
+        SysUserInfoPO sysUserInfoPO = sysUserInfoConvertUtil.convertToPO(sysUserInfoInDTO);
         return sysUserInfoService.saveSysUserInfo(sysUserInfoPO);
     }
 }

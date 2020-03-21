@@ -5,7 +5,7 @@ import cn.com.zhshzh.core.model.ConditionModel;
 import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.core.model.WhereConditions;
 import cn.com.zhshzh.system.user.dao.SysUserInfoMapper;
-import cn.com.zhshzh.system.user.dto.SysUserInfoDTO;
+import cn.com.zhshzh.system.user.dto.SysUserInfoInDTO;
 import cn.com.zhshzh.system.user.po.SysUserInfoPO;
 import cn.com.zhshzh.system.user.service.SysUserInfoService;
 import cn.com.zhshzh.system.user.util.SysUserInfoConvertUtil;
@@ -43,7 +43,7 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
      * @return 用户基本信息
      */
     @Override
-    public SysUserInfoDTO getSysUserInfo(Long userInfoId) {
+    public SysUserInfoInDTO getSysUserInfo(Long userInfoId) {
         SysUserInfoPO sysUserInfoPO = sysUserInfoMapper.getSysUserInfo(userInfoId);
         SysUserInfoConvertUtil sysUserInfoConvertUtil = new SysUserInfoConvertUtil();
         return sysUserInfoConvertUtil.convertToDTO(sysUserInfoPO);
@@ -119,7 +119,7 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
      * @param sysUserInfoPO 用户基本信息
      */
     @Override
-    public HttpResult<SysUserInfoDTO> saveSysUserInfo(SysUserInfoPO sysUserInfoPO) {
+    public HttpResult<SysUserInfoInDTO> saveSysUserInfo(SysUserInfoPO sysUserInfoPO) {
         Long userInfoId = sysUserInfoPO.getUserInfoId();
         if (userInfoId == null) {
             String password = new BCryptPasswordEncoder().encode(sysUserInfoPO.getPassword());

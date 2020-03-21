@@ -3,7 +3,7 @@ package cn.com.zhshzh.system.generator.util;
 import cn.com.zhshzh.core.util.DailyException;
 import cn.com.zhshzh.core.util.FileUtil;
 import cn.com.zhshzh.core.util.StringUtil;
-import cn.com.zhshzh.system.generator.dto.CodeGenerationDTO;
+import cn.com.zhshzh.system.generator.dto.CodeGenerationInDTO;
 import cn.com.zhshzh.system.generator.model.GeneratorMappingsModel;
 import cn.com.zhshzh.system.generator.model.GeneratorStringModel;
 import cn.com.zhshzh.system.generator.model.MappingModel;
@@ -47,38 +47,38 @@ public class GeneratorUtil {
      * 解析数据库表及列的信息
      * 遍历数据库表的所有列，并处理代码生成器字符串
      *
-     * @param codeGenerationDTO 生成代码的相关参数
+     * @param codeGenerationInDTO 生成代码的相关参数
      * @param tablesPO          数据库表的信息
      * @param columnsPOList     数据库表中列名的信息
      * @return 拼接代码生成器字符串的模型对象
      * @throws DailyException 异常
      */
-    public static GeneratorStringModel handleStringBuilders(CodeGenerationDTO codeGenerationDTO, TablesPO tablesPO,
+    public static GeneratorStringModel handleStringBuilders(CodeGenerationInDTO codeGenerationInDTO, TablesPO tablesPO,
                                                             List<ColumnsPO> columnsPOList) throws DailyException {
         GeneratorStringModel generatorStringModel = new GeneratorStringModel();
         // po文件的路径
-        String poFilePath = codeGenerationDTO.getPoFilePath();
+        String poFilePath = codeGenerationInDTO.getPoFilePath();
         // po文件的绝对路径
         String poFileAbsolutePath = GeneratorUtil.getJavaPath() + GeneratorUtil.changeFilePath(poFilePath, File.separator)
                 + File.separator;
         generatorStringModel.setPoFileAbsolutePath(poFileAbsolutePath);
         generatorStringModel.setPoPackageName(GeneratorUtil.changeFilePath(poFilePath, "."));
         // dao文件的路径
-        String daoFilePath = codeGenerationDTO.getDaoFilePath();
+        String daoFilePath = codeGenerationInDTO.getDaoFilePath();
         // dao文件的绝对路径
         String daoFileAbsolutePath = GeneratorUtil.getJavaPath() + GeneratorUtil.changeFilePath(daoFilePath, File.separator)
                 + File.separator;
         generatorStringModel.setDaoFileAbsolutePath(daoFileAbsolutePath);
         generatorStringModel.setDaoPackageName(GeneratorUtil.changeFilePath(daoFilePath, "."));
         // mapper文件的路径
-        String mapperFilePath = codeGenerationDTO.getMapperFilePath();
+        String mapperFilePath = codeGenerationInDTO.getMapperFilePath();
         // mapper文件的绝对路径
         String MapperFileAbsolutePath = GeneratorUtil.getResourcesPath() + GeneratorUtil.changeFilePath(mapperFilePath, File.separator)
                 + File.separator;
         generatorStringModel.setMapperFileAbsolutePath(MapperFileAbsolutePath);
 
         // 数据库名
-        String tableSchema = codeGenerationDTO.getTableSchema();
+        String tableSchema = codeGenerationInDTO.getTableSchema();
         // 数据库表名
         String tableName = tablesPO.getTableName();
         if (StringUtils.isEmpty(tableSchema) || TABLE_SCHEMA.equals(tableSchema)) {

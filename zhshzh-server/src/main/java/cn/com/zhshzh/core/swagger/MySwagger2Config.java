@@ -105,7 +105,8 @@ public class MySwagger2Config {
     private Predicate<String> allowPaths() {
         return or(
                 regex("/userInfo.*"),
-                regex("/menuInfos.*")
+                regex("/menuInfos.*"),
+                regex("/params.*")
         );
     }
 }

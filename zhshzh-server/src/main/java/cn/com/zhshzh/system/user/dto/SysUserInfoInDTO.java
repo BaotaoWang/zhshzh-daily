@@ -10,7 +10,7 @@ import java.time.LocalDate;
  * 系统用户信息的数据传输对象
  */
 @Data
-public class SysUserInfoDTO {
+public class SysUserInfoInDTO {
     /**
      * 用户id
      */
@@ -53,7 +53,7 @@ public class SysUserInfoDTO {
      */
     private String email;
 
-    public SysUserInfoDTO() {
+    public SysUserInfoInDTO() {
         super();
     }
 }

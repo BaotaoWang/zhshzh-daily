@@ -3,7 +3,7 @@ package cn.com.zhshzh.system.user.service;
 import cn.com.zhshzh.core.model.CascaderDataModel;
 import cn.com.zhshzh.core.model.HttpResult;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoDTO;
-import cn.com.zhshzh.system.user.dto.SysMenuInfoResultDTO;
+import cn.com.zhshzh.system.user.dto.SysMenuInfoOutDTO;
 import cn.com.zhshzh.system.user.dto.SysMenuInfoTreeDTO;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public interface SysMenuInfoService {
      * @param menuInfoId
      * @return
      */
-    HttpResult<SysMenuInfoResultDTO> getSysMenuInfo(long menuInfoId);
+    HttpResult<SysMenuInfoOutDTO> getSysMenuInfo(long menuInfoId);
 
     /**
      * 查询用户有权查看的树状菜单

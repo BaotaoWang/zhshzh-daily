@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel(description = "菜单信息模型(返回)")
-public class SysMenuInfoResultDTO implements Serializable {
+public class SysMenuInfoOutDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "菜单id", dataType = "Long")
