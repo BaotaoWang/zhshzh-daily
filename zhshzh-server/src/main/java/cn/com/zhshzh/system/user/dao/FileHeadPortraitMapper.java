@@ -1,7 +1,6 @@
 package cn.com.zhshzh.system.user.dao;
 
 import cn.com.zhshzh.system.user.po.FileHeadPortraitPO;
-import cn.com.zhshzh.core.model.DeleteBatchLogicalModel;
 import cn.com.zhshzh.core.model.WhereConditions;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,7 +12,7 @@ import java.util.List;
  * 用户头像Mapper
  *
  * @author Generator
- * @since 2020/03/15
+ * @since 2020/03/22
  */
 @Mapper
 public interface FileHeadPortraitMapper {
@@ -42,9 +41,10 @@ public interface FileHeadPortraitMapper {
     /**
      * 批量逻辑删除用户头像
      *
-     * @param deleteBatchLogicalModel 批量逻辑删除的模型对象
+     * @param headPortraitIds 主键id数组
+     * @param updateBy 用户id
      */
-    void deleteBatchLogical(DeleteBatchLogicalModel deleteBatchLogicalModel);
+    void deleteBatchLogical(@Param("headPortraitIds") Long[] headPortraitIds, @Param("updateBy") Long updateBy);
 
     /**
      * 根据id物理删除用户头像

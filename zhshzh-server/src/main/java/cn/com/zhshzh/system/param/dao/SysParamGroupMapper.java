@@ -1,7 +1,6 @@
 package cn.com.zhshzh.system.param.dao;
 
 import cn.com.zhshzh.system.param.po.SysParamGroupPO;
-import cn.com.zhshzh.core.model.DeleteBatchLogicalModel;
 import cn.com.zhshzh.core.model.WhereConditions;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,7 +12,7 @@ import java.util.List;
  * 系统参数组Mapper
  *
  * @author Generator
- * @since 2020/03/16
+ * @since 2020/03/22
  */
 @Mapper
 public interface SysParamGroupMapper {
@@ -42,9 +41,10 @@ public interface SysParamGroupMapper {
     /**
      * 批量逻辑删除系统参数组
      *
-     * @param deleteBatchLogicalModel 批量逻辑删除的模型对象
+     * @param paramGroupIds 主键id数组
+     * @param updateBy 用户id
      */
-    void deleteBatchLogical(DeleteBatchLogicalModel deleteBatchLogicalModel);
+    void deleteBatchLogical(@Param("paramGroupIds") Long[] paramGroupIds, @Param("updateBy") Long updateBy);
 
     /**
      * 根据id物理删除系统参数组

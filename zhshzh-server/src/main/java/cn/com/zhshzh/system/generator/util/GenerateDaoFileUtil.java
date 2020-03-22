@@ -58,7 +58,7 @@ public class GenerateDaoFileUtil {
         // 生成mapper.java的根据id逻辑删除方法
         generateDeleteByIdLogicalMethod(tableComment, lowerCamelCasePrimaryKey, priFieldType, builder);
         // 生成mapper.java的批量逻辑删除方法
-        generateDeleteBatchLogicalMethod(lowerCamelCasePrimaryKey, tableComment, builder);
+        generateDeleteBatchLogicalMethod(lowerCamelCasePrimaryKey, tableComment, priFieldType, builder);
         // 生成mapper.java的根据id物理删除方法
         generateDeleteByIdPhysicalMethod(lowerCamelCasePrimaryKey, priFieldType, tableComment, builder);
         // 生成mapper.java的批量物理删除方法
@@ -103,7 +103,6 @@ public class GenerateDaoFileUtil {
         builder.append("\r\n");
         // 拼接引包
         builder.append("import ").append(poFileType).append(";").append("\r\n");
-        builder.append("import cn.com.zhshzh.core.model.DeleteBatchLogicalModel;").append("\r\n");
         builder.append("import cn.com.zhshzh.core.model.WhereConditions;").append("\r\n");
         builder.append("import org.apache.ibatis.annotations.Mapper;").append("\r\n");
         builder.append("import org.apache.ibatis.annotations.Param;").append("\r\n");
@@ -190,17 +189,21 @@ public class GenerateDaoFileUtil {
      *
      * @param lowerCamelCasePrimaryKey 首字母小写的驼峰格式主键
      * @param tableComment             数据库表的注释
+     * @param priFieldType             主键的fieldType
      * @param builder                  拼接的mapper.java文件文本
      */
     private static void generateDeleteBatchLogicalMethod(String lowerCamelCasePrimaryKey, String tableComment,
-                                                         StringBuilder builder) {
+                                                         String priFieldType, StringBuilder builder) {
         builder.append("\r\n");
         builder.append("    /**").append("\r\n");
         builder.append("     * 批量逻辑删除").append(tableComment).append("\r\n");
         builder.append("     *").append("\r\n");
-        builder.append("     * @param deleteBatchLogicalModel 批量逻辑删除的模型对象").append("\r\n");
+        builder.append("     * @param ").append(lowerCamelCasePrimaryKey).append("s 主键id数组").append("\r\n");
+        builder.append("     * @param updateBy 用户id").append("\r\n");
         builder.append("     */").append("\r\n");
-        builder.append("    void deleteBatchLogical(DeleteBatchLogicalModel deleteBatchLogicalModel);").append("\r\n");
+        builder.append("    void deleteBatchLogical(").append("@Param(\"").append(lowerCamelCasePrimaryKey)
+                .append("s\") ").append(priFieldType).append("[] ").append(lowerCamelCasePrimaryKey)
+                .append("s, @Param(\"updateBy\") Long updateBy").append(");").append("\r\n");
     }
 
     /**

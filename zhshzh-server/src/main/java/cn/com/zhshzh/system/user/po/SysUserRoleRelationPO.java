@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * 用户-角色关系PO
  *
  * @author Generator
- * @since 2020/03/19
+ * @since 2020/03/22
  */
 @Data
 public class SysUserRoleRelationPO implements Serializable {

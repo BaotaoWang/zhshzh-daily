@@ -1,7 +1,6 @@
 package cn.com.zhshzh.system.user.dao;
 
 import cn.com.zhshzh.system.user.po.SysUserRoleRelationPO;
-import cn.com.zhshzh.core.model.DeleteBatchLogicalModel;
 import cn.com.zhshzh.core.model.WhereConditions;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,7 +12,7 @@ import java.util.List;
  * 用户-角色关系Mapper
  *
  * @author Generator
- * @since 2020/03/15
+ * @since 2020/03/22
  */
 @Mapper
 public interface SysUserRoleRelationMapper {
@@ -42,9 +41,10 @@ public interface SysUserRoleRelationMapper {
     /**
      * 批量逻辑删除用户-角色关系
      *
-     * @param deleteBatchLogicalModel 批量逻辑删除的模型对象
+     * @param urRelationIds 主键id数组
+     * @param updateBy 用户id
      */
-    void deleteBatchLogical(DeleteBatchLogicalModel deleteBatchLogicalModel);
+    void deleteBatchLogical(@Param("urRelationIds") Long[] urRelationIds, @Param("updateBy") Long updateBy);
 
     /**
      * 根据id物理删除用户-角色关系

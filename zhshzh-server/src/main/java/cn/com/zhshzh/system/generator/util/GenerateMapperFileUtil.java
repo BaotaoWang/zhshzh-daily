@@ -320,12 +320,13 @@ public class GenerateMapperFileUtil {
         // 生成sql的注释
         builder.append("  <!-- 批量逻辑删除").append(tableComment).append(" -->").append("\r\n");
         // 拼接update语句
-        builder.append("  <update id=\"deleteBatchLogical\" parameterType=\"cn.com.zhshzh.core.model.DeleteBatchLogicalModel\" >").append("\r\n");
+        builder.append("  <update id=\"deleteBatchLogical\" >").append("\r\n");
         builder.append("    UPDATE ").append(tableName).append("\r\n");
         builder.append("    SET is_deleted = 1,").append("\r\n");
         builder.append("    update_by = #{updateBy, jdbcType=BIGINT}").append("\r\n");
         builder.append("    WHERE ").append(primaryKey).append(" IN").append("\r\n");
-        builder.append("    <foreach collection=\"deleteIds\" item=\"item\" index=\"index\" open=\"(\" close=\")\" separator=\",\" >").append("\r\n");
+        builder.append("    <foreach collection=\"").append(lowerCamelCasePrimaryKey)
+                .append("s\" item=\"item\" index=\"index\" open=\"(\" close=\")\" separator=\",\" >").append("\r\n");
         builder.append("      #{item, jdbcType=").append(priJdbcType).append("}").append("\r\n");
         builder.append("    </foreach>").append("\r\n");
         builder.append("  </update>").append("\r\n");

@@ -213,12 +213,12 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
         if (disabled) {
             // 禁用。禁用菜单时，所有的子级菜单也禁用
             // 要禁用的菜单id的集合
-            List<String> menuInfoIdList = new ArrayList<>();
+            List<Long> menuInfoIdList = new ArrayList<>();
             // 递归获取该菜单下所有的子级菜单id，并添加到集合中
             this.getChildMenuInfoIds(menuInfoIdList, menuInfoId);
             menuInfoIdList.forEach(id -> {
                 SysMenuInfoPO sysMenuInfo = new SysMenuInfoPO();
-                sysMenuInfo.setMenuInfoId(Long.parseLong(id));
+                sysMenuInfo.setMenuInfoId(id);
                 sysMenuInfo.setUpdateBy(userInfoId);
                 sysMenuInfo.setDisabled(true);
                 sysMenuInfoPOList.add(sysMenuInfo);
@@ -251,12 +251,12 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
     @Override
     public HttpResult<?> deleteSysMenuInfo(long menuInfoId, long userInfoId) {
         // 要删除的菜单id的集合
-        List<String> menuInfoIdList = new ArrayList<>();
+        List<Long> menuInfoIdList = new ArrayList<>();
         // 递归获取该菜单下所有的子级菜单id，并添加到集合中
         this.getChildMenuInfoIds(menuInfoIdList, menuInfoId);
-        DeleteBatchLogicalModel deleteBatchLogicalModel = new DeleteBatchLogicalModel(userInfoId, menuInfoIdList.toArray(new String[0]));
+        Long[] menuInfoIds = menuInfoIdList.toArray(new Long[0]);
         // 批量逻辑删除菜单
-        sysMenuInfoMapper.deleteBatchLogical(deleteBatchLogicalModel);
+        sysMenuInfoMapper.deleteBatchLogical(menuInfoIds, userInfoId);
         return HttpResult.success();
     }
 
@@ -320,11 +320,10 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
      * @param menuInfoIdList
      * @param parentId
      */
-    private void getChildMenuInfoIds(List<String> menuInfoIdList, long parentId) {
-        String id = String.valueOf(parentId);
+    private void getChildMenuInfoIds(List<Long> menuInfoIdList, long parentId) {
         // 将该菜单id添加到集合中
-        menuInfoIdList.add(id);
-        ConditionModel conditionModel = new ConditionModel("parent_id", id);
+        menuInfoIdList.add(parentId);
+        ConditionModel conditionModel = new ConditionModel("parent_id", String.valueOf(parentId));
         List<ConditionModel> conditionModelList = new ArrayList<>();
         conditionModelList.add(conditionModel);
         // 封装查询菜单信息的查询条件

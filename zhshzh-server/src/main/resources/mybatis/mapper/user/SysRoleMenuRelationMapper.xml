@@ -134,12 +134,12 @@
   </update>
 
   <!-- 批量逻辑删除角色-菜单关系 -->
-  <update id="deleteBatchLogical" parameterType="cn.com.zhshzh.core.model.DeleteBatchLogicalModel" >
+  <update id="deleteBatchLogical" >
     UPDATE sys_role_menu_relation
     SET is_deleted = 1,
     update_by = #{updateBy, jdbcType=BIGINT}
     WHERE rm_relation_id IN
-    <foreach collection="deleteIds" item="item" index="index" open="(" close=")" separator="," >
+    <foreach collection="rmRelationIds" item="item" index="index" open="(" close=")" separator="," >
       #{item, jdbcType=BIGINT}
     </foreach>
   </update>

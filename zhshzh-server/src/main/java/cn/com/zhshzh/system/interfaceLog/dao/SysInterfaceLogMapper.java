@@ -1,7 +1,6 @@
 package cn.com.zhshzh.system.interfaceLog.dao;
 
 import cn.com.zhshzh.system.interfaceLog.po.SysInterfaceLogPO;
-import cn.com.zhshzh.core.model.DeleteBatchLogicalModel;
 import cn.com.zhshzh.core.model.WhereConditions;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,7 +12,7 @@ import java.util.List;
  * 系统接口日志Mapper
  *
  * @author Generator
- * @since 2020/03/15
+ * @since 2020/03/22
  */
 @Mapper
 public interface SysInterfaceLogMapper {
@@ -42,9 +41,10 @@ public interface SysInterfaceLogMapper {
     /**
      * 批量逻辑删除系统接口日志
      *
-     * @param deleteBatchLogicalModel 批量逻辑删除的模型对象
+     * @param interfaceLogIds 主键id数组
+     * @param updateBy 用户id
      */
-    void deleteBatchLogical(DeleteBatchLogicalModel deleteBatchLogicalModel);
+    void deleteBatchLogical(@Param("interfaceLogIds") Long[] interfaceLogIds, @Param("updateBy") Long updateBy);
 
     /**
      * 根据id物理删除系统接口日志

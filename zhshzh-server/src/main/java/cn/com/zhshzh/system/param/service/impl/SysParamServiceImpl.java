@@ -166,9 +166,9 @@ public class SysParamServiceImpl implements SysParamService {
             return HttpResult.success();
         }
         // 从查询出的参数集合中提取paramItemId
-        String[] paramItemIds = sysParamItemPOList.stream().map(sysParamItemPO -> String.valueOf(sysParamItemPO.getParamItemId())).toArray(String[]::new);
+        Long[] paramItemIds = sysParamItemPOList.stream().map(SysParamItemPO::getParamItemId).toArray(Long[]::new);
         // 批量逻辑删除参数信息
-        sysParamItemMapper.deleteBatchLogical(new DeleteBatchLogicalModel(userInfoId, paramItemIds));
+        sysParamItemMapper.deleteBatchLogical(paramItemIds, userInfoId);
         return HttpResult.success();
     }
 
