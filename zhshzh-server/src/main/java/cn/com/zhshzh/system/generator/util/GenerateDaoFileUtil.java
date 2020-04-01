@@ -98,7 +98,7 @@ public class GenerateDaoFileUtil {
         LocalDate localDate = LocalDate.now();
         String nowDateStr = DateFormatUtil.getBackslashDateString(localDate);
 
-        // 拼接mapper.xml的头部
+        // 拼接mapper.java的头部
         builder.append("package ").append(daoPackageName).append(";").append("\r\n");
         builder.append("\r\n");
         // 拼接引包

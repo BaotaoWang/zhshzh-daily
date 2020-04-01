@@ -28,6 +28,31 @@ public class GeneratorStringModel {
     private String mapperFileAbsolutePath;
 
     /**
+     * dto文件的绝对路径
+     */
+    private String dtoFileAbsolutePath;
+
+    /**
+     * service文件的绝对路径
+     */
+    private String serviceFileAbsolutePath;
+
+    /**
+     * serviceImpl文件的绝对路径
+     */
+    private String serviceImplFileAbsolutePath;
+
+    /**
+     * controller文件的绝对路径
+     */
+    private String controllerFileAbsolutePath;
+
+    /**
+     * controller中的requestMapping值
+     */
+    private String requestMapping;
+
+    /**
      * po文件的包名
      */
     private String poPackageName;
@@ -36,6 +61,26 @@ public class GeneratorStringModel {
      * dao文件的包名
      */
     private String daoPackageName;
+
+    /**
+     * dto文件的包名
+     */
+    private String dtoPackageName;
+
+    /**
+     * service文件的包名
+     */
+    private String servicePackageName;
+
+    /**
+     * serviceImpl文件的包名
+     */
+    private String serviceImplPackageName;
+
+    /**
+     * controller文件的包名
+     */
+    private String controllerPackageName;
 
     /**
      * 数据库表名
@@ -118,12 +163,32 @@ public class GeneratorStringModel {
     private String updateBatchSql;
 
     /**
-     * po中要引的包
+     * pojo类中要引的包
      */
     private Set<String> importPackages;
+
+    /**
+     * inDto中额外要引的包
+     */
+    private Set<String> otherImportPackages;
 
     /**
      * po中遍历的成员变量字符串
      */
     private String memberVariables;
+
+    /**
+     * dto中遍历的成员变量字符串
+     */
+    private String dtoMemberVariables;
+
+    /**
+     * inDto中遍历的成员变量字符串
+     */
+    private String inDtoMemberVariables;
+
+    /**
+     * outDto中遍历的成员变量字符串
+     */
+    private String outDtoMemberVariables;
 }

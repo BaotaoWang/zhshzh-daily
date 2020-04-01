@@ -76,8 +76,8 @@ public interface SysMenuInfoService {
     /**
      * 删除菜单信息
      *
-     * @param id
-     * @param request
+     * @param menuInfoId
+     * @param userInfoId
      * @return
      */
     HttpResult<?> deleteSysMenuInfo(long menuInfoId, long userInfoId);

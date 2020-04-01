@@ -6,7 +6,6 @@ import lombok.Data;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -24,7 +23,7 @@ public class SysMenuInfoDTO implements Serializable {
     @ApiModelProperty(value = "用户id", dataType = "long", required = true, hidden = true)
     private Long userInfoId; // 用户id
 
-    @NotNull(message = "【父级菜单】不能为空")
+    @NotBlank(message = "【父级菜单】不能为空")
     @ApiModelProperty(value = "父级菜单id", dataType = "long", required = true)
     private Long parentId; // 用户id
 
@@ -38,7 +37,7 @@ public class SysMenuInfoDTO implements Serializable {
     @ApiModelProperty(value = "菜单路由", dataType = "String", required = true)
     private String menuRoute; // 菜单路由
 
-    @NotNull(message = "【菜单序号】不能为空")
+    @NotBlank(message = "【菜单序号】不能为空")
     @Max(value = 10000, message = "【菜单序号】不得大于10000")
     @ApiModelProperty(value = "菜单序号", dataType = "Integer", required = true)
     private Short menuOrder; // 菜单序号

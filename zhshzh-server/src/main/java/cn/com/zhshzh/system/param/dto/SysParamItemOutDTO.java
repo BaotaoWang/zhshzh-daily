@@ -23,7 +23,7 @@ public class SysParamItemOutDTO {
     @ApiModelProperty(value = "参数名", dataType = "String")
     private String paramItemName; // 参数名
 
-    @ApiModelProperty(value = "参数序号", dataType = "Integer")
+    @ApiModelProperty(value = "参数序号", dataType = "Short")
     private Short paramItemOrder; // 参数序号
 
     @ApiModelProperty(value = "参数描述", dataType = "String")

@@ -10,10 +10,7 @@ import cn.com.zhshzh.system.generator.model.GeneratorStringModel;
 import cn.com.zhshzh.system.generator.po.ColumnsPO;
 import cn.com.zhshzh.system.generator.po.TablesPO;
 import cn.com.zhshzh.system.generator.service.GeneratorService;
-import cn.com.zhshzh.system.generator.util.GenerateDaoFileUtil;
-import cn.com.zhshzh.system.generator.util.GenerateMapperFileUtil;
-import cn.com.zhshzh.system.generator.util.GeneratePoFileUtil;
-import cn.com.zhshzh.system.generator.util.GeneratorUtil;
+import cn.com.zhshzh.system.generator.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,12 +65,30 @@ public class GeneratorServiceImpl implements GeneratorService {
         try {
             // 解析数据库表及列的信息
             GeneratorStringModel generatorStringModel = GeneratorUtil.handleStringBuilders(codeGenerationInDTO, tablesPO, columnsPOList);
-            // 生成PO.java文件
-            GeneratePoFileUtil.generatePoFile(generatorStringModel);
-            // 生成mapper.java文件
-            GenerateDaoFileUtil.generateDaoFile(generatorStringModel);
-            // 生成mapper.xml文件
-            GenerateMapperFileUtil.generateMapperFile(generatorStringModel);
+            if (codeGenerationInDTO.getGeneratePoFile()) {
+                // 生成PO.java文件
+                GeneratePoFileUtil.generatePoFile(generatorStringModel);
+            }
+            if (codeGenerationInDTO.getGenerateDaoFile()) {
+                // 生成mapper.java文件
+                GenerateDaoFileUtil.generateDaoFile(generatorStringModel);
+            }
+            if (codeGenerationInDTO.getGenerateMapperFile()) {
+                // 生成mapper.xml文件
+                GenerateMapperFileUtil.generateMapperFile(generatorStringModel);
+            }
+            if (codeGenerationInDTO.getGenerateDtoFile()) {
+                // 生成dto.java文件
+                GenerateDtoFileUtil.generateDtoFile(generatorStringModel);
+            }
+            if (codeGenerationInDTO.getGenerateServiceFile()) {
+                // 生成service.java文件
+                GenerateServiceFileUtil.generateServiceFile(generatorStringModel);
+            }
+            if (codeGenerationInDTO.getGenerateControllerFile()) {
+                // 生成controller.java文件
+                GenerateControllerFileUtil.generateControllerFile(generatorStringModel);
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return HttpResult.error(HttpResultEnum.GENERATOR_ERROR);

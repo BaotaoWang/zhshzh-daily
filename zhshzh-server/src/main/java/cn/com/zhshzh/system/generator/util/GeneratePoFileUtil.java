@@ -17,7 +17,7 @@ import java.util.Set;
 public class GeneratePoFileUtil {
 
     /**
-     * 生成Mybatis的mapper.java文件
+     * 生成Mybatis的po.java文件
      *
      * @param generatorStringModel 解析数据库表及字段的模型对象
      * @throws DailyException 异常
@@ -66,7 +66,7 @@ public class GeneratePoFileUtil {
         LocalDate localDate = LocalDate.now();
         String nowDateStr = DateFormatUtil.getBackslashDateString(localDate);
 
-        // 拼接mapper.xml的头部
+        // 拼接po.java的头部
         builder.append("package ").append(poPackageName).append(";").append("\r\n");
         builder.append("\r\n");
         // 拼接引包

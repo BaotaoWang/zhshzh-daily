@@ -42,33 +42,38 @@ public class GeneratorUtil {
     private static final String CREATE_BY = "create_by";
     // 修改人
     private static final String UPDATE_BY = "update_by";
+    // 否
+    private static final String NO = "NO";
 
     /**
      * 解析数据库表及列的信息
      * 遍历数据库表的所有列，并处理代码生成器字符串
      *
      * @param codeGenerationInDTO 生成代码的相关参数
-     * @param tablesPO          数据库表的信息
-     * @param columnsPOList     数据库表中列名的信息
+     * @param tablesPO            数据库表的信息
+     * @param columnsPOList       数据库表中列名的信息
      * @return 拼接代码生成器字符串的模型对象
      * @throws DailyException 异常
      */
     public static GeneratorStringModel handleStringBuilders(CodeGenerationInDTO codeGenerationInDTO, TablesPO tablesPO,
                                                             List<ColumnsPO> columnsPOList) throws DailyException {
         GeneratorStringModel generatorStringModel = new GeneratorStringModel();
+        String javaPath = GeneratorUtil.getJavaPath();
         // po文件的路径
         String poFilePath = codeGenerationInDTO.getPoFilePath();
         // po文件的绝对路径
-        String poFileAbsolutePath = GeneratorUtil.getJavaPath() + GeneratorUtil.changeFilePath(poFilePath, File.separator)
+        String poFileAbsolutePath = javaPath + GeneratorUtil.changeFilePath(poFilePath, File.separator)
                 + File.separator;
         generatorStringModel.setPoFileAbsolutePath(poFileAbsolutePath);
+        // po的包名
         generatorStringModel.setPoPackageName(GeneratorUtil.changeFilePath(poFilePath, "."));
         // dao文件的路径
         String daoFilePath = codeGenerationInDTO.getDaoFilePath();
         // dao文件的绝对路径
-        String daoFileAbsolutePath = GeneratorUtil.getJavaPath() + GeneratorUtil.changeFilePath(daoFilePath, File.separator)
+        String daoFileAbsolutePath = javaPath + GeneratorUtil.changeFilePath(daoFilePath, File.separator)
                 + File.separator;
         generatorStringModel.setDaoFileAbsolutePath(daoFileAbsolutePath);
+        // dao的包名
         generatorStringModel.setDaoPackageName(GeneratorUtil.changeFilePath(daoFilePath, "."));
         // mapper文件的路径
         String mapperFilePath = codeGenerationInDTO.getMapperFilePath();
@@ -76,6 +81,38 @@ public class GeneratorUtil {
         String MapperFileAbsolutePath = GeneratorUtil.getResourcesPath() + GeneratorUtil.changeFilePath(mapperFilePath, File.separator)
                 + File.separator;
         generatorStringModel.setMapperFileAbsolutePath(MapperFileAbsolutePath);
+        // dto文件的路径
+        String dtoFilePath = codeGenerationInDTO.getDtoFilePath();
+        // dto文件的绝对路径
+        String dtoFileAbsolutePath = javaPath + GeneratorUtil.changeFilePath(dtoFilePath, File.separator)
+                + File.separator;
+        generatorStringModel.setDtoFileAbsolutePath(dtoFileAbsolutePath);
+        // dto的包名
+        generatorStringModel.setDtoPackageName(GeneratorUtil.changeFilePath(dtoFilePath, "."));
+        // service文件的路径
+        String serviceFilePath = codeGenerationInDTO.getServiceFilePath();
+        // service文件的绝对路径
+        String serviceFileAbsolutePath = javaPath + GeneratorUtil.changeFilePath(serviceFilePath, File.separator)
+                + File.separator;
+        generatorStringModel.setServiceFileAbsolutePath(serviceFileAbsolutePath);
+        // service的包名
+        generatorStringModel.setServicePackageName(GeneratorUtil.changeFilePath(serviceFilePath, "."));
+        // serviceImpl文件的绝对路径
+        String serviceImplFileAbsolutePath = javaPath + GeneratorUtil.changeFilePath(serviceFilePath, File.separator)
+                + File.separator + "impl" + File.separator;
+        generatorStringModel.setServiceImplFileAbsolutePath(serviceImplFileAbsolutePath);
+        // serviceImpl的包名
+        generatorStringModel.setServiceImplPackageName(GeneratorUtil.changeFilePath(serviceFilePath, ".") + ".impl");
+        // controller文件的路径
+        String controllerFilePath = codeGenerationInDTO.getControllerFilePath();
+        // controller文件的绝对路径
+        String controllerFileAbsolutePath = javaPath + GeneratorUtil.changeFilePath(controllerFilePath, File.separator)
+                + File.separator;
+        generatorStringModel.setControllerFileAbsolutePath(controllerFileAbsolutePath);
+        // controller的包名
+        generatorStringModel.setControllerPackageName(GeneratorUtil.changeFilePath(controllerFilePath, "."));
+        // controller中的requestMapping
+        generatorStringModel.setRequestMapping(codeGenerationInDTO.getRequestMapping());
 
         // 数据库名
         String tableSchema = codeGenerationInDTO.getTableSchema();
@@ -117,8 +154,16 @@ public class GeneratorUtil {
         StringBuilder updateSqlBuilder = new StringBuilder();
         // 遍历后的updateBatchSql
         StringBuilder updateBatchSqlBuilder = new StringBuilder();
-        // 遍历后的成员变量
+        // 遍历后的po中的成员变量
         StringBuilder memberVariablesBuilder = new StringBuilder();
+        // 遍历后的dto中的成员变量
+        StringBuilder dtoMemberVariablesBuilder = new StringBuilder();
+        // 遍历后的inDto中的成员变量
+        StringBuilder inDtoMemberVariablesBuilder = new StringBuilder();
+        // inDto中额外要引的包
+        Set<String> otherImportPackages = new HashSet<>();
+        // 遍历后的outDto中的成员变量
+        StringBuilder outDtoMemberVariablesBuilder = new StringBuilder();
 
         // 生成Base_Column_List的同时格式化代码，保证每行不超过120个字符（包括空格）
         // rowLength为每行的字符数，初始值为4，代表前面有4个空格
@@ -155,6 +200,10 @@ public class GeneratorUtil {
             String fieldType = mappingModel.getFieldType();
             // 是否是主键
             boolean isPrimaryKey = false;
+            // 是否可空值
+            String isNullable = columnsPO.getIsNullable();
+            // 字段最大长度
+            Long maximumLength = columnsPO.getCharacterMaximumLength();
             // 数据库表主键的处理
             if (!StringUtils.isEmpty(columnKey) && "PRI".equals(columnKey.toUpperCase())) {
                 generatorStringModel.setPrimaryKey(columnName);
@@ -185,6 +234,18 @@ public class GeneratorUtil {
             iterateUpdateBatchSql(columnName, camelCaseColumnName, jdbcType, updateBatchSqlBuilder);
             // 迭代拼接PO.java中的成员变量
             iterateMemberVariables(columnName, columnComment, camelCaseColumnName, fieldType, memberVariablesBuilder);
+            // dto文件的处理
+            if (!IS_DELETED.equals(columnName) && !CREATE_BY.equals(columnName) && !UPDATE_BY.equals(columnName)
+                    && !CREATE_TIME.equals(columnName) && !UPDATE_TIME.equals(columnName)) {
+                if (!isPrimaryKey) {
+                    // 迭代拼接DTO.java中的成员变量
+                    iterateDtoMemberVariables(columnComment, camelCaseColumnName, fieldType, dtoMemberVariablesBuilder);
+                    // 迭代拼接inDTO.java中的成员变量
+                    iterateInDtoMemberVariables(isNullable, maximumLength, otherImportPackages, columnComment, camelCaseColumnName, fieldType, inDtoMemberVariablesBuilder);
+                }
+                // 迭代拼接outDTO.java中的成员变量
+                iterateOutDtoMemberVariables(columnComment, camelCaseColumnName, fieldType, outDtoMemberVariablesBuilder);
+            }
         }
         generatorStringModel.setImportPackages(importPackages);
         generatorStringModel.setResultMap(resultMapBuilder.toString());
@@ -195,6 +256,10 @@ public class GeneratorUtil {
         generatorStringModel.setUpdateSql(updateSqlBuilder.toString());
         generatorStringModel.setUpdateBatchSql(updateBatchSqlBuilder.toString());
         generatorStringModel.setMemberVariables(memberVariablesBuilder.toString());
+        generatorStringModel.setDtoMemberVariables(dtoMemberVariablesBuilder.toString());
+        generatorStringModel.setInDtoMemberVariables(inDtoMemberVariablesBuilder.toString());
+        generatorStringModel.setOtherImportPackages(otherImportPackages);
+        generatorStringModel.setOutDtoMemberVariables(outDtoMemberVariablesBuilder.toString());
         return generatorStringModel;
     }
 
@@ -428,7 +493,7 @@ public class GeneratorUtil {
     }
 
     /**
-     * 迭代拼接mapper.xml中的updateBatchSql
+     * 迭代拼接PO.java中的成员变量
      *
      * @param columnName             数据库表字段名
      * @param columnComment          数据库表字段注释
@@ -445,5 +510,74 @@ public class GeneratorUtil {
         memberVariablesBuilder.append("     */").append("\r\n");
         memberVariablesBuilder.append("    private ").append(fieldType).append(" ").append(camelCaseColumnName)
                 .append(";").append("\r\n");
+    }
+
+    /**
+     * 迭代拼接DTO.java中的成员变量
+     *
+     * @param columnComment             数据库表字段注释
+     * @param camelCaseColumnName       java字段名称
+     * @param fieldType                 fieldType
+     * @param dtoMemberVariablesBuilder 拼接的字符串
+     */
+    private static void iterateDtoMemberVariables(String columnComment, String camelCaseColumnName,
+                                                  String fieldType, StringBuilder dtoMemberVariablesBuilder) {
+        dtoMemberVariablesBuilder.append("\r\n");
+        dtoMemberVariablesBuilder.append("    @ApiModelProperty(value = \"").append(columnComment)
+                .append("\", dataType = \"").append(fieldType).append("\")").append("\r\n");
+        dtoMemberVariablesBuilder.append("    private ").append(fieldType).append(" ").append(camelCaseColumnName)
+                .append("; // ").append(columnComment).append("\r\n");
+    }
+
+    /**
+     * 迭代拼接inDTO.java中的成员变量
+     *
+     * @param isNullable                  是否可空值
+     * @param maximumLength               字段最大长度
+     * @param otherImportPackages         inDto中额外要引的包
+     * @param columnComment               数据库表字段注释
+     * @param camelCaseColumnName         java字段名称
+     * @param fieldType                   fieldType
+     * @param inDtoMemberVariablesBuilder 拼接的字符串
+     */
+    private static void iterateInDtoMemberVariables(String isNullable, Long maximumLength, Set<String> otherImportPackages,
+                                                    String columnComment, String camelCaseColumnName,
+                                                    String fieldType, StringBuilder inDtoMemberVariablesBuilder) {
+        inDtoMemberVariablesBuilder.append("\r\n");
+        if (NO.equals(isNullable)) {
+            otherImportPackages.add("import javax.validation.constraints.NotBlank;");
+            inDtoMemberVariablesBuilder.append("    @NotBlank(message = \"【").append(columnComment).append("】不能为空\")").append("\r\n");
+        }
+        if (maximumLength != null) {
+            otherImportPackages.add("import javax.validation.constraints.Size;");
+            inDtoMemberVariablesBuilder.append("    @Size(max = ").append(maximumLength).append(", message = \"【")
+                    .append(columnComment).append("】字符长度不得大于").append(maximumLength).append("\")").append("\r\n");
+        }
+        if (NO.equals(isNullable)) {
+            inDtoMemberVariablesBuilder.append("    @ApiModelProperty(value = \"").append(columnComment)
+                    .append("\", dataType = \"").append(fieldType).append("\", required = true)").append("\r\n");
+        } else {
+            inDtoMemberVariablesBuilder.append("    @ApiModelProperty(value = \"").append(columnComment)
+                    .append("\", dataType = \"").append(fieldType).append("\")").append("\r\n");
+        }
+        inDtoMemberVariablesBuilder.append("    private ").append(fieldType).append(" ").append(camelCaseColumnName)
+                .append("; // ").append(columnComment).append("\r\n");
+    }
+
+    /**
+     * 迭代拼接outDTO.java中的成员变量
+     *
+     * @param columnComment                数据库表字段注释
+     * @param camelCaseColumnName          java字段名称
+     * @param fieldType                    fieldType
+     * @param outDtoMemberVariablesBuilder 拼接的字符串
+     */
+    private static void iterateOutDtoMemberVariables(String columnComment, String camelCaseColumnName,
+                                                     String fieldType, StringBuilder outDtoMemberVariablesBuilder) {
+        outDtoMemberVariablesBuilder.append("\r\n");
+        outDtoMemberVariablesBuilder.append("    @ApiModelProperty(value = \"").append(columnComment)
+                .append("\", dataType = \"").append(fieldType).append("\")").append("\r\n");
+        outDtoMemberVariablesBuilder.append("    private ").append(fieldType).append(" ").append(camelCaseColumnName)
+                .append("; // ").append(columnComment).append("\r\n");
     }
 }
